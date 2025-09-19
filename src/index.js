@@ -1,6 +1,7 @@
 import { statusGenerator } from "./barrel.js";
 import { priorityGenerator } from "./barrel.js";
 import { uuidGenerator } from "./barrel.js";
+import { storageController } from "./barrel.js";
 
 console.log(uuidGenerator);
 
@@ -89,11 +90,8 @@ const internalController = (function () {
 
 })();
 
-// get internalController working first
-const storageController = (function () {
 
-})();
-
+export { ChecklistItem, TodoItem };
 
 /* ========================================================================== */
 /* TEST INPUTS */
