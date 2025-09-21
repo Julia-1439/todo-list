@@ -8,10 +8,19 @@
  * time of writing. 
  */
 
+// Potential idea for storing & retrieval for the functions:
+// utilize .constructor.name to get the class name and add it as an additional 
+// property "className". this additional property is added only upon storing
+// and is used to revive the class instances upon retrieval. Removed once used
+// for revival
+// Downside: might have to use switch statement on reviving to determine what kind
+// of class to use. s/b okay. OR can use Function constructor. I feel the latter
+// helps with decoupling and open/closed principle. 
+
 // i think reviving functionality is buitl into json retrieval, so would be good to do it here. 
 // need to test this module assuming local storage is not available too.
 
-import { ChecklistItem, TodoItem } from "./index.js";
+import { ChecklistItem, TodoItem, Project } from "./index.js";
 
 /**
  * 
