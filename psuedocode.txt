@@ -1,0 +1,45 @@
+IMPORT { ChecklistItem } from "checklistItem.js"
+IMPORT { TodoItem } from "todoItem.js"
+IMPORT { Project } from "project.js"
+
+SET classes TO [ChecklistItem, TodoItem, Project]
+// An object containing key-value pairs of class names to classes
+SET classAccessor TO Object.fromEntries(classes.map((c) => [c.name, c]))
+
+FUNC isStorageAvailable() 
+  RETURN {Boolean} whether localStorage is available, implemented per MDN's example
+
+// item {Project | TodoItem | ChecklistItem}
+FUNC serialize(item):
+  SET item.createdBy TO item.constructor.name
+  CALL JSON.stringify WITH item INTO serializedItem
+  RETURN {String} serializedItem
+
+// value {String}
+FUNC deserialize(value):
+  CALL JSON.parse WITH value INTO deserializedItem
+  SET creator TO deserializedItem.createdBy
+  REMOVE deserializedItem.createdBy USING delete
+  CREATE the item USING new classAccessor.creator INTO item
+  RETURN item
+
+// Create a new entry or Update an existing entry 
+FUNC post(item)
+   CALL serialize WITH item
+   CALL localStorage.setItem WITH key as uuid AND value as serilization
+
+// Get item from localStorage of type {Project | TodoItem | ChecklistItem}
+FUNC get(uuid)
+  CALL localStorage.getItem WITH uuid INTO value
+  IF value is non-null:
+    CALL deserialize on value INTO item 
+  RETURN item
+
+FUNC delete(uuid)
+  CALL localStorage.removeItem WITH uuid
+
+// @TODO how do you connect it all back together???
+FUNC getAllProjects()
+  REHYDRATE every item in localStorage USING get
+  FOR EACH project:
+    ITERATE 
