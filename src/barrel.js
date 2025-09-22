@@ -7,7 +7,6 @@ export * as dateFns from "./util/dateFns.js";
 // Classes
 export { default as Project } from "./classes/project.js";
 export { default as TodoItem } from "./classes/todoItem.js";
-export { default as ChecklistItem } from "./classes/checklistItem.js";
 
 // Controllers
 export * as storageController from "./storageController.js";

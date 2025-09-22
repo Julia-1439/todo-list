@@ -1,6 +1,5 @@
 import { Project } from "./barrel.js";
 import { TodoItem } from "./barrel.js";
-import { ChecklistItem } from "./barrel.js";
 
 import { priorityGenerator } from "./barrel.js";
 import { dateFns } from "./barrel.js";
