@@ -28,7 +28,7 @@ import { ChecklistItem, TodoItem, Project } from "./index.js";
  * availability does not imply available quota to store items, but this function
  * will still return true. Meeting quota should be checked elsewhere.  
  */
-const isStorageAvailable = (() => {
+function isStorageAvailable() {
   let storage;
   try {
     storage = window["localStorage"];
@@ -47,7 +47,7 @@ const isStorageAvailable = (() => {
       storage.length !== 0
     );
   }
-})();
+}
 
 /**
  * Create a new entry or Update an existing entry
