@@ -39,7 +39,14 @@ FUNC delete(uuid)
   CALL localStorage.removeItem WITH uuid
 
 // @TODO how do you connect it all back together???
+// PURPOSE: called once on page load
 FUNC getAllProjects()
   REHYDRATE every item in localStorage USING get
   FOR EACH project:
     ITERATE 
+
+EXPORT:
+  getAllProjects
+  post
+  delete
+  // ? maybe I should work on internalController first. 
