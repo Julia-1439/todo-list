@@ -82,6 +82,12 @@ class TodoItem {
 class Project {
   #uuid = uuidGenerator.generate();
 
+  constructor({ title, description, todos = [], }) {
+    this.title = title;
+    this.description = description;
+    this.todos = todos;
+  }
+  
 }
 
 
@@ -91,7 +97,7 @@ const internalController = (function () {
 })();
 
 
-export { ChecklistItem, TodoItem };
+export { ChecklistItem, TodoItem, Project };
 
 /* ========================================================================== */
 /* TEST INPUTS */
