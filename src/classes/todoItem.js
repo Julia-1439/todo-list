@@ -53,7 +53,7 @@ export default class TodoItem {
     return {
       title: todo.title,
       dueDateTime: todo.dueDateTime,
-      priority: todo._priority,
+      priority: todo.priority,
       status: todo.status,
     };
   }
