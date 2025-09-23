@@ -52,7 +52,7 @@ export default class TodoItem {
   static summary(todo) {
     return {
       title: todo.title,
-      dueDate: todo.dueDate,
+      dueDateTime: todo.dueDateTime,
       priority: todo._priority,
       status: todo.status,
     };
