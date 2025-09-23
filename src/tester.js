@@ -13,7 +13,7 @@ function runTests() {
       title: "Buy groceries",
       description: "Go to the Shop. Remember to bring a bag to avoid paying the fee",
       dueDate: new Date(2025, 9-1, 2),
-      priority: new priorityGenerator.createHighPrio(),
+      priority: new priorityGenerator.createPrio1(),
     })
     console.log(todo);
   })();
