@@ -1,13 +1,13 @@
 export function createIncompleteStatus() {
   return {
-    text: "Incomplete",
+    text: "incomplete",
     color: "#9b9b9b",
   };
 }
 
 export function createCompletedStatus() {
   return {
-    text: "Completed",
+    text: "completed",
     color: "#80ff80ff",
   };
 }
