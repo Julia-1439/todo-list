@@ -13,7 +13,7 @@ export default class TodoItem {
     this.priority = priority;
   }
   
-  edit({
+  editMetadata({
     // Provide current value as default for unedited fields
     title = this.title,
     description = this.description,
