@@ -36,4 +36,5 @@ export default class Project {
     this.todoList.splice(removalIdx, 1);
   }
   
+  get uuid() { return this.#uuid; }
 }
