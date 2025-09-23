@@ -6,11 +6,11 @@ export default class TodoItem {
   #uuid = uuidGenerator.generate();
   status = statusGenerator.incompleteStatus();
 
-  constructor({ title, description, dueDate, priority, }) {
+  constructor({ title, description, dueDate, priorityLvl, }) {
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
-    this.priority = priority;
+    this.priority = priorityGenerator.priority(priorityLvl);
   }
   
   editMetadata({
@@ -18,12 +18,12 @@ export default class TodoItem {
     title = this.title,
     description = this.description,
     dueDate = this.dueDate,
-    priority = this.priority,
+    priorityLvl = this.priority.level,
   }) {
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
-    this.priority = priority;
+    this.priority = priorityGenerator.priority(priorityLvl);
   }
 
   toggleStatus() {

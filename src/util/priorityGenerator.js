@@ -1,27 +1,41 @@
-export function createPrio4() {
+function prio4() {
   return {
-    text: "p4",
+    level: "p4",
     color: "#6E64FE",
   };
 }
 
-export function createPrio3() {
+function prio3() {
   return {
-    text: "p3",
+    level: "p3",
     color: "#FFF57D",
   };
 }
 
-export function createPrio2() {
+function prio2() {
   return {
-    text: "p2",
+    level: "p2",
     color: "#FFA257",
   };
 }
 
-export function createPrio1() { 
+function prio1() { 
   return {
-    text: "p1",
+    level: "p1",
     color: "#FF5757",
   };
+}
+
+/**
+ * 
+ * @param {String} priorityLvl 
+ * @returns {Object} prio4() to prio1() corresponding to priorityLevel 
+ */
+export function priority(priorityLvl) {
+  switch (priorityLvl) {
+    case "p4": return prio4();
+    case "p3": return prio3();
+    case "p2": return prio2();
+    case "p1": return prio1();
+  }
 }

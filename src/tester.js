@@ -1,7 +1,6 @@
 import { Project } from "./barrel.js";
 import { TodoItem } from "./barrel.js";
 
-import { priorityGenerator } from "./barrel.js";
 import { dateFns } from "./barrel.js";
 
 import { storageController } from "./barrel.js";
@@ -13,7 +12,7 @@ function runTests() {
     title: "Buy groceries",
     description: "Go to the Shop. Remember to bring a bag to avoid paying the fee",
     dueDate: new Date(2025, 9-1, 2),
-    priority: new priorityGenerator.createPrio1(),
+    priorityLvl: "p1",
   });
   console.log(todo);
   console.log(todo.status);
@@ -22,7 +21,7 @@ function runTests() {
   // edit a todo
   todo.editMetadata({
     title: "Buy hardware",
-    priority: new priorityGenerator.createPrio2(),
+    priorityLvl: "p2",
   });
   console.log(todo);
   console.log(todo.status);
