@@ -4,28 +4,45 @@ import { priorityUtil } from "../barrel.js";
 import { dateFns } from "../barrel.js";
 
 export default class TodoItem {
-  #uuid = uuidGenerator.generate();
   static DATE_TIME_FORMAT = "MMM-d-yyyy p";
+
+  #uuid = uuidGenerator.generate();
   status = statusUtil.status("incomplete");
 
-  constructor({ title, description, dueDateTimeStr, priorityLvl, }) {
+  /**
+   * 
+   * @param {String} title 
+   * @param {String} description 
+   * @param {Date} dueDateTime 
+   * @param {String} priorityLvl 
+   */
+  constructor(title, description, dueDateTime, priorityLvl) {
     this.title = title;
     this.description = description;
-    this.dueDateTime = dateFns.format(new Date(dueDateTimeStr), this.DATE_TIME_FORMAT);
-    this.priority = priorityUtil.priority(priorityLvl);
+    this.dueDateTime = dueDateTime;
+    this.priority = priorityLvl;
   }
-  
-  editMetadata({
-    // Provide current value as default for unedited fields
-    title = this.title,
-    description = this.description,
-    dueDate = this.dueDate,
-    priorityLvl = this.priority.level,
-  }) {
-    this.title = title;
-    this.description = description;
-    this.dueDate = dueDate;
-    this.priority = priorityUtil.priority(priorityLvl);
+
+  set dueDateTime(dueDateTime) {
+    if (dueDateTime !== undefined )
+      this._dueDateTime = dateFns.format(dueDateTime, TodoItem.DATE_TIME_FORMAT);
+    else 
+      this._dueDateTime = undefined;
+  }
+
+  get dueDateTime() {
+    return this._dueDateTime;
+  }
+
+  set priority(priorityLvl) {
+    if (priorityLvl !== undefined)
+      this._priority = priorityUtil.priority(priorityLvl);
+    else
+      this._priority = undefined;
+  }
+
+  get priority() {
+    return this._priority;
   }
 
   toggleStatus() {
@@ -36,7 +53,7 @@ export default class TodoItem {
     return {
       title: todo.title,
       dueDate: todo.dueDate,
-      priority: todo.priority,
+      priority: todo._priority,
       status: todo.status,
     };
   }

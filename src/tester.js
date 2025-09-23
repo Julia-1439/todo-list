@@ -1,28 +1,24 @@
 import { Project } from "./barrel.js";
 import { TodoItem } from "./barrel.js";
 
-import { dateFns } from "./barrel.js";
-
 import { storageController } from "./barrel.js";
 import { internalController } from "./barrel.js";
 
 function runTests() {
   // create a todo
-  const todo = new TodoItem({
-    title: "Buy groceries",
-    description: "Go to the Shop. Remember to bring a bag to avoid paying the fee",
-    dueDate: new Date(2025, 9-1, 2),
-    priorityLvl: "p1",
-  });
+  const todo = new TodoItem(
+    "Buy groceries",
+    "Go to the Shop. Remember to bring a bag to avoid paying the fee",
+    new Date("2017-06-01T08:30"),
+    "p1",
+  );
   console.log(todo);
   console.log(todo.status);
   console.log(todo.priority);
 
   // edit a todo & mark as complete
-  todo.editMetadata({
-    title: "Buy hardware",
-    priorityLvl: "p2",
-  });
+  todo.title = "Buy hardware";
+  todo.priority = "p2";
   todo.toggleStatus();
   console.log(todo);
   console.log(todo.status);
@@ -46,8 +42,8 @@ function runTests() {
 
   // add todos to a project
   project.addTodo(todo);
-  project.addTodo(new TodoItem({title: "test todo2"}));
-  project.addTodo(new TodoItem({title: "test todo3"}));
+  project.addTodo(new TodoItem("test todo2"));
+  project.addTodo(new TodoItem("test todo3"));
   console.log(project.todoList);
 
   // remove todo from a project
@@ -70,11 +66,6 @@ function runTests() {
     Project.details(project)
   );
 
-  // add a due date and time to a project using dateFns
-  const inputDateTime = "2017-06-01T08:30"; 
-  console.log(
-    dateFns.format(new Date(inputDateTime), "MMM-d-yyyy p")
-  );
 }
 
 export { runTests };
