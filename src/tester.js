@@ -39,6 +39,14 @@ function runTests() {
     });
     console.log(project);
     console.log(project.status);
+
+    project.addTodo(todo);
+    project.addTodo(todo);
+    project.addTodo(todo);
+    console.log(project.todoList);
+
+    project.removeTodo(todo.uuid); // should remove the first one
+    console.log(project.todoList);
   })();
 }
 
