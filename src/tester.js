@@ -18,11 +18,12 @@ function runTests() {
   console.log(todo.status);
   console.log(todo.priority);
 
-  // edit a todo
+  // edit a todo & mark as complete
   todo.editMetadata({
     title: "Buy hardware",
     priorityLvl: "p2",
   });
+  todo.toggleStatus();
   console.log(todo);
   console.log(todo.status);
   console.log(todo.priority);
@@ -35,10 +36,11 @@ function runTests() {
   console.log(project);
   console.log(project.status);
 
-  // create a project's metadata
+  // create a project's metadata & mark as complete
   project.editMetadata({
     title: "Cook a delicious goulash",
   });
+  project.toggleStatus();
   console.log(project);
   console.log(project.status);
 
@@ -67,16 +69,6 @@ function runTests() {
   console.log(
     Project.details(project)
   );
-
-  // mark a todo as done
-  console.log(todo.status);
-  todo.toggleStatus();
-  console.log(todo.status);
-
-  // mark a project as done
-  console.log(project.status);
-  project.toggleStatus();
-  console.log(project.status);
 }
 
 export { runTests };
