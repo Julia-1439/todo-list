@@ -17,12 +17,14 @@ function runTests() {
       priority: new priorityGenerator.createPrio1(),
     })
     console.log(todo);
+    console.log(todo.status);
 
     todo.edit({
       title: "Buy hardware",
       status: new statusGenerator.createCompletedStatus(),
     });
     console.log(todo);
+    console.log(todo.status);
   })();
 }
 
