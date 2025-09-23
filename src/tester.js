@@ -25,6 +25,20 @@ function runTests() {
     });
     console.log(todo);
     console.log(todo.status);
+
+    const project = new Project({
+      title: "Cook a goulash",
+      description: "This is my first attempt at cooking an American goulash! I'm so excited."
+    });
+    console.log(project);
+    console.log(project.status);
+
+    project.editMetadata({
+      title: "Cook a delicious goulash",
+      status: new statusGenerator.createCompletedStatus(),
+    });
+    console.log(project);
+    console.log(project.status);
   })();
 }
 
