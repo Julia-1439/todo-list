@@ -5,14 +5,14 @@ import { statusGenerator } from "../barrel.js";
 export default class Project {
   #uuid = uuidGenerator.generate();
   status = statusGenerator.createIncompleteStatus();
+  todos = [];
 
-  constructor({ title, description, todos = [], }) {
+  constructor({ title, description, }) {
     this.title = title;
     this.description = description;
-    this.todos = todos;
   }
 
-  edit({
+  editMetadata({
     // Provide current value as default for unedited fields
     title = this.title,
     description = this.description,
