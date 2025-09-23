@@ -45,8 +45,12 @@ export default class TodoItem {
     return this._priority;
   }
 
-  toggleStatus() {
-    statusUtil.toggleStatus(this.status);
+  get status() {
+    return this._status;
+  }
+
+  set status(name) {
+    this._status = statusUtil.status(name);
   }
 
   static summary(todo) {

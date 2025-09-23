@@ -13,8 +13,12 @@ export default class Project {
     this.description = description;
   }
 
-  toggleStatus() {
-    statusUtil.toggleStatus(this.status);
+  get status() {
+    return this._status;
+  }
+
+  set status(name) {
+    this._status = statusUtil.status(name);
   }
 
   /**

@@ -19,7 +19,7 @@ function runTests() {
   // edit a todo & mark as complete
   todo.title = "Buy hardware";
   todo.priority = "p2";
-  todo.toggleStatus();
+  todo.status = "completed";
   console.log(todo);
   console.log(todo.status);
   console.log(todo.priority);
@@ -34,7 +34,7 @@ function runTests() {
 
   // create a project's metadata & mark as complete
   project.title = "Cook a delicious goulash";
-  project.toggleStatus();
+  project.status = "completed";
   console.log(project);
   console.log(project.status);
 

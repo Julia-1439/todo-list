@@ -18,12 +18,3 @@ export function status(statusName) {
     case "completed": return completedStatus();
   }  
 }
-
-export function toggleStatus(currStatus) {
-  Object.assign(
-    currStatus,
-    currStatus.name === "incomplete" 
-      ? completedStatus()
-      : incompleteStatus()
-  );
-}
