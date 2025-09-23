@@ -67,6 +67,11 @@ function runTests() {
     TodoItem.details(project.todoList[2])
   );
 
+  // view details of a project
+  console.log(
+    Project.details(project)
+  );
+
 }
 
 export { runTests };

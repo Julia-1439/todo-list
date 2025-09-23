@@ -1,5 +1,6 @@
 import { uuidGenerator } from "../barrel.js";
 import { statusGenerator } from "../barrel.js";
+import { TodoItem } from "../barrel.js";
 
 
 export default class Project {
@@ -34,6 +35,14 @@ export default class Project {
   removeTodo(uuid) {
     const removalIdx = this.todoList.findIndex((todoItem) => todoItem.uuid === uuid);
     this.todoList.splice(removalIdx, 1);
+  }
+
+  static details(project) {
+    return {
+      title: project.title,
+      description: project.description,
+      todoList: project.todoList.map(todoItem => TodoItem.details(todoItem)),
+    };
   }
   
   get uuid() { return this.#uuid; }
