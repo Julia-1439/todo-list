@@ -40,7 +40,7 @@ function runTests() {
   // create a project's metadata
   project.editMetadata({
     title: "Cook a delicious goulash",
-    status: new statusGenerator.createCompletedStatus(),
+    status: new statusGenerator.completedStatus(),
   });
   console.log(project);
   console.log(project.status);

@@ -4,7 +4,7 @@ import { priorityGenerator } from "../barrel.js";
 
 export default class TodoItem {
   #uuid = uuidGenerator.generate();
-  status = statusGenerator.createIncompleteStatus();
+  status = statusGenerator.incompleteStatus();
 
   constructor({ title, description, dueDate, priority, }) {
     this.title = title;
@@ -30,8 +30,8 @@ export default class TodoItem {
     Object.assign(
       this.status,
       this.status.text === "incomplete" 
-        ? statusGenerator.createCompletedStatus() 
-        : statusGenerator.createIncompleteStatus(),
+        ? statusGenerator.completedStatus() 
+        : statusGenerator.incompleteStatus(),
     );
   }
 
