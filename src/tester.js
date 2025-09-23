@@ -25,17 +25,15 @@ function runTests() {
   console.log(todo.priority);
 
   // create a project
-  const project = new Project({
-    title: "Cook a goulash",
-    description: "This is my first attempt at cooking an American goulash! I'm so excited."
-  });
+  const project = new Project(
+    "Cook a goulash",
+    "This is my first attempt at cooking an American goulash! I'm so excited."
+  );
   console.log(project);
   console.log(project.status);
 
   // create a project's metadata & mark as complete
-  project.editMetadata({
-    title: "Cook a delicious goulash",
-  });
+  project.title = "Cook a delicious goulash";
   project.toggleStatus();
   console.log(project);
   console.log(project.status);

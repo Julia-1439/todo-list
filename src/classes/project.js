@@ -8,16 +8,7 @@ export default class Project {
   status = statusUtil.status("incomplete");
   todoList = [];
 
-  constructor({ title, description, }) {
-    this.title = title;
-    this.description = description;
-  }
-
-  editMetadata({
-    // Provide current value as default for unedited fields
-    title = this.title,
-    description = this.description,
-  }) {
+  constructor(title, description) {
     this.title = title;
     this.description = description;
   }
