@@ -1,16 +1,16 @@
 import { uuidGenerator } from "../barrel.js";
-import { statusGenerator } from "../barrel.js";
-import { priorityGenerator } from "../barrel.js";
+import { statusUtil } from "../barrel.js";
+import { priorityUtil } from "../barrel.js";
 
 export default class TodoItem {
   #uuid = uuidGenerator.generate();
-  status = statusGenerator.incompleteStatus();
+  status = statusUtil.status("incomplete");
 
   constructor({ title, description, dueDate, priorityLvl, }) {
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
-    this.priority = priorityGenerator.priority(priorityLvl);
+    this.priority = priorityUtil.priority(priorityLvl);
   }
   
   editMetadata({
@@ -23,16 +23,11 @@ export default class TodoItem {
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
-    this.priority = priorityGenerator.priority(priorityLvl);
+    this.priority = priorityUtil.priority(priorityLvl);
   }
 
   toggleStatus() {
-    Object.assign(
-      this.status,
-      this.status.text === "incomplete" 
-        ? statusGenerator.completedStatus() 
-        : statusGenerator.incompleteStatus(),
-    );
+    statusUtil.toggleStatus(this.status);
   }
 
   static summary(todo) {

@@ -1,11 +1,11 @@
 import { uuidGenerator } from "../barrel.js";
-import { statusGenerator } from "../barrel.js";
+import { statusUtil } from "../barrel.js";
 import { TodoItem } from "../barrel.js";
 
 
 export default class Project {
   #uuid = uuidGenerator.generate();
-  status = statusGenerator.incompleteStatus();
+  status = statusUtil.status("incomplete");
   todoList = [];
 
   constructor({ title, description, }) {
@@ -23,12 +23,7 @@ export default class Project {
   }
 
   toggleStatus() {
-    Object.assign(
-      this.status,
-      this.status.text === "incomplete" 
-        ? statusGenerator.completedStatus() 
-        : statusGenerator.incompleteStatus(),
-    );
+    statusUtil.toggleStatus(this.status);
   }
 
   /**
@@ -48,6 +43,7 @@ export default class Project {
     return {
       title: project.title,
       description: project.description,
+      status: project.status,
       todoList: project.todoList.map(todo => TodoItem.details(todo)),
     };
   }

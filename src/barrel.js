@@ -1,7 +1,7 @@
 // Util
 export * as uuidGenerator from "./util/uuidGenerator.js";
-export * as statusGenerator from "./util/statusGenerator.js";
-export * as priorityGenerator from "./util/priorityGenerator.js";
+export * as statusUtil from "./util/statusUtil.js";
+export * as priorityUtil from "./util/priorityUtil.js";
 export * as dateFns from "./util/dateFns.js";
 
 // Classes
