@@ -18,13 +18,17 @@ function runTests() {
     })
     console.log(todo);
     console.log(todo.status);
+    console.log(todo.priority);
 
     todo.edit({
       title: "Buy hardware",
       status: new statusGenerator.createCompletedStatus(),
+      priority: new priorityGenerator.createPrio2(),
     });
     console.log(todo);
     console.log(todo.status);
+    console.log(todo.priority);
+
 
     const project = new Project({
       title: "Cook a goulash",
