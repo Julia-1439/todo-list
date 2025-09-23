@@ -12,13 +12,15 @@ export default class Project {
     this.todos = todos;
   }
 
-  editMetadata({
+  edit({
     // Provide current value as default for unedited fields
     title = this.title,
     description = this.description,
+    status = this.status,
   }) {
     this.title = title;
     this.description = description;
+    this.status = status;
   }
   
 }
