@@ -9,6 +9,7 @@ import { storageController } from "./barrel.js";
 import { internalController } from "./barrel.js";
 
 function runTests() {
+  // create a todo
   const todo = new TodoItem({
     title: "Buy groceries",
     description: "Go to the Shop. Remember to bring a bag to avoid paying the fee",
@@ -19,6 +20,7 @@ function runTests() {
   console.log(todo.status);
   console.log(todo.priority);
 
+  // edit a todo
   todo.edit({
     title: "Buy hardware",
     status: new statusGenerator.createCompletedStatus(),
@@ -28,7 +30,7 @@ function runTests() {
   console.log(todo.status);
   console.log(todo.priority);
 
-
+  // create a project
   const project = new Project({
     title: "Cook a goulash",
     description: "This is my first attempt at cooking an American goulash! I'm so excited."
@@ -36,6 +38,7 @@ function runTests() {
   console.log(project);
   console.log(project.status);
 
+  // create a project's metadata
   project.editMetadata({
     title: "Cook a delicious goulash",
     status: new statusGenerator.createCompletedStatus(),
@@ -43,13 +46,16 @@ function runTests() {
   console.log(project);
   console.log(project.status);
 
+  // add todos to a project
   project.addTodo(todo);
   project.addTodo(new TodoItem({title: "test todo2"}));
   project.addTodo(new TodoItem({title: "test todo3"}));
   console.log(project.todoList);
 
+  // remove todo from a project
   project.removeTodo(todo.uuid);
   console.log(project.todoList);
+    
 }
 
 export { runTests };
