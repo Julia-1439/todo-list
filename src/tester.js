@@ -1,6 +1,7 @@
 import { Project } from "./barrel.js";
 import { TodoItem } from "./barrel.js";
 
+import { statusGenerator } from "./barrel.js";
 import { priorityGenerator } from "./barrel.js";
 import { dateFns } from "./barrel.js";
 
@@ -15,6 +16,12 @@ function runTests() {
       dueDate: new Date(2025, 9-1, 2),
       priority: new priorityGenerator.createPrio1(),
     })
+    console.log(todo);
+
+    todo.edit({
+      title: "Buy hardware",
+      status: new statusGenerator.createCompletedStatus(),
+    });
     console.log(todo);
   })();
 }
