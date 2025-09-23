@@ -28,20 +28,20 @@ export default class TodoItem {
     this.status = status;
   }
 
-  static summary(todoItem) {
+  static summary(todo) {
     return {
-      title: todoItem.title,
-      dueDate: todoItem.dueDate,
-      priority: todoItem.priority,
-      status: todoItem.status,
+      title: todo.title,
+      dueDate: todo.dueDate,
+      priority: todo.priority,
+      status: todo.status,
     };
   }
 
-  static details(todoItem) {
+  static details(todo) {
     return Object.assign(
       {},
-      this.summary(todoItem),
-      {description: todoItem.description, }
+      this.summary(todo),
+      {description: todo.description, }
     );
   }
 

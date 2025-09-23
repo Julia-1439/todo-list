@@ -26,14 +26,14 @@ export default class Project {
 
   /**
    * 
-   * @param {TodoItem} todoItem 
+   * @param {TodoItem} todo 
    */
-  addTodo(todoItem) {
-    this.todoList.push(todoItem);
+  addTodo(todo) {
+    this.todoList.push(todo);
   }
 
   removeTodo(uuid) {
-    const removalIdx = this.todoList.findIndex((todoItem) => todoItem.uuid === uuid);
+    const removalIdx = this.todoList.findIndex((todo) => todo.uuid === uuid);
     this.todoList.splice(removalIdx, 1);
   }
 
@@ -41,7 +41,7 @@ export default class Project {
     return {
       title: project.title,
       description: project.description,
-      todoList: project.todoList.map(todoItem => TodoItem.details(todoItem)),
+      todoList: project.todoList.map(todo => TodoItem.details(todo)),
     };
   }
   
