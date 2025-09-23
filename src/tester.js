@@ -55,7 +55,18 @@ function runTests() {
   // remove todo from a project
   project.removeTodo(todo.uuid);
   console.log(project.todoList);
-    
+
+  // view summary of each todo in a project
+  project.addTodo(todo); // readd the old one with lots of info
+  project.todoList.forEach((todo) => {
+    console.log(TodoItem.summary(todo));
+  });
+ 
+  // view details of a todo in a project
+  console.log(
+    TodoItem.details(project.todoList[2])
+  );
+
 }
 
 export { runTests };

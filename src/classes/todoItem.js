@@ -28,6 +28,23 @@ export default class TodoItem {
     this.status = status;
   }
 
+  static summary(todoItem) {
+    return {
+      title: todoItem.title,
+      dueDate: todoItem.dueDate,
+      priority: todoItem.priority,
+      status: todoItem.status,
+    };
+  }
+
+  static details(todoItem) {
+    return Object.assign(
+      {},
+      this.summary(todoItem),
+      {description: todoItem.description, }
+    );
+  }
+
   get uuid() { return this.#uuid; }
 
 }
