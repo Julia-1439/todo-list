@@ -13,19 +13,26 @@ export default class TodoItem {
     this.priority = priority;
   }
   
-  edit({
+  editMetadata({
     // Provide current value as default for unedited fields
     title = this.title,
     description = this.description,
     dueDate = this.dueDate,
     priority = this.priority,
-    status = this.status,
   }) {
     this.title = title;
     this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
-    this.status = status;
+  }
+
+  toggleStatus() {
+    Object.assign(
+      this.status,
+      this.status.text === "incomplete" 
+        ? statusGenerator.createCompletedStatus() 
+        : statusGenerator.createIncompleteStatus(),
+    );
   }
 
   static summary(todo) {

@@ -21,9 +21,8 @@ function runTests() {
   console.log(todo.priority);
 
   // edit a todo
-  todo.edit({
+  todo.editMetadata({
     title: "Buy hardware",
-    status: new statusGenerator.createCompletedStatus(),
     priority: new priorityGenerator.createPrio2(),
   });
   console.log(todo);
@@ -72,6 +71,10 @@ function runTests() {
     Project.details(project)
   );
 
+  // mark a todo as done
+  console.log(todo.status);
+  todo.toggleStatus();
+  console.log(todo.status);
 }
 
 export { runTests };
