@@ -17,11 +17,18 @@ export default class Project {
     // Provide current value as default for unedited fields
     title = this.title,
     description = this.description,
-    status = this.status,
   }) {
     this.title = title;
     this.description = description;
-    this.status = status;
+  }
+
+  toggleStatus() {
+    Object.assign(
+      this.status,
+      this.status.text === "incomplete" 
+        ? statusGenerator.completedStatus() 
+        : statusGenerator.incompleteStatus(),
+    );
   }
 
   /**

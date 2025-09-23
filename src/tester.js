@@ -1,7 +1,6 @@
 import { Project } from "./barrel.js";
 import { TodoItem } from "./barrel.js";
 
-import { statusGenerator } from "./barrel.js";
 import { priorityGenerator } from "./barrel.js";
 import { dateFns } from "./barrel.js";
 
@@ -15,7 +14,7 @@ function runTests() {
     description: "Go to the Shop. Remember to bring a bag to avoid paying the fee",
     dueDate: new Date(2025, 9-1, 2),
     priority: new priorityGenerator.createPrio1(),
-  })
+  });
   console.log(todo);
   console.log(todo.status);
   console.log(todo.priority);
@@ -40,7 +39,6 @@ function runTests() {
   // create a project's metadata
   project.editMetadata({
     title: "Cook a delicious goulash",
-    status: new statusGenerator.completedStatus(),
   });
   console.log(project);
   console.log(project.status);
@@ -75,6 +73,11 @@ function runTests() {
   console.log(todo.status);
   todo.toggleStatus();
   console.log(todo.status);
+
+  // mark a project as done
+  console.log(project.status);
+  project.toggleStatus();
+  console.log(project.status);
 }
 
 export { runTests };
