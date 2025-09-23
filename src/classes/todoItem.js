@@ -1,15 +1,17 @@
 import { uuidGenerator } from "../barrel.js";
 import { statusUtil } from "../barrel.js";
 import { priorityUtil } from "../barrel.js";
+import { dateFns } from "../barrel.js";
 
 export default class TodoItem {
   #uuid = uuidGenerator.generate();
+  static DATE_TIME_FORMAT = "MMM-d-yyyy p";
   status = statusUtil.status("incomplete");
 
-  constructor({ title, description, dueDate, priorityLvl, }) {
+  constructor({ title, description, dueDateTimeStr, priorityLvl, }) {
     this.title = title;
     this.description = description;
-    this.dueDate = dueDate;
+    this.dueDateTime = dateFns.format(new Date(dueDateTimeStr), this.DATE_TIME_FORMAT);
     this.priority = priorityUtil.priority(priorityLvl);
   }
   

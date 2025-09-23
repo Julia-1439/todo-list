@@ -69,6 +69,12 @@ function runTests() {
   console.log(
     Project.details(project)
   );
+
+  // add a due date and time to a project using dateFns
+  const inputDateTime = "2017-06-01T08:30"; 
+  console.log(
+    dateFns.format(new Date(inputDateTime), "MMM-d-yyyy p")
+  );
 }
 
 export { runTests };
