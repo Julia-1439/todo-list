@@ -5,7 +5,7 @@ import { statusGenerator } from "../barrel.js";
 export default class Project {
   #uuid = uuidGenerator.generate();
   status = statusGenerator.createIncompleteStatus();
-  todos = [];
+  todoList = [];
 
   constructor({ title, description, }) {
     this.title = title;
@@ -21,6 +21,19 @@ export default class Project {
     this.title = title;
     this.description = description;
     this.status = status;
+  }
+
+  /**
+   * 
+   * @param {TodoItem} todoItem 
+   */
+  addTodo(todoItem) {
+    this.todoList.push(todoItem);
+  }
+
+  removeTodo(uuid) {
+    const removalIdx = this.todoList.findIndex((todoItem) => todoItem.uuid === uuid);
+    this.todoList.splice(removalIdx, 1);
   }
   
 }
