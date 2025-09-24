@@ -1,4 +1,3 @@
-IMPORT { ChecklistItem } from "checklistItem.js"
 IMPORT { TodoItem } from "todoItem.js"
 IMPORT { Project } from "project.js"
 
@@ -19,10 +18,7 @@ FUNC serialize(item):
 // value {String}
 FUNC deserialize([key, value]):
   CALL JSON.parse WITH value INTO deserializedItem
-  SET creator TO deserializedItem.createdBy
-  REMOVE deserializedItem.createdBy USING delete
-  CREATE the item USING new classAccessor.creator.rehydrate INTO item
-  SET the uuid to be the oldUuid (key) 
+  CREATE the item USING new classAccessor.creator.rehydrate(val, key) INTO item
   RETURN item
 
 // Create a new entry or Update an existing entry 
@@ -34,7 +30,7 @@ FUNC post(item)
 FUNC get(uuid)
   CALL localStorage.getItem WITH uuid INTO value
   IF value is non-null:
-    CALL deserialize on value INTO item 
+    CALL deserialize(uuid, value) on value INTO item 
   RETURN item
 
 FUNC delete(uuid)
