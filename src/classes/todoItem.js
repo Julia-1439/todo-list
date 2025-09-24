@@ -71,4 +71,31 @@ export default class TodoItem {
 
   get uuid() { return this.#uuid; }
 
+  static dehydrate(todo) {
+    return {
+      title: todo.title,
+      description: todo.description,
+
+    };
+  }
+
+  /**
+   * 
+   * @param {Object} parsedTodo the outcome of JSON.parse on a serialized TodoItem 
+   * @param {String} oldUuid the uuid of the TodoItem before serialization, to 
+   * be applied to the new TodoItem before returning
+   * @returns {TodoItem}
+   */
+  static rehydrate(parsedTodo, oldUuid) {
+    const todo = new TodoItem();
+    todo.#uuid = oldUuid;
+
+    todo.title = parsedTodo.title;
+    todo.description = parsedTodo.description;
+    todo._dueDateTime = parsedTodo._dueDateTime;
+    todo._priority = parsedTodo._priority;
+    todo._status = parsedTodo._status;
+    
+    return todo;
+  }
 }

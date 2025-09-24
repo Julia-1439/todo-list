@@ -64,6 +64,14 @@ function runTests() {
     Project.details(project)
   );
 
+  const stringifiedTodo = JSON.stringify(todo);
+  const parsedTodo = JSON.parse(stringifiedTodo);
+  console.log(stringifiedTodo);
+  console.log(parsedTodo);
+  const rehydratedTodo = TodoItem.rehydrate(parsedTodo, todo.uuid);
+  console.log(rehydratedTodo);
+
+
 }
 
 export { runTests };
