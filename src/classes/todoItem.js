@@ -74,11 +74,21 @@ export default class TodoItem {
 
   get uuid() { return this.#uuid; }
 
+  /**
+   * 
+   * @param {TodoItem} todo 
+   * @returns 
+   */
   static dehydrate(todo) {
     return {
+      createdBy: todo.constructor.name,
       title: todo.title,
       description: todo.description,
 
+      // properties that require distinct treatment:  
+      dueDateTime: todo._dueDateTime,
+      priority: todo.priority.level,
+      status: todo.status.name,
     };
   }
 
@@ -90,15 +100,15 @@ export default class TodoItem {
    * @returns {TodoItem}
    */
   static rehydrate(parsedTodo, oldUuid) {
-    const todo = new TodoItem();
+    const todo = new TodoItem(
+      parsedTodo.title,
+      parsedTodo.description,
+      parsedTodo.dueDateTime,
+      parsedTodo.priority,
+    );
+    todo.status = parsedTodo.status;
     todo.#uuid = oldUuid;
 
-    todo.title = parsedTodo.title;
-    todo.description = parsedTodo.description;
-    todo._dueDateTime = parsedTodo._dueDateTime;
-    todo._priority = parsedTodo._priority;
-    todo._status = parsedTodo._status;
-    
     return todo;
   }
 }
