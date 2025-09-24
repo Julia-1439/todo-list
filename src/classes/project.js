@@ -5,12 +5,12 @@ import { TodoItem } from "../barrel.js";
 
 export default class Project {
   #uuid = uuidGenerator.generate();
-  todoList = [];
   
   constructor(title, description) {
     this.title = title;
     this.description = description;
     this.status = "incomplete";
+    this.todoList = [];
   }
 
   get status() {
