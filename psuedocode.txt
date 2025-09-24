@@ -12,15 +12,17 @@ FUNC isStorageAvailable()
 // item {Project | TodoItem | ChecklistItem}
 FUNC serialize(item):
   SET item.createdBy TO item.constructor.name
+  CALL classAccessor.creator.dehydrate(item)
   CALL JSON.stringify WITH item INTO serializedItem
   RETURN {String} serializedItem
 
 // value {String}
-FUNC deserialize(value):
+FUNC deserialize([key, value]):
   CALL JSON.parse WITH value INTO deserializedItem
   SET creator TO deserializedItem.createdBy
   REMOVE deserializedItem.createdBy USING delete
-  CREATE the item USING new classAccessor.creator INTO item
+  CREATE the item USING new classAccessor.creator.rehydrate INTO item
+  SET the uuid to be the oldUuid (key) 
   RETURN item
 
 // Create a new entry or Update an existing entry 
