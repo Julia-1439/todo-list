@@ -11,7 +11,7 @@ export default class TodoItem {
    * 
    * @param {String} title 
    * @param {String} description 
-   * @param {Date} dueDateTime 
+   * @param {Date | String} dueDateTime 
    * @param {String} priorityLvl 
    */
   constructor(title, description, dueDateTime, priorityLvl) {
@@ -23,14 +23,17 @@ export default class TodoItem {
   }
 
   set dueDateTime(dueDateTime) {
-    if (dueDateTime !== undefined )
-      this._dueDateTime = dateFns.format(dueDateTime, TodoItem.DATE_TIME_FORMAT);
-    else 
-      this._dueDateTime = undefined;
+    if (dueDateTime !== undefined)
+      this._dueDateTime = new Date(dueDateTime); 
+    else
+      this._dueDateTime = dueDateTime;
   }
 
   get dueDateTime() {
-    return this._dueDateTime;
+    if (this._dueDateTime !== undefined)
+      return dateFns.format(this._dueDateTime, TodoItem.DATE_TIME_FORMAT);
+    else
+      return this._dueDateTime;
   }
 
   set priority(priorityLvl) {
