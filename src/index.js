@@ -1,3 +1,3 @@
-import { runTests } from "./tester.js";
+import { runTestSet1, runTestSet2 } from "./tester.js";
 
-runTests();
+runTestSet2();

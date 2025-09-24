@@ -4,7 +4,7 @@ import { TodoItem } from "./barrel.js";
 import { storageController } from "./barrel.js";
 import { internalController } from "./barrel.js";
 
-function runTests() {
+function runTestSet1() {
   // create a todo
   const todo = new TodoItem(
     "Buy groceries",
@@ -72,8 +72,17 @@ function runTests() {
   
   const rehydratedTodo = TodoItem.rehydrate(parsedTodo, todo.uuid);
   console.log(rehydratedTodo);
-
-
 }
 
-export { runTests };
+function runTestSet2() {
+  const todo = new TodoItem(
+    "Buy groceries",
+    "Go to the Shop. Remember to bring a bag to avoid paying the fee",
+    new Date("2017-06-01T08:30"),
+    "p1",
+  );
+  console.log(todo);
+  
+}
+
+export { runTestSet1, runTestSet2 };
