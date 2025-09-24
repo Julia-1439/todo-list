@@ -5,9 +5,7 @@ import { dateFns } from "../barrel.js";
 
 export default class TodoItem {
   static DATE_TIME_FORMAT = "MMM-d-yyyy p";
-
   #uuid = uuidGenerator.generate();
-  status = statusUtil.status("incomplete");
 
   /**
    * 
@@ -21,6 +19,7 @@ export default class TodoItem {
     this.description = description;
     this.dueDateTime = dueDateTime;
     this.priority = priorityLvl;
+    this.status = "incomplete";
   }
 
   set dueDateTime(dueDateTime) {
