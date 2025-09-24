@@ -8,19 +8,15 @@
  * time of writing. 
  */
 
-// Potential idea for storing & retrieval for the functions:
-// utilize .constructor.name to get the class name and add it as an additional 
-// property "className". this additional property is added only upon storing
-// and is used to revive the class instances upon retrieval. Removed once used
-// for revival
-// Downside: might have to use switch statement on reviving to determine what kind
-// of class to use. s/b okay. OR can use Function constructor. I feel the latter
-// helps with decoupling and open/closed principle. 
+// @TODO need to test this module assuming localStorage is not available too.
 
-// i think reviving functionality is buitl into json retrieval, so would be good to do it here. 
-// need to test this module assuming local storage is not available too.
 
-import { ChecklistItem, TodoItem, Project } from "./index.js";
+import { TodoItem, Project } from "./barrel.js";
+
+const classes = [TodoItem, Project];
+const classAccessor = Object.fromEntries(
+  classes.map(cls => [cls.name, cls])
+);
 
 /**
  * 
@@ -50,30 +46,53 @@ function isStorageAvailable() {
 }
 
 /**
+ * 
+ * @param {Project | TodoItem} item 
+ * @returns {String}
+ */
+function serialize(item) {
+  item.itemCreator = item.constructor.name;
+  return JSON.stringify(item);
+}
+
+/**
+ * 
+ * @param {String} value 
+ * @returns {Project | TodoItem}
+ */
+function deserialize(value, uuidToInject) {
+  const parsedValue = JSON.parse(value);
+  const itemCreator = classAccessor[parsedValue.itemCreator];
+  return itemCreator.instanceReviver(parsedValue, uuidToInject);
+}
+
+/**
  * Create a new entry or Update an existing entry
- * @param {Project | TodoItem | ChecklistItem } item 
+ * @param {Project | TodoItem } item 
  */
 function post(item) {
   const key = item.uuid;
-  const value = JSON.stringify(item);
+  const value = serialize(item);
   localStorage.setItem(key, value); // can throw QuotaExceededError
 }
 
 /**
  * 
- * @param {String} uuid 
- * @returns Object belonging to uuid, or false if no such entry exists.    
+ * @param {String} key the uuid of a Project or TodoItem  
+ * @returns {Project | TodoItem} false if no such entry exists    
  */
-function get(uuid) {
-  let value; 
-  value = localStorage.getItem(uuid);
+function get(key) {
+  const value = localStorage.getItem(key);
   if (value === null) {
     return false;
   }
-  value = JSON.parse(value, () => {
-    // reviving 
-  });
-  return value;
+
+  const uuid = key;
+  return deserialize(value, uuid);
+}
+
+function remove(key) {
+  localStorage.removeItem(key);
 }
 
 /**
@@ -87,6 +106,7 @@ function getAllProjects() {
   return data; 
 }
 
-export { isStorageAvailable, post, getAllProjects };
+// @TODO get should probably be removed. just in here for testing
+export { isStorageAvailable, post, get, remove, getAllProjects };
 
 // recreate the objects via iterating on the prototype, maybe

@@ -81,8 +81,32 @@ function runTestSet2() {
     new Date("2017-06-01T08:30"),
     "p1",
   );
-  console.log(todo);
-  
+  console.log("Todo created:", todo);
+
+  // check localStorage availability
+  console.log(
+    "localStorage available:",
+    storageController.isStorageAvailable()
+  );
+
+  // post
+  storageController.post(todo);
+
+  // get
+  const retrievalUuid = todo.uuid;
+  console.log(
+    "Retrieved item:",
+    storageController.get(retrievalUuid)
+  );
+
+  // remove
+  const removalUuid = todo.uuid;
+  storageController.remove(removalUuid); // set a breakpoint here to test
+  storageController.post(todo); // readd for further testing
+
+  // update
+  todo.title = "Take dog to the vet";
+  storageController.post(todo);
 }
 
 export { runTestSet1, runTestSet2 };

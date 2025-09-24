@@ -76,39 +76,22 @@ export default class TodoItem {
 
   /**
    * 
-   * @param {TodoItem} todo 
-   * @returns 
+   * @param {Object} objTodo a plain object representing a TodoItem instance;
+   * a result of JSON.parse on a stringified TodoItem created by JSON.stringify. 
+   * @param {String} uuid the uuid of the TodoItem before serialization, to 
+   * be injected into the revived TodoItem before returning
+   * @returns {TodoItem} 
    */
-  static dehydrate(todo) {
-    return {
-      createdBy: todo.constructor.name,
-      title: todo.title,
-      description: todo.description,
-
-      // properties that require distinct treatment:  
-      dueDateTime: todo._dueDateTime,
-      priority: todo.priority.level,
-      status: todo.status.name,
-    };
-  }
-
-  /**
-   * 
-   * @param {Object} parsedTodo the outcome of JSON.parse on a serialized TodoItem 
-   * @param {String} oldUuid the uuid of the TodoItem before serialization, to 
-   * be applied to the new TodoItem before returning
-   * @returns {TodoItem}
-   */
-  static rehydrate(parsedTodo, oldUuid) {
+  static instanceReviver(objTodo, uuid) {
     const todo = new TodoItem(
-      parsedTodo.title,
-      parsedTodo.description,
-      parsedTodo.dueDateTime,
-      parsedTodo.priority,
+      objTodo.title,
+      objTodo.description,
+      objTodo._dueDateTime,
+      objTodo._priority.level,
     );
-    todo.status = parsedTodo.status;
-    todo.#uuid = oldUuid;
-
+    
+    todo.status = objTodo._status.name;
+    todo.#uuid = uuid;
     return todo;
   }
 }
