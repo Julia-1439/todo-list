@@ -55,7 +55,7 @@ export default class TodoItem {
     this._status = statusUtil.status(name);
   }
 
-  static summary(todo) {
+  static viewSummary(todo) {
     return {
       title: todo.title,
       dueDateTime: todo.dueDateTime,
@@ -64,9 +64,9 @@ export default class TodoItem {
     };
   }
 
-  static details(todo) {
+  static viewDetails(todo) {
     return {
-      ...this.summary(todo),
+      ...this.viewSummary(todo),
       description: todo.description,
     };
   }

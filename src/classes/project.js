@@ -39,7 +39,7 @@ export default class Project {
       title: project.title,
       description: project.description,
       status: project.status,
-      todoList: project.todoList.map(todo => TodoItem.summary(todo)),
+      todoList: project.todoList.map(todo => TodoItem.viewSummary(todo)),
     };
   }
 
