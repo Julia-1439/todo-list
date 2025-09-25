@@ -34,12 +34,12 @@ export default class Project {
     this.todoList.splice(removalIdx, 1);
   }
 
-  static details(project) {
+  static view(project) {
     return {
       title: project.title,
       description: project.description,
       status: project.status,
-      todoList: project.todoList.map(todo => TodoItem.details(todo)),
+      todoList: project.todoList.map(todo => TodoItem.summary(todo)),
     };
   }
 
