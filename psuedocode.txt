@@ -48,3 +48,16 @@ EXPORT:
   post
   delete
   // ? maybe I should work on internalController first. 
+
+
+/* ========================================================================== */
+
+class Project:
+
+static instanceReviver(objProject, uuid)
+  CALL new Project WITH title, description from objProject INTO project
+  SET project.status TO objProject._status.name
+  FOR EACH objTodo in objProject.todoList:
+    CALL TodoItem.instanceReviver(objTodo, objTodo.uuidToInject) INTO todo
+    CALL project.addTodo(todo)
+  RETURN project

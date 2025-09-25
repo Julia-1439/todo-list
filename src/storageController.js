@@ -11,12 +11,8 @@
 // @TODO need to test this module assuming localStorage is not available too.
 
 
-import { TodoItem, Project } from "./barrel.js";
+import { Project } from "./barrel.js";
 
-const classes = [TodoItem, Project];
-const classAccessor = Object.fromEntries(
-  classes.map(cls => [cls.name, cls])
-);
 
 /**
  * 
@@ -45,68 +41,43 @@ function isStorageAvailable() {
   }
 }
 
-/**
- * 
- * @param {Project | TodoItem} item 
- * @returns {String}
- */
-function serialize(item) {
-  item.itemCreator = item.constructor.name;
-  return JSON.stringify(item);
-}
-
-/**
- * 
- * @param {String} value 
- * @returns {Project | TodoItem}
- */
-function deserialize(value, uuidToInject) {
-  const parsedValue = JSON.parse(value);
-  const itemCreator = classAccessor[parsedValue.itemCreator];
-  return itemCreator.instanceReviver(parsedValue, uuidToInject);
-}
 
 /**
  * Create a new entry or Update an existing entry
- * @param {Project | TodoItem } item 
+ * @param {Project} project 
  */
-function post(item) {
-  const key = item.uuid;
-  const value = serialize(item);
+function post(project) {
+  const key = project.uuid;
+  const value = Project.serialize(project);
   localStorage.setItem(key, value); // can throw QuotaExceededError
 }
 
 /**
  * 
  * @param {String} key the uuid of a Project or TodoItem  
- * @returns {Project | TodoItem} false if no such entry exists    
+ * @returns {Project} false if no such entry exists    
  */
-function get(key) {
-  const value = localStorage.getItem(key);
+function get(projectUuid) {
+  const value = localStorage.getItem(projectUuid);
   if (value === null) {
     return false;
   }
 
-  const uuid = key;
-  return deserialize(value, uuid);
+  return Project.deserialize(value);
 }
 
-function remove(key) {
-  localStorage.removeItem(key);
+function remove(projectUuid) {
+  localStorage.removeItem(projectUuid);
 }
 
-/**
- * @TODO how do you even distinguish Projects from TodoItems? 
- */
-function getAllProjects() {
-  const data = [];
+function getAll() {
+  const projects = [];
   for (let i = 0; i < localStorage.length; i++) {
-    data.push(get(localStorage.key(i)));
+    const projectUuid = localStorage.key(i);
+    const project = get(projectUuid);
+    projects.push(project);
   }
-  return data; 
+  return projects; 
 }
 
-// @TODO get should probably be removed. just in here for testing
-export { isStorageAvailable, post, get, remove, getAllProjects };
-
-// recreate the objects via iterating on the prototype, maybe
+export { isStorageAvailable, post, remove, getAll };

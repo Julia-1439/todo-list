@@ -75,38 +75,74 @@ function runTestSet1() {
 }
 
 function runTestSet2() {
-  const todo = new TodoItem(
-    "Buy groceries",
-    "Go to the Shop. Remember to bring a bag to avoid paying the fee",
-    new Date("2017-06-01T08:30"),
-    "p1",
-  );
-  console.log("Todo created:", todo);
-
   // check localStorage availability
   console.log(
     "localStorage available:",
     storageController.isStorageAvailable()
   );
 
-  // post
-  storageController.post(todo);
-
-  // get
-  const retrievalUuid = todo.uuid;
+  // test with Project 
+  const project = new Project(
+    "Cook a goulash",
+    "This is my first attempt at cooking an American goulash! I'm so excited."
+  );
+  const todo1 = new TodoItem(
+    "Buy groceries",
+    "Go to the Shop. Remember to bring a bag to avoid paying the fee",
+    new Date("2017-06-01T08:30"),
+    "p1",
+  );
+  const todo2 = new TodoItem(
+    "Clean the floor",
+    "Remember to use the broom",
+    new Date("2018-06-01T08:30"),
+    "p2",
+  );
+  project.addTodo(todo1);
+  project.addTodo(todo2);
   console.log(
-    "Retrieved item:",
-    storageController.get(retrievalUuid)
+    "Project created:",
+    project,
+    project.status
   );
 
-  // remove
-  const removalUuid = todo.uuid;
-  storageController.remove(removalUuid); // set a breakpoint here to test
-  storageController.post(todo); // readd for further testing
+  // post
+  storageController.post(project);
+
+  // get
+  const projectKey = project.uuid;
+  console.log(
+    "Retrieved:",
+    // storageController.get(projectKey)
+  );
 
   // update
-  todo.title = "Take dog to the vet";
-  storageController.post(todo);
+  project.status = "completed";
+  storageController.post(project);
+  console.log(
+    "Retrieved updated project:",
+    // storageController.get(projectKey)
+  );  
+
+  // remove
+  // storageController.remove(projectKey); // use a breakpoint to test this
+
+  // get with a non-existent key
+  console.log(
+    "Get with a non-existent key:",
+    // storageController.get("foo")
+  );
+
+  // get all projects
+  const project2 = new Project("project 2");
+  const project3 = new Project("project 3");
+  storageController.post(project2);
+  storageController.post(project3);
+  console.log(
+    "All projects:",
+    storageController.getAll()
+  );
+  
 }
 
 export { runTestSet1, runTestSet2 };

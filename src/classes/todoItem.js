@@ -75,23 +75,23 @@ export default class TodoItem {
   get uuid() { return this.#uuid; }
 
   /**
-   * 
-   * @param {Object} objTodo a plain object representing a TodoItem instance;
-   * a result of JSON.parse on a stringified TodoItem created by JSON.stringify. 
-   * @param {String} uuid the uuid of the TodoItem before serialization, to 
-   * be injected into the revived TodoItem before returning
-   * @returns {TodoItem} 
+   * A utility function used to revive a TodoItem instance, for use in 
+   * deserializing a Project instance from storage,
+   * @param {Object} objTodo a plain object representing a TodoItem instance,
+   * containing an additional property "uuidToInject", which is applied to the
+   * new TodoItem to persist the uuid originally stored.  
+   * @returns {TodoItem} having its uuid retained
    */
-  static instanceReviver(objTodo, uuid) {
+  static revive(objTodo) {
     const todo = new TodoItem(
       objTodo.title,
       objTodo.description,
       objTodo._dueDateTime,
       objTodo._priority.level,
     );
-    
     todo.status = objTodo._status.name;
-    todo.#uuid = uuid;
+
+    todo.#uuid = objTodo.uuidToInject;
     return todo;
   }
 }
