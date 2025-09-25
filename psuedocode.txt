@@ -1,3 +1,6 @@
+/* ========================================================================== */
+/* Storage Controller */
+/* ========================================================================== */
 IMPORT { TodoItem } from "todoItem.js"
 IMPORT { Project } from "project.js"
 
@@ -51,8 +54,9 @@ EXPORT:
 
 
 /* ========================================================================== */
+/* class Project: */
+/* ========================================================================== */
 
-class Project:
 
 static instanceReviver(objProject, uuid)
   CALL new Project WITH title, description from objProject INTO project
@@ -61,3 +65,121 @@ static instanceReviver(objProject, uuid)
     CALL TodoItem.instanceReviver(objTodo, objTodo.uuidToInject) INTO todo
     CALL project.addTodo(todo)
   RETURN project
+
+/* ========================================================================== */
+/* Internal Controller */
+/* ========================================================================== */
+
+Modeled off Todoist
+This module offers an interface for the user to crud projects & todos. For each action taken, the corresponding action is done on localStorage via storageController. 
+
+IMPORT {Project, TodoItem, storageController}
+EXPORT {initialize, all crud operations for Project and TodoItem}
+
+SET private const _projects TO empty array 
+
+private func restoreFromStorage(): restores _projects by calling storageController
+  CALL storageController.getAll() INTO projectsFromStorage
+  CALL projectsFromStorage.forEach((project) => _projects.push(project))
+
+private func createDefaultProject(): create a 'Home' project and put two sample todos in there
+  CALL createProject WITH {title: "Home"}
+  SET project TO _projects[0] 
+  CALL createTodo WITH project.uuid and {
+    title: "Buy groceries", 
+    description: "Go to the big store to buy some big groceries", 
+    dueDateTime: new Date(4pm tomorrow), 
+    priorityLevel: "p2"
+  }
+  CALL createTodo WITH project.uuid and {
+    title: "Take a relaxing bath", 
+    description: "Use bubbles!", 
+    dueDateTime: new Date(7pm next Friday), 
+    priorityLevel: "p3"
+  }
+
+private func viewAllProjects(): returns an array of the projects with title strings only. for usage in the sidebar to display all projects
+    RETURN _projects.map(project => project.title)
+
+func initialize(): called on page load to prepare the space (the SR) - restore projects from storage; if no projects exist or localStorage not available, create a default one; return the project names for the sidebar
+    CALL restoreFromStorage()
+    IF _projects.length === 0:
+      CALL createDefaultProject()
+    RETURN viewAllProjects()
+
+// @param projectMetadata {Object} see createTodo for why it's like this
+C func createProject(projectMetadata):
+    SET {title, description} USING destructuring syntax on projectMetadata
+    CALL new Project WITH title, description INTO project
+    CALL _projects.push WITH project
+
+    CALL storageController.post WITH project
+
+R func viewProject(uuid): brings up a full-page view of the project including its todos
+    CALL _projects.find WITH uuid INTO project
+    CALL Project.view(project) INTO returnObj
+    RETURN returnObj
+
+// @param projectMetadata {Object} see editTodoMetadata for why it's like this
+U func editProjectMetadata(uuid, projectMetadata) 
+    CALL _projects.find WITH uuid INTO project
+
+    SET {title, description} USING destructuring syntax on projectMetadata
+    FOR EACH defined field:
+      SET project.field TO field
+
+    CALL storageController.post WITH project
+
+U func toggleStatusProject(uuid)
+    CALL _projects.find WITH uuid INTO project
+    TOGGLE project.status TO "completed" or "incomplete" 
+    CALL storageController.post WITH project
+
+D func deleteProject(uuid)
+    CALL _projects.findIndex WITH uuid INTO removalIdx
+    CALL _projects.splice WITH removalIdx 
+    CALL storageController.remove WITH uuid
+
+@param todoMetadata {Object} object holding arguments for the TodoItem constructor. do it this way to avoid the display controller needing to have "knowledge" of what arguments are submitted; "why should displayController have to change if I change Project?". instead, we just need to modify the intake form and the call to new TodoItem; rather than intake form, the argument list in calling addTodo, and the addTodo parameter list definition. this implementation will use the Object.fromEntries(FormData.entries()) to create an object containing the arguments
+C func addTodo(projectUuid, todoMetadata)
+    CALL _projects.find WITH projectUuid INTO project
+
+    SET {title, description, dueDateTime, priorityLevel} USING destructuring syntax on todoMetadata
+    CALL new TodoItem WITH title, description, dueDateTime, priorityLevel INTO todo
+    CALL project.addTodo WITH todo
+
+    CALL storageController.post WITH project
+    
+// note that the summary displaying is handled by viewProject
+R func expandTodo(projectUuid, todoUuid): additionally gives the description
+    CALL _projects.find WITH projectUuid INTO project
+    CALL project.todoList.find WITH todoUuid INTO todo
+
+    RETURN TodoItem.details(todo)
+
+// @param data {Object} object holding arguments, probably from a FormData object if editing metadata or , similar to addTodo
+U func editTodoMetadata(projectUuid, todoUuid, todoMetadata):
+    CALL _projects.find WITH projectUuid INTO project
+    CALL project.todoList.find WITH todoUuid INTO todo
+
+    SET {title, description, dueDateTime, priorityLevel} USING destructuring syntax on todoMetadata
+    FOR EACH defined field:
+      SET todo.field TO field
+    
+    CALL storageController.post WITH project
+
+U func toggleStatusTodo(projectUuid, todoUuid)
+    CALL _projects.find WITH projectUuid INTO project
+    CALL project.todoList.find WITH todoUuid INTO todo
+
+    TOGGLE todo.status TO "completed" or "incomplete" 
+
+    CALL storageController.post WITH project
+
+
+D func deleteTodo(projectUuid, todoUuid)
+    CALL _projects.find WITH projectUuid INTO project
+
+    CALL project.removeTodo WITH todoUuid
+    
+    CALL storageController.post WITH project
