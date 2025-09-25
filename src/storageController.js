@@ -1,8 +1,6 @@
 /**
  * Responsibility: Uses the localStorage browser functionality to persist data 
  * across sessions on this device. 
- * How: Receives instances of Project, TodoItem, ChecklistItem to serialize them
- * into localStorage. Deserializes them and recreates the class instances. 
  * 
  * Browser Compatibility: QuotaExceededError is still experimental feature at
  * time of writing. 
@@ -47,6 +45,10 @@ function isStorageAvailable() {
  * @param {Project} project 
  */
 function post(project) {
+  if (!isStorageAvailable()) {
+    throw Error("localStorage is not available");
+  }
+
   const key = project.uuid;
   const value = Project.serialize(project);
   localStorage.setItem(key, value); // can throw QuotaExceededError
@@ -58,6 +60,10 @@ function post(project) {
  * @returns {Project} false if no such entry exists    
  */
 function get(projectUuid) {
+  if (!isStorageAvailable()) {
+    throw Error("localStorage is not available");
+  }
+
   const value = localStorage.getItem(projectUuid);
   if (value === null) {
     return false;
@@ -67,10 +73,18 @@ function get(projectUuid) {
 }
 
 function remove(projectUuid) {
+  if (!isStorageAvailable()) {
+    throw Error("localStorage is not available");
+  }
+
   localStorage.removeItem(projectUuid);
 }
 
 function getAll() {
+  if (!isStorageAvailable()) {
+    throw Error("localStorage is not available");
+  }
+
   const projects = [];
   for (let i = 0; i < localStorage.length; i++) {
     const projectUuid = localStorage.key(i);
