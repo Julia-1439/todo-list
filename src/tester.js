@@ -142,6 +142,11 @@ function runTestSet2() {
     "All projects:",
     storageController.getAll()
   );
+
+  console.log(
+    "A todo's details:",
+    TodoItem.details(project.todoList[0])
+  );
   
 }
 

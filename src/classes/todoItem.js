@@ -65,11 +65,10 @@ export default class TodoItem {
   }
 
   static details(todo) {
-    return Object.assign(
-      {},
-      this.summary(todo),
-      {description: todo.description, }
-    );
+    return {
+      ...this.summary(todo),
+      description: todo.description,
+    };
   }
 
   get uuid() { return this.#uuid; }
