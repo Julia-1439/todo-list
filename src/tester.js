@@ -3,7 +3,6 @@ import { TodoItem } from "./barrel.js";
 
 import { storageController } from "./barrel.js";
 import { internalController } from "./barrel.js";
-import { restoreFromStorage } from "./internalController.js";
 
 // bare-metal work on Project & TodoItem 
 function runTestSet1() {
