@@ -44,17 +44,22 @@ export default class Project {
   }
 
   /**
-   * A utility function to serialize a project & its todos into storage
+   * A utility function to serialize a project & its todos into storage. 
+   * The original project & its todos are left unchanged. 
    * @param {Project} project 
    * @returns {String} stringified project, with additional property 
-   * "uuidToInject" on the project itself and its TodoItems, to be reapplied
-   * on deserialization. 
+   * "uuidToInject" the highest level and on its stringified TodoItems, to be 
+   * reapplied at deserialization. 
    */
   static serialize(project) {
-    project.uuidToInject = project.uuid;
-    return JSON.stringify(project, (_, val) => {
-      if (val instanceof TodoItem)
-        val.uuidToInject = val.uuid;
+    const _project = Object.assign(
+      {}, project, {uuidToInject: project.uuid}
+    );
+    return JSON.stringify(_project, (_, val) => {
+      if (val instanceof TodoItem) {
+        const _todo = Object.assign({}, val, {uuidToInject: val.uuid});
+        return _todo;
+      }
       return val;
     });
   }
