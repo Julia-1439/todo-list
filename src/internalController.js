@@ -82,6 +82,10 @@ function editProjectMetadata(uuid, metadata) {
   storageController.post(project);
 }
 
+/**
+ * 
+ * @param {String} uuid 
+ */
 function removeProject(uuid) {
   const removalIdx = _projects.findIndex((project) => project.uuid === uuid);
   _projects.splice(removalIdx);
@@ -111,6 +115,19 @@ function createTodo(projectUuid, data) {
 }
 
 /**
+ * Expand a todo to view more of its information
+ * @param {String} projectUuid 
+ * @param {String} todoUuid 
+ * @returns {Object} 
+ */
+function expandTodo(projectUuid, todoUuid) {
+  const project = getProject(projectUuid)
+  const todo = getTodo(project, todoUuid);
+
+  return TodoItem.viewDetails(todo);
+}
+
+/**
  * Edit a todo
  * @param {String} projectUuid id of the parent project
  * @param {String} todoUuid id of the TodoItem to be edited
@@ -136,6 +153,18 @@ function editTodo(projectUuid, todoUuid, data) {
   storageController.post(project);
 }
 
+/**
+ * 
+ * @param {String} projectUuid 
+ * @param {String} todoUuid 
+ */
+function removeTodo(projectUuid, todoUuid) {
+  const project = getProject(projectUuid);
+  project.removeTodo(todoUuid);
+
+  storageController.post(project);
+}
+
 // @todo exports are not final until done with testing
 export { 
   _projects, 
@@ -145,5 +174,7 @@ export {
   editProjectMetadata,
   removeProject,
   createTodo,
+  expandTodo,
   editTodo,
+  removeTodo,
 };

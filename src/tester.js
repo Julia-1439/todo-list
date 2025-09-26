@@ -240,8 +240,22 @@ function runTestSet3() {
     workingTodo
   );
 
+  // R todoitem
+  console.log(
+    "Expanding a todo:",
+    ic.expandTodo(workingProjUuid, workingTodoUuid)
+  );
+
+  // D todoitem
+  ic.removeTodo(workingProjUuid, workingTodoUuid); // set a breakpoint here
+  console.log(
+    "Removed a todo:",
+    workingProject 
+  );
+
 }
-// project1.addTodo(new TodoItem("Buy a new hose", "Get one at the hardware store.", new Date(), "p1"));
-// project1.addTodo(new TodoItem("Buy gardening equipment", "Get them at the hardware store.", new Date(), "p2"));
+
+
+
 
 export { runTestSet1, runTestSet2, runTestSet3 };
