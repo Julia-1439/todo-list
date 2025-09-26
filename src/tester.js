@@ -256,8 +256,9 @@ function runTestSet3() {
 
 }
 
-// internalController: restore from storage & create default project
-// preconditions: must have projects in localStorage, else nothing happens
+// internalController: restore from storage 
+// preconditions: must have projects in localStorage, else nothing happens.
+// create some with createProjectsHelper()
 function runTestSet4() {
   const ic = internalController;
   const sc = storageController;
@@ -337,18 +338,32 @@ function createProjectsHelper() {
     description: null,
     priority: "p3",
   });
-
-  // project 4
-  setTimeout(() => {
-    ic.createDefaultProject();
-  }, 10);
 }
 
+// internalController: initialize
+function runTestSet5() {
+  const ic = internalController;
+
+  // run createProjectsHelper to get some projects in to test
+  console.log(
+    "Page initialized:",
+    ic.initialize(),
+  );
+
+  // test creating a default project: first removing all projects
+  localStorage.clear();
+  ic._projects.length = 0;
+  console.log(
+    "Page initialized with default project:",
+    ic.initialize(),
+  );
+}
 
 export { 
   runTestSet1, 
   runTestSet2, 
   runTestSet3, 
   runTestSet4,
-  createProjectsHelper 
+  createProjectsHelper,
+  runTestSet5,
 };

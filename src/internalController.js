@@ -17,7 +17,9 @@ function restoreFromStorage() {
   projectsFromStorage.forEach((project) => _projects.push(project));
 }
 
-// ...
+/**
+ * Pre condition: there are no projects in array _projects
+ */
 function createDefaultProject() {
   createProject({
     title: "Home 🏡",
@@ -46,7 +48,29 @@ function createDefaultProject() {
     })(), 
     priorityLvl: "p4",
   });
+}
 
+function viewAllProjects() {
+  return _projects.map(project => project.title);
+}
+
+/**
+ * Preconditions: should only called once on page load. 
+ * Postconditions: the _projects array is populated with projects from storage.
+ * if there are none, a default project is created. 
+ * @returns {Object} containing a list of project titles and a view of the
+ * most recently created project
+ */
+function initialize() {
+  restoreFromStorage();
+
+  if (_projects.length === 0) 
+    createDefaultProject();
+
+  return Object.assign(
+    {projectTitles: viewAllProjects()},
+    {latestProject: viewProject(_projects[0].uuid)}
+  );
 }
 
 /* ========================================================================== */
@@ -205,6 +229,7 @@ function removeTodo(projectUuid, todoUuid) {
 export { 
   _projects, 
   restoreFromStorage, 
+  initialize,
   createDefaultProject,
   createProject, 
   viewProject,
