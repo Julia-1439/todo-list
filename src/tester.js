@@ -205,7 +205,7 @@ function runTestSet3() {
   const destinedForDoomProject = ic._projects[1];
 
   const removalUuid = destinedForDoomProject.uuid;
-  ic.deleteProject(removalUuid); // set breakpoint here to test
+  ic.removeProject(removalUuid); // set breakpoint here to test
   console.log(
     "Project deleted from _projects:",
     ic._projects

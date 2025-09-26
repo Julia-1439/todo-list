@@ -82,7 +82,7 @@ function editProjectMetadata(uuid, metadata) {
   storageController.post(project);
 }
 
-function deleteProject(uuid) {
+function removeProject(uuid) {
   const removalIdx = _projects.findIndex((project) => project.uuid === uuid);
   _projects.splice(removalIdx);
 
@@ -143,7 +143,7 @@ export {
   createProject, 
   viewProject,
   editProjectMetadata,
-  deleteProject,
+  removeProject,
   createTodo,
   editTodo,
 };
