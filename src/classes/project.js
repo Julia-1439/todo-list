@@ -52,13 +52,15 @@ export default class Project {
    * reapplied at deserialization. 
    */
   static serialize(project) {
-    const _project = Object.assign(
-      {}, project, {uuidToInject: project.uuid}
-    );
-    return JSON.stringify(_project, (_, val) => {
-      if (val instanceof TodoItem) {
-        const _todo = Object.assign({}, val, {uuidToInject: val.uuid});
-        return _todo;
+    // create a deep copy of 'project' and expose its uuid for later deserialization
+    const projectClone = Object.assign({}, project);
+    Object.assign(projectClone, {uuidToInject: project.uuid});
+
+    return JSON.stringify(projectClone, (_, val) => {
+      if (val instanceof TodoItem) { // similarly, expose the uuids of each todo
+        const todoClone = Object.assign({}, val);
+        Object.assign(todoClone, {uuidToInject: val.uuid});
+        return todoClone;
       }
       return val;
     });
