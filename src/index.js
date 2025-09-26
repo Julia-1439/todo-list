@@ -6,5 +6,7 @@ import {
   createProjectsHelper 
 } from "./tester.js";
 
-createProjectsHelper();
-runTestSet4();
+// createProjectsHelper(); // comment out to test persistence of old uuids
+setTimeout(() => {
+  runTestSet4();
+}, 20);

@@ -337,6 +337,11 @@ function createProjectsHelper() {
     description: null,
     priority: "p3",
   });
+
+  // project 4
+  setTimeout(() => {
+    ic.createDefaultProject();
+  }, 10);
 }
 
 

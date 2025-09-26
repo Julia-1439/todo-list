@@ -12,6 +12,36 @@ function restoreFromStorage() {
 }
 
 // ...
+function createDefaultProject() {
+  createProject({
+    title: "Home 🏡",
+    description: "Here's a place to help you get started! Add todos and projects to your liking.",
+  });
+  const projectUuid = _projects.at(-1).uuid;
+  createTodo(projectUuid, {
+    title: "Buy groceries after work", 
+    description: "Make sure to get vegetables!", 
+    dueDateTime: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      d.setHours(17, 0, 0, 0);
+      return d;
+    })(), 
+    priorityLevel: "p3",
+  });
+  createTodo(projectUuid, {
+    title: "Practice meditation for 10 minutes", 
+    description: "A calm soul is a restful soul, or something.", 
+    dueDateTime: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() + 2);
+      d.setHours(8, 0, 0, 0);
+      return d;
+    })(), 
+    priorityLevel: "p4",
+  });
+
+}
 
 /* ========================================================================== */
 /* Helpers */
@@ -169,6 +199,7 @@ function removeTodo(projectUuid, todoUuid) {
 export { 
   _projects, 
   restoreFromStorage, 
+  createDefaultProject,
   createProject, 
   viewProject,
   editProjectMetadata,
