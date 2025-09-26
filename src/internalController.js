@@ -199,6 +199,7 @@ function editTodo(projectUuid, todoUuid, data) {
 
   const {title, description, dueDateTime, priority, status,} = data;
 
+  //@TODO there is probably a cleaner way to do this. maybe instead of indiv variables, put them all in an object and iterate that. 
   if (title !== undefined)
     todo.title = title;
   if (description !== undefined)
