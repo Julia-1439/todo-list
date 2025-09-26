@@ -132,11 +132,11 @@ function editProjectMetadata(uuid, metadata) {
   const project = getProject(uuid);
   const {title, description, status,} = metadata;
 
-  if (title)
+  if (title !== undefined)
     project.title = title;
-  if (description)
+  if (description !== undefined)
     project.description = description;
-  if (status)
+  if (status !== undefined)
     project.status = status;
 
   storageController.post(project);
@@ -199,15 +199,15 @@ function editTodo(projectUuid, todoUuid, data) {
 
   const {title, description, dueDateTime, priority, status,} = data;
 
-  if (title)
+  if (title !== undefined)
     todo.title = title;
-  if (description)
+  if (description !== undefined)
     todo.description = description;
-  if (dueDateTime)
+  if (dueDateTime !== undefined)
     todo.dueDateTime = dueDateTime;
-  if (priority)
+  if (priority !== undefined)
     todo.priority = priority;
-  if (status)
+  if (status !== undefined)
     todo.status = status;
 
   storageController.post(project);

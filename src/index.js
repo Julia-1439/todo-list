@@ -26,6 +26,6 @@ ic.editTodo(homeProjUuid,
 ic.editTodo(homeProjUuid,
   "38fa18e7-1ad2-46c0-bd64-d5a466d715bd",
   {
-    priority: "p1",
+    priority: null,
   }
 );
