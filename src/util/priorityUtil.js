@@ -1,3 +1,10 @@
+function prioNull() {
+  return {
+    level: null,
+    color: "#00000000",
+  }
+}
+
 function prio4() {
   return {
     level: "p4",
@@ -37,5 +44,6 @@ export function priority(priorityLvl) {
     case "p3": return prio3();
     case "p2": return prio2();
     case "p1": return prio1();
+    default: return prioNull();
   }
 }

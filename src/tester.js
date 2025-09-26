@@ -330,7 +330,7 @@ function createProjectsHelper() {
   ic.createTodo(p3.uuid, {
     title: "Go to the bed",
     description: "This step is extremely important.",
-    priority: "p1",
+    // test without a priority
   });
   ic.createTodo(p3.uuid, {
     title: "Sleep",

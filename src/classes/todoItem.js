@@ -37,10 +37,7 @@ export default class TodoItem {
   }
 
   set priority(priorityLvl) {
-    if (priorityLvl !== undefined)
-      this._priority = priorityUtil.priority(priorityLvl);
-    else
-      this._priority = undefined;
+    this._priority = priorityUtil.priority(priorityLvl);
   }
 
   get priority() {
