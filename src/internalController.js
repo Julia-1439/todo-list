@@ -6,8 +6,14 @@ const _projects = [];
 /* Initialization: restoring from storage & default project */
 /* ========================================================================== */
 
+/**
+ * Pre condition: array _projects is empty on page load
+ * Post condition: array _projects is populated with the projects from storage
+ * in the reverse order they were created. 
+ */
 function restoreFromStorage() {
   const projectsFromStorage = storageController.getAll();
+  projectsFromStorage.sort((p1, p2) => p2.creationTime - p1.creationTime);
   projectsFromStorage.forEach((project) => _projects.push(project));
 }
 

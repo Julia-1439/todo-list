@@ -74,7 +74,7 @@ export default class TodoItem {
    * A utility function used to revive a TodoItem instance, for use in 
    * deserializing a Project instance from storage,
    * @param {Object} objTodo a plain object representing a TodoItem instance,
-   * containing an additional property "uuidToInject", which is applied to the
+   * containing an additional property "exposedUuid", which is applied to the
    * new TodoItem to persist the uuid originally stored.  
    * @returns {TodoItem} having its uuid retained
    */
@@ -87,7 +87,7 @@ export default class TodoItem {
     );
     todo.status = objTodo._status.name;
 
-    todo.#uuid = objTodo.uuidToInject;
+    todo.#uuid = objTodo.exposedUuid;
     return todo;
   }
 }

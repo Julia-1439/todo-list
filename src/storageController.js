@@ -80,6 +80,12 @@ function remove(projectUuid) {
   localStorage.removeItem(projectUuid);
 }
 
+/**
+ * 
+ * @returns {Array{Project}} all projects created but in no particular order 
+ * (the localStorage.key function cannot be relied on to retain the order in 
+ * which projects were added; see MDN docs.)
+ */
 function getAll() {
   if (!isStorageAvailable()) {
     throw Error("localStorage is not available");
