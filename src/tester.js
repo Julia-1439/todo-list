@@ -211,6 +211,34 @@ function runTestSet3() {
     ic._projects
   );
   
+  // C todoitem
+  ic.createProject({
+    title: "Dummy project",
+  });
+  const workingProjUuid = workingUuid;
+  ic.createTodo(workingProjUuid, {
+    title: "Take a relaxing bath",
+    description: "Use bubbles!",
+    dueDateTime: new Date("1995-12-17T03:24:00"),
+    priority: "p2",
+  });
+  console.log(
+    "Todo created: (make sure it's posted to storage too)",
+    workingProject
+  );
+
+  // U todoitem
+  const workingTodo = workingProject.todoList[1];
+  const workingTodoUuid = workingTodo.uuid;
+  ic.editTodo(workingProjUuid, workingTodoUuid, {
+    description: "Use LOTS of bubbles!",
+    priority: "p1",
+    status: "completed",
+  });
+  console.log(
+    "Todo edited: (make sure it's posted to storage too)",
+    workingTodo
+  );
 
 }
 // project1.addTodo(new TodoItem("Buy a new hose", "Get one at the hardware store.", new Date(), "p1"));
