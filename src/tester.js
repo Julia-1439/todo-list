@@ -4,6 +4,7 @@ import { TodoItem } from "./barrel.js";
 import { storageController } from "./barrel.js";
 import { internalController } from "./barrel.js";
 
+// bare-metal work on Project & TodoItem 
 function runTestSet1() {
   // create a todo
   const todo = new TodoItem(
@@ -74,6 +75,7 @@ function runTestSet1() {
   console.log(rehydratedTodo);
 }
 
+// storageController
 function runTestSet2() {
   // check localStorage availability
   console.log(
@@ -150,4 +152,68 @@ function runTestSet2() {
   
 }
 
-export { runTestSet1, runTestSet2 };
+// internalController
+function runTestSet3() {
+  localStorage.clear(); // ensure clean slate for testing
+  const ic = internalController;
+  const sc = storageController;
+
+  // C project  
+  ic.createProject({
+    title: "Get a nice lawn", 
+    description: "Green as can be!",
+  });
+  console.log(
+    "Project created in _projects array: (verify it's in localStorage as well)",
+    ic._projects,
+  );
+  console.log(
+    "The project created:",
+    ic._projects[0]
+  );
+
+  let workingProject = ic._projects[0];
+  let workingUuid = workingProject.uuid;
+
+  // R project
+  console.log(
+    "Viewing project:",
+    ic.viewProject(workingUuid)
+  );
+
+  // U project
+  workingProject.addTodo(new TodoItem("Test foo"));
+  ic.editProjectMetadata(workingUuid, {
+    foobar: "This property should not be posted",
+    todoList: "The todos should not be modified!",
+    status: "completed",
+    title: null,
+  });
+  console.log(
+    "Edited project metadata:",
+    workingProject
+  );
+
+  // D project
+  ic.createProject({
+    title: "This project will be deleted!",
+  });
+  console.log(
+    "New project created in _projects:",
+    ic._projects
+  );
+  const destinedForDoomProject = ic._projects[1];
+
+  const removalUuid = destinedForDoomProject.uuid;
+  ic.deleteProject(removalUuid); // set breakpoint here to test
+  console.log(
+    "Project deleted from _projects:",
+    ic._projects
+  );
+  
+
+}
+// project1.addTodo(new TodoItem("Buy a new hose", "Get one at the hardware store.", new Date(), "p1"));
+// project1.addTodo(new TodoItem("Buy gardening equipment", "Get them at the hardware store.", new Date(), "p2"));
+
+export { runTestSet1, runTestSet2, runTestSet3 };
