@@ -46,7 +46,8 @@ function isStorageAvailable() {
  */
 function post(project) {
   if (!isStorageAvailable()) {
-    throw Error("localStorage is not available");
+    console.error("localStorage is not available");
+    return false;
   }
 
   const key = project.uuid;
@@ -61,7 +62,8 @@ function post(project) {
  */
 function get(projectUuid) {
   if (!isStorageAvailable()) {
-    throw Error("localStorage is not available");
+    console.error("localStorage is not available");
+    return false;
   }
 
   const value = localStorage.getItem(projectUuid);
@@ -74,7 +76,8 @@ function get(projectUuid) {
 
 function remove(projectUuid) {
   if (!isStorageAvailable()) {
-    throw Error("localStorage is not available");
+    console.error("localStorage is not available");
+    return false;
   }
 
   localStorage.removeItem(projectUuid);
@@ -88,7 +91,8 @@ function remove(projectUuid) {
  */
 function getAll() {
   if (!isStorageAvailable()) {
-    throw Error("localStorage is not available");
+    console.error("localStorage is not available");
+    return false;
   }
 
   const projects = [];
