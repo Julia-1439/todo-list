@@ -57,7 +57,7 @@ function post(project) {
 /**
  * 
  * @param {String} key the uuid of a Project or TodoItem  
- * @returns {Project} false if no such entry exists    
+ * @returns {Project} null if no such entry exists    
  */
 function get(projectUuid) {
   if (!isStorageAvailable()) {
@@ -66,7 +66,7 @@ function get(projectUuid) {
 
   const value = localStorage.getItem(projectUuid);
   if (value === null) {
-    return false;
+    return null;
   }
 
   return Project.deserialize(value);
@@ -95,7 +95,8 @@ function getAll() {
   for (let i = 0; i < localStorage.length; i++) {
     const projectUuid = localStorage.key(i);
     const project = get(projectUuid);
-    projects.push(project);
+    if (project !== null)
+      projects.push(project);
   }
   return projects; 
 }
