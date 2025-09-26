@@ -3,6 +3,7 @@ import { TodoItem } from "./barrel.js";
 
 import { storageController } from "./barrel.js";
 import { internalController } from "./barrel.js";
+import { restoreFromStorage } from "./internalController.js";
 
 // bare-metal work on Project & TodoItem 
 function runTestSet1() {
@@ -152,7 +153,7 @@ function runTestSet2() {
   
 }
 
-// internalController
+// internalController: crud operations on project & todos
 function runTestSet3() {
   localStorage.clear(); // ensure clean slate for testing
   const ic = internalController;
@@ -255,7 +256,94 @@ function runTestSet3() {
 
 }
 
+// internalController: restore from storage & create default project
+// preconditions: must have projects in localStorage, else nothing happens
+function runTestSet4() {
+  const ic = internalController;
+  const sc = storageController;
+
+  ic._projects.length = 0; // simulate a page reloading
+
+  ic.restoreFromStorage();
+  console.log(
+    "Restored projects:",
+    ic._projects
+  );
+}
+
+function createProjectsHelper() {
+  localStorage.clear(); // ensure clean slate for testing
+  const ic = internalController;
+  const sc = storageController;
+
+  // project 1
+  ic.createProject({
+    title: "Get a nice LAWN", 
+    description: "Green as can be!",
+  });
+  const p1 = ic._projects[0];
+  ic.createTodo(p1.uuid, {
+    title: "Get a hose",
+    description: "The hardware store sells them!",
+    dueDateTime: new Date("1995-12-17T03:24:00"),
+    priority: "p2",
+  });
+  ic.editTodo(p1.uuid, p1.todoList[0].uuid, {
+    status: "completed",
+    priority: "p2",
+  }); // mark as done to make sure completion gets injected correctly
+  ic.createTodo(p1.uuid, {
+    title: "Water the lawn",
+    description: null,
+    dueDateTime: new Date("1995-12-17T03:24:00"),
+    priority: "p1",
+  });
+  ic.editProjectMetadata(p1.uuid, {
+    status: "completed",
+  }); // mark as done to make sure completion gets injected correctly
+  
+
+  // project 2
+  ic.createProject({
+    title: "Get a nice PRAWN", 
+    description: "Cooked as can be!",
+  });
+  const p2 = ic._projects[1];
+  ic.createTodo(p2.uuid, {
+    title: "Buy a prawn at the supermarket",
+    description: null, // test with null
+    dueDateTime: new Date("1995-12-17T03:24:00"),
+    priority: "p1",
+  });
+  ic.createTodo(p2.uuid, {
+    title: "Cook the prawn",
+    dueDateTime: new Date("1995-12-17T03:24:00"),
+    priority: "p3",
+  });
+
+  // project 3
+  ic.createProject({
+    title: "Get a nice YAWN", 
+    description: "Sleepy as can be!",
+  });
+  const p3 = ic._projects[2];
+  ic.createTodo(p3.uuid, {
+    title: "Go to the bed",
+    description: "This step is extremely important.",
+    priority: "p1",
+  });
+  ic.createTodo(p3.uuid, {
+    title: "Sleep",
+    description: null,
+    priority: "p3",
+  });
+}
 
 
-
-export { runTestSet1, runTestSet2, runTestSet3 };
+export { 
+  runTestSet1, 
+  runTestSet2, 
+  runTestSet3, 
+  runTestSet4,
+  createProjectsHelper 
+};

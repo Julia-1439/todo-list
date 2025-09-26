@@ -1,3 +1,10 @@
-import { runTestSet1, runTestSet2, runTestSet3 } from "./tester.js";
+import { 
+  runTestSet1, 
+  runTestSet2, 
+  runTestSet3, 
+  runTestSet4,
+  createProjectsHelper 
+} from "./tester.js";
 
-runTestSet3();
+createProjectsHelper();
+runTestSet4();
