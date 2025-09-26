@@ -51,9 +51,8 @@ function viewProject(uuid) {
 }
 
 /**
- * Edit the parts of a project *not* concerning its todoList or status 
- * properties. 'todoList' of a project is modified with TodoItem-specific
- * crud functions. And 'status' 
+ * Edit the parts of a project *not* concerning its 'todoList' property. 
+ * 'todoList' of a project is modified with TodoItem-specific crud functions.  
  * @param {String} uuid Id of the project user requested to edit 
  * @param {Object} metadata Object containing the adjusted values, with the 
  * property names as those in the Project constructor parameter list. 
