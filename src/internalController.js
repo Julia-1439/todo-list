@@ -225,16 +225,17 @@ function removeTodo(projectUuid, todoUuid) {
   storageController.post(project);
 }
 
-// @todo exports are not final until done with testing
 export { 
-  _projects, 
-  restoreFromStorage, 
+  // For page load
   initialize,
-  createDefaultProject,
+
+  // CRUD for projects
   createProject, 
   viewProject,
   editProjectMetadata,
   removeProject,
+
+  // CRUD for todos
   createTodo,
   expandTodo,
   editTodo,

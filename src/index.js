@@ -7,4 +7,3 @@ import {
   runTestSet5, 
 } from "./tester.js";
 
-runTestSet5();
