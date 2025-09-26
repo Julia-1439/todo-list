@@ -14,11 +14,12 @@ export default class TodoItem {
    * @param {Date | String} dueDateTime 
    * @param {String} priorityLvl 
    */
-  constructor(title, description, dueDateTime, priorityLvl) {
+  constructor(title, description, dueDateTime, priority) {
     this.title = title;
     this.description = description;
     this.dueDateTime = dueDateTime;
-    this.priority = priorityLvl;
+    this.priority = priority;
+
     this.status = "incomplete";
   }
 

@@ -35,7 +35,7 @@ function createDefaultProject() {
       d.setHours(17, 0, 0, 0);
       return d;
     })(), 
-    priorityLvl: "p3",
+    priority: "p3",
   });
   createTodo(projectUuid, {
     title: "Practice meditation for 10 minutes", 
@@ -46,7 +46,7 @@ function createDefaultProject() {
       d.setHours(8, 0, 0, 0);
       return d;
     })(), 
-    priorityLvl: "p4",
+    priority: "p4",
   });
 }
 
@@ -126,7 +126,7 @@ function viewProject(uuid) {
  * 'todoList' of a project is modified with TodoItem-specific crud functions.  
  * @param {String} uuid Id of the project user requested to edit 
  * @param {Object} metadata Object containing the adjusted values, with the 
- * property names as those in the Project constructor parameter list. 
+ * property names as those set in the Project constructor. 
  */
 function editProjectMetadata(uuid, metadata) {
   const project = getProject(uuid);
@@ -161,14 +161,13 @@ function removeProject(uuid) {
  * Creates a new TodoItem. Stores it in a parent proejct and browser storage.
  * @param {String} projectUuid the parent project of the TodoItem to be created
  * @param {Object} data Object containing the arguments to instantiate a 
- * TodoItem, with the property names as those in the TodoItem constructor
- * parameter list. 
+ * TodoItem, with the property names as those set in the TodoItem constructor. 
  */
 function createTodo(projectUuid, data) {
   const project = getProject(projectUuid);
 
-  const {title, description, dueDateTime, priorityLvl,} = data;
-  const todo = new TodoItem(title, description, dueDateTime, priorityLvl,);
+  const {title, description, dueDateTime, priority,} = data;
+  const todo = new TodoItem(title, description, dueDateTime, priority,);
   project.addTodo(todo);
 
   storageController.post(project);
@@ -181,7 +180,7 @@ function createTodo(projectUuid, data) {
  * @returns {Object} 
  */
 function expandTodo(projectUuid, todoUuid) {
-  const project = getProject(projectUuid)
+  const project = getProject(projectUuid);
   const todo = getTodo(project, todoUuid);
 
   return TodoItem.viewDetails(todo);
@@ -192,11 +191,12 @@ function expandTodo(projectUuid, todoUuid) {
  * @param {String} projectUuid id of the parent project
  * @param {String} todoUuid id of the TodoItem to be edited
  * @param {Object} data Object containing the adjusted values, with the 
- * property names as those in the TodoItem constructor parameter list. 
+ * property names as those set in the TodoItem constructor. 
  */
 function editTodo(projectUuid, todoUuid, data) {
   const project = getProject(projectUuid)
   const todo = getTodo(project, todoUuid);
+
   const {title, description, dueDateTime, priority, status,} = data;
 
   if (title)
