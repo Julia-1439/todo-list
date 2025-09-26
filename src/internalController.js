@@ -46,8 +46,8 @@ function createProject(metadata) {
  * @returns {Object} 
  */
 function viewProject(uuid) {
-  const requestedProject = getProject(uuid);
-  return Project.view(requestedProject);
+  const project = getProject(uuid);
+  return Project.view(project);
 }
 
 /**
@@ -59,17 +59,17 @@ function viewProject(uuid) {
  * property names as those in the Project constructor parameter list. 
  */
 function editProjectMetadata(uuid, metadata) {
-  const subjectProject = getProject(uuid);
+  const project = getProject(uuid);
   const {title, description, status,} = metadata;
 
   if (title)
-    subjectProject.title = title;
+    project.title = title;
   if (description)
-    subjectProject.description = description;
+    project.description = description;
   if (status)
-    subjectProject.status = status;
+    project.status = status;
 
-  storageController.post(subjectProject);
+  storageController.post(project);
 }
 
 function deleteProject(uuid) {
