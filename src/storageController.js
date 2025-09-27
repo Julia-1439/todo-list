@@ -6,11 +6,7 @@
  * time of writing. 
  */
 
-// @TODO need to test this module assuming localStorage is not available too.
-
-
 import { Project } from "./barrel.js";
-
 
 /**
  * 
@@ -38,7 +34,6 @@ function isStorageAvailable() {
     );
   }
 }
-
 
 /**
  * Create a new entry or Update an existing entry
