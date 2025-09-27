@@ -11,3 +11,4 @@ export { default as TodoItem } from "./classes/todoItem.js";
 // Controllers
 export * as storageControl from "./storageControl.js";
 export * as internalControl from "./internalControl.js";
+export * as displayControl from "./displayControl.js";

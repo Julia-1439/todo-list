@@ -3,6 +3,7 @@ import { TodoItem } from "./barrel.js";
 
 import { storageControl } from "./barrel.js";
 import { internalControl } from "./barrel.js";
+import { displayControl } from "./barrel.js";
 
 // bare-metal work on Project & TodoItem 
 function runTestSet1() {
