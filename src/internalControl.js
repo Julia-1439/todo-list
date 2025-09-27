@@ -160,7 +160,7 @@ function editProjectMetadata(uuid, metadata) {
 function removeProject(uuid) {
   const removalIdx = _projects.findIndex((project) => project.uuid === uuid);
   const projectToRemove = _projects[removalIdx]; // for the return value
-  _projects.splice(removalIdx);
+  _projects.splice(removalIdx, 1);
 
   storageControl.remove(uuid);
 
