@@ -50,7 +50,7 @@ function createDefaultProject() {
     priority: "p4",
   });
 
-  return viewProject(_projects[0].uuid);
+  return viewProject(_projects.at(-1).uuid);
 }
 
 function viewProjectTitles() {
