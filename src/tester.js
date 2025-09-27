@@ -1,8 +1,8 @@
 import { Project } from "./barrel.js";
 import { TodoItem } from "./barrel.js";
 
-import { storageController } from "./barrel.js";
-import { internalController } from "./barrel.js";
+import { storageControl } from "./barrel.js";
+import { internalControl } from "./barrel.js";
 
 // bare-metal work on Project & TodoItem 
 function runTestSet1() {
@@ -75,12 +75,12 @@ function runTestSet1() {
   console.log(rehydratedTodo);
 }
 
-// storageController
+// storageControl
 function runTestSet2() {
   // check localStorage availability
   console.log(
     "localStorage available:",
-    storageController.isStorageAvailable()
+    storageControl.isStorageAvailable()
   );
 
   // test with Project 
@@ -109,40 +109,40 @@ function runTestSet2() {
   );
 
   // post
-  storageController.post(project);
+  storageControl.post(project);
 
   // get
   const projectKey = project.uuid;
   console.log(
     "Retrieved:",
-    // storageController.get(projectKey)
+    // storageControl.get(projectKey)
   );
 
   // update
   project.status = "completed";
-  storageController.post(project);
+  storageControl.post(project);
   console.log(
     "Retrieved updated project:",
-    // storageController.get(projectKey)
+    // storageControl.get(projectKey)
   );  
 
   // remove
-  // storageController.remove(projectKey); // use a breakpoint to test this
+  // storageControl.remove(projectKey); // use a breakpoint to test this
 
   // get with a non-existent key
   console.log(
     "Get with a non-existent key:",
-    // storageController.get("foo")
+    // storageControl.get("foo")
   );
 
   // get all projects
   const project2 = new Project("project 2");
   const project3 = new Project("project 3");
-  storageController.post(project2);
-  storageController.post(project3);
+  storageControl.post(project2);
+  storageControl.post(project3);
   console.log(
     "All projects:",
-    storageController.getAll()
+    storageControl.getAll()
   );
 
   console.log(
@@ -152,11 +152,11 @@ function runTestSet2() {
   
 }
 
-// internalController: crud operations on project & todos
+// internalControl: crud operations on project & todos
 function runTestSet3() {
   localStorage.clear(); // ensure clean slate for testing
-  const ic = internalController;
-  const sc = storageController;
+  const ic = internalControl;
+  const sc = storageControl;
 
   // C project  
   ic.createProject({
@@ -255,12 +255,12 @@ function runTestSet3() {
 
 }
 
-// internalController: restore from storage 
+// internalControl: restore from storage 
 // preconditions: must have projects in localStorage, else nothing happens.
 // create some with createProjectsHelper()
 function runTestSet4() {
-  const ic = internalController;
-  const sc = storageController;
+  const ic = internalControl;
+  const sc = storageControl;
 
   ic._projects.length = 0; // simulate a page reloading
 
@@ -273,8 +273,8 @@ function runTestSet4() {
 
 function createProjectsHelper() {
   localStorage.clear(); // ensure clean slate for testing
-  const ic = internalController;
-  const sc = storageController;
+  const ic = internalControl;
+  const sc = storageControl;
 
   // project 1
   ic.createProject({
@@ -339,9 +339,9 @@ function createProjectsHelper() {
   });
 }
 
-// internalController: initialize
+// internalControl: initialize
 function runTestSet5() {
-  const ic = internalController;
+  const ic = internalControl;
 
   // run createProjectsHelper to get some projects in to test
   console.log(

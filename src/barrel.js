@@ -9,5 +9,5 @@ export { default as Project } from "./classes/project.js";
 export { default as TodoItem } from "./classes/todoItem.js";
 
 // Controllers
-export * as storageController from "./storageController.js";
-export * as internalController from "./internalController.js";
+export * as storageControl from "./storageControl.js";
+export * as internalControl from "./internalControl.js";

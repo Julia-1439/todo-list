@@ -7,7 +7,7 @@ import {
   runTestSet5, 
 } from "./tester.js";
 
-import { internalController as ic } from "./barrel.js";
+import { internalControl as ic } from "./barrel.js";
 
 const loadData = ic.initialize();
 

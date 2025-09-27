@@ -1,4 +1,4 @@
-import { Project, TodoItem, storageController } from "./barrel.js";
+import { Project, TodoItem, storageControl } from "./barrel.js";
 
 const _projects = [];
 
@@ -13,7 +13,7 @@ const _projects = [];
  * _projects will be empty. 
  */
 function restoreFromStorage() {
-  const projectsFromStorage = storageController.getAll() || [];
+  const projectsFromStorage = storageControl.getAll() || [];
   projectsFromStorage.sort((p1, p2) => p2.creationTime - p1.creationTime);
   projectsFromStorage.forEach((project) => _projects.push(project));
 }
@@ -109,7 +109,7 @@ function createProject(metadata) {
   const project = new Project(title, description,);
   _projects.push(project);
 
-  storageController.post(project);
+  storageControl.post(project);
 
   return viewProject(project.uuid);
 }
@@ -146,7 +146,7 @@ function editProjectMetadata(uuid, metadata) {
       project[prop] = updatedVal;
   });
 
-  storageController.post(project);
+  storageControl.post(project);
 
   return viewProject(project.uuid);
 }
@@ -161,7 +161,7 @@ function removeProject(uuid) {
   const projectToRemove = _projects[removalIdx]; // for the return value
   _projects.splice(removalIdx);
 
-  storageController.remove(uuid);
+  storageControl.remove(uuid);
 
   return viewProject(projectToRemove.uuid);
 }
@@ -184,7 +184,7 @@ function createTodo(projectUuid, data) {
   const todo = new TodoItem(title, description, dueDateTime, priority,);
   project.addTodo(todo);
 
-  storageController.post(project);
+  storageControl.post(project);
 
   return expandTodo(projectUuid, todo.uuid);
 }
@@ -227,7 +227,7 @@ function editTodo(projectUuid, todoUuid, data) {
       todo[prop] = updatedVal;
   });
 
-  storageController.post(project);
+  storageControl.post(project);
 
   return expandTodo(projectUuid, todoUuid);
 }
@@ -242,7 +242,7 @@ function removeTodo(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
   project.removeTodo(todoUuid);
 
-  storageController.post(project);
+  storageControl.post(project);
 
   return expandTodo(projectUuid, todoUuid);
 }
