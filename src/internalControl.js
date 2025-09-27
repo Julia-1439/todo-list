@@ -72,7 +72,7 @@ function initialize() {
 
   const latestProjectData = viewProject(_projects.at(-1).uuid); 
   return Object.assign(
-    { projectTitles: viewProjectTitles() },
+    { projectTitles: viewProjectTitles() }, // @todo might not be needed
     { latestProjectData }
   );
 }

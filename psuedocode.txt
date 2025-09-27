@@ -169,3 +169,183 @@ D func deleteTodo(projectUuid, todoUuid)
     CALL project.removeTodo WITH todoUuid
     
     CALL storageController.post WITH project
+
+
+/* ========================================================================== */
+/* Display Controller */
+/* ========================================================================== */
+
+Perhaps a function that gets an updated view of this project, OR modify todo crud to retain the updated project.
+Potential idea: an "archived" status
+
+memo: editing:
+  "title", 
+  "description", 
+  "dueDateTime", 
+  "priority", 
+  "status",
+
+// UPDATING THE DISPLAY
+wipe content
+update main (probably done with R project)
+update sidebar
+
+// FUNCTIONALITY:
+x PAGE LOAD:
+- projects loaded from storage
+- sidebar gets populated
+- most recent project gets displayed
+
+SIDEBAR:
+- C add project 
+- R view project
+  for each project: 
+  - U edit project (opens a dialog form)
+  - D delete project (opens a dialog form to confirm)
+
+MAIN:
+viewing a project:
+  for curr project:
+  - U edit project (3-dot or change directly ('change' event?))
+  - D delete project
+
+  - C add a todo
+  - R view all todos
+  - R expand a todo (shows description)
+  - U edit a todo (opens a dialog form)
+  - D delete a todo (opens a dialog form to confirm)
+
+
+/* ========================================================================== */
+HELPERS
+/* ========================================================================== */
+
+// wipes the content of a div, for usage particularly with div#content 
+/**
+ * @param {HTMLElement} 
+ * @returns {}
+ */
+func wipe(container)
+  WHILE container.firstChild
+    container.removeChild(container.lastChild)
+
+/**
+ * @param {String} notifMsg
+ */
+func displayNotif(notifMsg)
+  // display the notification
+  CALL notif.setAttribute TO unhide the notification
+  SET notif.textContent TO notifMsg
+
+  // hide the notification
+  CALL setTimeOut WITH some seconds DO:
+    CALL notif.setAttribute TO hide the notification 
+    SET notif.textContent TO null
+
+func updateSidebar()
+  CALL internalControl.viewProjectTitles INTO projectTitles // @todo need to expose this
+  FOR EACH title OF projectTitles
+    DOMCREATE button INTO projectBtn
+    SET projectBtn.textContent TO projectTitle
+    CALL nav.append WITH projectBtn
+
+/* ========================================================================== */
+VARIABLES
+/* ========================================================================== */
+
+SET doc TO document
+SET nav TO doc.querySelector("nav")
+SET main TO doc.querySelector("div#main")
+SET notif TO doc.querySelector("div#notif") // probably a non-modal dialog
+
+/* ========================================================================== */
+PAGE LOAD
+/* ========================================================================== */
+
+/**
+ * Preconditions: none
+ * Postconditions: sidebar is populated with a button for each project.
+ * main is populated with the latest project.  
+ * @param {} 
+ * @returns {}
+ */
+func initialize()
+  // load the data from storage OR create a default project if no projects
+  CALL internalControl.initialize() INTO loadData
+
+  // populate the sidebar with the projects
+  CALL updateSidebar
+  
+  // render the latest project
+  CALL renderProject WITH loadData.latestProjectData
+
+/* ========================================================================== */
+CRUD
+/* ========================================================================== */
+
+/**
+ * open a form to enter and submit data for a new project. 
+ * Preconditions: "formdata" event is fired on a "project creation" form with
+ * html validation already done on the arguments
+ * Postconditions: a new project is created and main is populated with it
+ * @param {Event {formData}} 
+ * @returns {}
+ */
+func createProject(formDataEvt)
+  SET creationData TO formDataEvt.formData
+  CALL internalControl.createProject WITH creationData INTO projectData
+
+  // view it
+  CALL renderProject WITH projectData
+  CALL updateSidebar
+  CALL displayNotif WITH a message
+
+/**
+ * Preconditions: none
+ * Postconditions: main is populated with projectData, and its elements 
+ * have dataset properties set including uuid.
+ * @param {Object} 
+ * @returns {}
+ */
+func renderProject(projectData)
+  CALL wipe WITH main
+  // ...
+
+/**
+ * Preconditions: none
+ * Postconditions: main is populated with the updated projectData 
+ * @param {String} uuid
+ * @param {Event {formData | change}} evt 
+ * @returns {}
+ */
+func updateProject(uuid, evt)
+  SET updatedData TO {}
+  IF evt.type === "change":
+    SET formCtrl TO evt.target
+    SET propToUpdate TO formCtrl.name
+    SET updatedData[propToUpdate] TO evt.target.value
+  ELSE IF evt.type === "formdata":
+    SET updatedData TO evt.formData
+  ELSE  
+    THROW "An unknown error occured lmao"
+
+  CALL internalControl.editProjectMetadata WITH uuid, updatedData INTO projectData
+
+  // view
+  CALL renderProject WITH projectData
+  CALL updateSidebar
+  CALL displayNotif WITH a message
+
+/**
+ * Preconditions: none
+ * Postconditions: The project is removed from the database and from view. 
+ * There is no content in the main content view. 
+ * @param {String} uuid
+ * @returns {}
+ */
+func removeProject(uuid)
+  CALL internalControl.removeProject(uuid)
+  
+  CALL wipe WITH main
+  CALL updateSidebar
+  CALL displayNotif WITH a message
