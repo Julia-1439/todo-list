@@ -70,7 +70,7 @@ function initialize() {
   if (_projects.length === 0) 
     createDefaultProject();
 
-  const latestProjectData = viewProject(_projects[0].uuid); 
+  const latestProjectData = viewProject(_projects.at(-1).uuid); 
   return Object.assign(
     { projectTitles: viewProjectTitles() },
     { latestProjectData }
