@@ -12,7 +12,7 @@ const _projects = [];
  * in the reverse order they were created. 
  */
 function restoreFromStorage() {
-  const projectsFromStorage = storageController.getAll();
+  const projectsFromStorage = storageController.getAll() || [];
   projectsFromStorage.sort((p1, p2) => p2.creationTime - p1.creationTime);
   projectsFromStorage.forEach((project) => _projects.push(project));
 }
