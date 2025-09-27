@@ -397,6 +397,34 @@ function runTestSet6() {
   );
 }
 
+function runTestSet7() {
+  const ic = internalControl;
+  localStorage.clear(); // ensure clean slate
+
+  const project2Data = ic.createProject({
+    title: "Test project 2",
+  });
+  const project3Data = ic.createProject({
+    title: "Test project 3",
+  });
+  const todo3_1Data = ic.createTodo(project3Data.uuid, {
+    title: "Test todo 3.1",
+  });
+  ic.createTodo(project3Data.uuid, {
+    title: "Test todo 3.2",
+  });
+
+  console.log(
+    "Test project 2 removed:",
+    ic.removeProject(project2Data.uuid),
+  );
+  console.log(
+    "Test todo 3.1 removed:",
+    ic.removeTodo(project3Data.uuid, todo3_1Data.uuid),
+    ic.viewProject(project3Data.uuid),
+  );
+}
+
 export { 
   runTestSet1, 
   runTestSet2, 
@@ -405,4 +433,5 @@ export {
   createProjectsHelper,
   runTestSet5,
   runTestSet6,
+  runTestSet7,
 };

@@ -159,12 +159,12 @@ function editProjectMetadata(uuid, metadata) {
  */
 function removeProject(uuid) {
   const removalIdx = _projects.findIndex((project) => project.uuid === uuid);
-  const projectToRemove = _projects[removalIdx]; // for the return value
+  const projectData = viewProject(_projects[removalIdx].uuid); // for the return
   _projects.splice(removalIdx, 1);
 
   storageControl.remove(uuid);
 
-  return viewProject(projectToRemove.uuid);
+  return projectData;
 }
 
 /* ========================================================================== */
@@ -241,11 +241,12 @@ function editTodo(projectUuid, todoUuid, data) {
  */
 function removeTodo(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
+  const todoData = expandTodo(projectUuid, todoUuid); // for the return
   project.removeTodo(todoUuid);
 
   storageControl.post(project);
 
-  return expandTodo(projectUuid, todoUuid);
+  return todoData;
 }
 
 export { 
