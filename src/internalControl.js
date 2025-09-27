@@ -9,12 +9,12 @@ const _projects = [];
 /**
  * Preconditions: array _projects is empty on page load
  * Postconditions: array _projects is populated with the projects from storage
- * in the reverse order they were created. If storage is not available, 
- * _projects will be empty. 
+ * in the order they were created. If storage is not available, _projects 
+ * will be empty. 
  */
 function restoreFromStorage() {
   const projectsFromStorage = storageControl.getAll() || [];
-  projectsFromStorage.sort((p1, p2) => p2.creationTime - p1.creationTime);
+  projectsFromStorage.sort((p1, p2) => p1.creationTime - p2.creationTime);
   projectsFromStorage.forEach((project) => _projects.push(project));
 }
 
