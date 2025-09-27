@@ -49,6 +49,8 @@ function createDefaultProject() {
     })(), 
     priority: "p4",
   });
+
+  return viewProject(_projects[0].uuid);
 }
 
 function viewProjectTitles() {
@@ -58,7 +60,7 @@ function viewProjectTitles() {
 /**
  * Preconditions: should only called once on page load. 
  * Postconditions: the _projects array is populated with projects from storage.
- * if there are none, a default project is created. 
+ * if there are none, a default project is created.  
  * @returns {Object} containing a list of project titles and a view of the
  * most recently created project
  */
@@ -68,9 +70,10 @@ function initialize() {
   if (_projects.length === 0) 
     createDefaultProject();
 
+  const latestProjectData = viewProject(_projects[0].uuid); 
   return Object.assign(
-    {projectTitles: viewProjectTitles()},
-    {latestProject: viewProject(_projects[0].uuid)}
+    { projectTitles: viewProjectTitles() },
+    { latestProjectData }
   );
 }
 

@@ -364,13 +364,13 @@ function runTestSet6() {
 
   const loadData = ic.initialize();
 
-  let homeProjectData = loadData.latestProject; 
+  let homeProjectData = loadData.latestProjectData; 
   const homeProjUuid = homeProjectData.uuid;
   homeProjectData = ic.editProjectMetadata(homeProjUuid, {
     status: "completed",
   });
 
-  let todo1Data = loadData.latestProject.todoList[0];
+  let todo1Data = loadData.latestProjectData.todoList[0];
   const todo1Uuid = todo1Data.uuid;
   todo1Data = ic.editTodo(homeProjUuid, todo1Uuid,
     {
@@ -379,7 +379,7 @@ function runTestSet6() {
     }
   );
 
-  let todo2Data = loadData.latestProject.todoList[1];
+  let todo2Data = loadData.latestProjectData.todoList[1];
   const todo2Uuid = todo2Data.uuid;
   todo2Data = ic.editTodo(homeProjUuid, todo2Uuid,
     {
@@ -397,6 +397,7 @@ function runTestSet6() {
   );
 }
 
+// internalControl: removing project and todo 
 function runTestSet7() {
   const ic = internalControl;
   localStorage.clear(); // ensure clean slate
