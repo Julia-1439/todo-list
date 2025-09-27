@@ -83,7 +83,8 @@ function getProject(uuid) {
 }
 
 /**
- * 
+ * // @TODO this is probably more fit as a utility function in Project class; it
+ * would fit the current methods. 
  * @param {Project} project parent project containing the todo requested 
  * @param {String} todoUuid 
  * @returns {TodoItem}
