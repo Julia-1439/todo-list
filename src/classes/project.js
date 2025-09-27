@@ -42,6 +42,7 @@ export default class Project {
       description: project.description,
       status: project.status,
       todoList: project.todoList.map(todo => TodoItem.viewSummary(todo)),
+      uuid: project.uuid,
     };
   }
 

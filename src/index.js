@@ -9,23 +9,36 @@ import {
 
 import { internalController as ic } from "./barrel.js";
 
-ic.initialize();
-const homeProjUuid = "2ba9d9ee-25a4-46ae-9916-6bff54f32665";
-ic.editProjectMetadata(homeProjUuid, {
+const loadData = ic.initialize();
+
+let homeProjectData = loadData.latestProject; 
+const homeProjUuid = homeProjectData.uuid;
+homeProjectData = ic.editProjectMetadata(homeProjUuid, {
   status: "completed",
 });
 
-ic.editTodo(homeProjUuid,
-  "018f1092-7dd5-44e2-a481-a272a67d67e4",
+let todo1Data = loadData.latestProject.todoList[0];
+const todo1Uuid = todo1Data.uuid;
+todo1Data = ic.editTodo(homeProjUuid, todo1Uuid,
   {
     status: "completed",
     priority: "p1",
   }
 );
 
-ic.editTodo(homeProjUuid,
-  "38fa18e7-1ad2-46c0-bd64-d5a466d715bd",
+let todo2Data = loadData.latestProject.todoList[1];
+const todo2Uuid = todo2Data.uuid;
+todo2Data = ic.editTodo(homeProjUuid, todo2Uuid,
   {
     priority: null,
   }
 );
+
+console.log(
+  "Home project data:",
+  homeProjectData,
+  "Todo1 data:",
+  todo1Data,
+  "Todo2 data:",
+  todo2Data,
+)

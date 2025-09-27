@@ -59,6 +59,7 @@ export default class TodoItem {
       dueDateTime: todo.dueDateTime,
       priority: todo.priority,
       status: todo.status,
+      uuid: todo.uuid,
     };
   }
 

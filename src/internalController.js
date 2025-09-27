@@ -7,8 +7,8 @@ const _projects = [];
 /* ========================================================================== */
 
 /**
- * Pre condition: array _projects is empty on page load
- * Post condition: array _projects is populated with the projects from storage
+ * Preconditions: array _projects is empty on page load
+ * Postconditions: array _projects is populated with the projects from storage
  * in the reverse order they were created. 
  */
 function restoreFromStorage() {
@@ -18,7 +18,7 @@ function restoreFromStorage() {
 }
 
 /**
- * Pre condition: there are no projects in array _projects
+ * Preconditions: there are no projects in array _projects
  */
 function createDefaultProject() {
   createProject({
@@ -102,6 +102,7 @@ function getTodo(project, todoUuid) {
  * @param {Object} metadata Object containing the arguments to instantiate a 
  * Project, with the property names as those in the Project constructor
  * parameter list. 
+ * @returns {Object}
  */
 function createProject(metadata) {
   const {title, description,} = metadata;
@@ -109,6 +110,8 @@ function createProject(metadata) {
   _projects.push(project);
 
   storageController.post(project);
+
+  return viewProject(project.uuid);
 }
 
 /**
@@ -127,6 +130,7 @@ function viewProject(uuid) {
  * @param {String} uuid Id of the project user requested to edit 
  * @param {Object} metadata Object containing the adjusted values, with the 
  * property names as those set in the Project constructor. 
+ * @returns {Object}
  */
 function editProjectMetadata(uuid, metadata) {
   const project = getProject(uuid);
@@ -140,17 +144,23 @@ function editProjectMetadata(uuid, metadata) {
     project.status = status;
 
   storageController.post(project);
+
+  return viewProject(project.uuid);
 }
 
 /**
  * 
  * @param {String} uuid 
+ * @returns {Object}
  */
 function removeProject(uuid) {
   const removalIdx = _projects.findIndex((project) => project.uuid === uuid);
+  const projectToRemove = _projects[removalIdx]; // for the return value
   _projects.splice(removalIdx);
 
   storageController.remove(uuid);
+
+  return viewProject(projectToRemove.uuid);
 }
 
 /* ========================================================================== */
@@ -162,6 +172,7 @@ function removeProject(uuid) {
  * @param {String} projectUuid the parent project of the TodoItem to be created
  * @param {Object} data Object containing the arguments to instantiate a 
  * TodoItem, with the property names as those set in the TodoItem constructor. 
+ * @returns {Object}
  */
 function createTodo(projectUuid, data) {
   const project = getProject(projectUuid);
@@ -171,6 +182,8 @@ function createTodo(projectUuid, data) {
   project.addTodo(todo);
 
   storageController.post(project);
+
+  return expandTodo(projectUuid, todo.uuid);
 }
 
 /**
@@ -192,6 +205,7 @@ function expandTodo(projectUuid, todoUuid) {
  * @param {String} todoUuid id of the TodoItem to be edited
  * @param {Object} data Object containing the adjusted values, with the 
  * property names as those set in the TodoItem constructor. 
+ * @returns {Object}
  */
 function editTodo(projectUuid, todoUuid, data) {
   const project = getProject(projectUuid)
@@ -212,18 +226,23 @@ function editTodo(projectUuid, todoUuid, data) {
     todo.status = status;
 
   storageController.post(project);
+
+  return expandTodo(projectUuid, todoUuid);
 }
 
 /**
  * 
  * @param {String} projectUuid 
  * @param {String} todoUuid 
+ * @returns {Object}
  */
 function removeTodo(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
   project.removeTodo(todoUuid);
 
   storageController.post(project);
+
+  return expandTodo(projectUuid, todoUuid);
 }
 
 export { 
