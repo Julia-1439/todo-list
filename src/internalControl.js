@@ -85,18 +85,6 @@ function getProject(uuid) {
   return _projects.find((project) => project.uuid === uuid);
 }
 
-/**
- * // @TODO this is probably more fit as a utility function in Project class; it
- * would fit the current methods. 
- * @param {Project} project parent project containing the todo requested 
- * @param {String} todoUuid 
- * @returns {TodoItem}
- */
-function getTodo(project, todoUuid) {
-  const todoList = project.todoList;
-  return todoList.find((todo) => todo.uuid === todoUuid);
-}
-
 /* ========================================================================== */
 /* CRUD operations for Project */
 /* ========================================================================== */
@@ -201,7 +189,7 @@ function createTodo(projectUuid, data) {
  */
 function expandTodo(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
-  const todo = getTodo(project, todoUuid);
+  const todo = project.getTodo(todoUuid); 
 
   return TodoItem.viewDetails(todo);
 }
@@ -216,7 +204,7 @@ function expandTodo(projectUuid, todoUuid) {
  */
 function editTodo(projectUuid, todoUuid, data) {
   const project = getProject(projectUuid)
-  const todo = getTodo(project, todoUuid);
+  const todo = project.getTodo(todoUuid);
 
   const propertiesToUpdate = [
     "title", 

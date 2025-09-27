@@ -31,6 +31,10 @@ export default class Project {
     this.todoList.push(todo);
   }
 
+  getTodo(uuid) {
+    return this.todoList.find((todo) => todo.uuid === uuid);
+  }
+
   removeTodo(uuid) {
     const removalIdx = this.todoList.findIndex((todo) => todo.uuid === uuid);
     this.todoList.splice(removalIdx, 1);
