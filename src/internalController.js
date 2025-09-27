@@ -9,7 +9,8 @@ const _projects = [];
 /**
  * Preconditions: array _projects is empty on page load
  * Postconditions: array _projects is populated with the projects from storage
- * in the reverse order they were created. 
+ * in the reverse order they were created. If storage is not available, 
+ * _projects will be empty. 
  */
 function restoreFromStorage() {
   const projectsFromStorage = storageController.getAll() || [];
@@ -50,7 +51,7 @@ function createDefaultProject() {
   });
 }
 
-function viewAllProjects() {
+function viewProjectTitles() {
   return _projects.map(project => project.title);
 }
 
@@ -68,7 +69,7 @@ function initialize() {
     createDefaultProject();
 
   return Object.assign(
-    {projectTitles: viewAllProjects()},
+    {projectTitles: viewProjectTitles()},
     {latestProject: viewProject(_projects[0].uuid)}
   );
 }
@@ -91,7 +92,6 @@ function getTodo(project, todoUuid) {
   const todoList = project.todoList;
   return todoList.find((todo) => todo.uuid === todoUuid);
 }
-
 
 /* ========================================================================== */
 /* CRUD operations for Project */
@@ -134,14 +134,17 @@ function viewProject(uuid) {
  */
 function editProjectMetadata(uuid, metadata) {
   const project = getProject(uuid);
-  const {title, description, status,} = metadata;
 
-  if (title !== undefined)
-    project.title = title;
-  if (description !== undefined)
-    project.description = description;
-  if (status !== undefined)
-    project.status = status;
+  const propertiesToUpdate = [
+    "title", 
+    "description", 
+    "status",
+  ];
+  propertiesToUpdate.forEach((prop) => {
+    const updatedVal = metadata[prop];
+    if (updatedVal !== undefined)
+      project[prop] = updatedVal;
+  });
 
   storageController.post(project);
 
@@ -211,19 +214,18 @@ function editTodo(projectUuid, todoUuid, data) {
   const project = getProject(projectUuid)
   const todo = getTodo(project, todoUuid);
 
-  const {title, description, dueDateTime, priority, status,} = data;
-
-  //@TODO there is probably a cleaner way to do this. maybe instead of indiv variables, put them all in an object and iterate that. 
-  if (title !== undefined)
-    todo.title = title;
-  if (description !== undefined)
-    todo.description = description;
-  if (dueDateTime !== undefined)
-    todo.dueDateTime = dueDateTime;
-  if (priority !== undefined)
-    todo.priority = priority;
-  if (status !== undefined)
-    todo.status = status;
+  const propertiesToUpdate = [
+    "title", 
+    "description", 
+    "dueDateTime", 
+    "priority", 
+    "status",
+  ];
+  propertiesToUpdate.forEach((prop) => {
+    const updatedVal = data[prop];
+    if (updatedVal !== undefined)
+      todo[prop] = updatedVal;
+  });
 
   storageController.post(project);
 
