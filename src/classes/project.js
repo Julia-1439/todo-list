@@ -40,16 +40,6 @@ export default class Project {
     this.todoList.splice(removalIdx, 1);
   }
 
-  static view(project) {
-    return {
-      title: project.title,
-      description: project.description,
-      status: project.status,
-      todoList: project.todoList.map(todo => TodoItem.viewSummary(todo)),
-      uuid: project.uuid,
-    };
-  }
-
   /**
    * A utility function to serialize a project & its todos into storage. 
    * The original project & its todos are left unchanged. 

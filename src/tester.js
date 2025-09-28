@@ -396,6 +396,15 @@ function runTestSet6() {
     "Todo2 data:",
     todo2Data,
   );
+
+  console.log(
+    "Viewing a project:",
+    ic.viewProject(homeProjUuid),
+    "Viewing Todo1 summary:",
+    ic.viewTodo(homeProjUuid, todo1Uuid),
+    "Viewing Todo1 expanded:",
+    ic.expandTodo(homeProjUuid, todo1Uuid),
+  );
 }
 
 // internalControl: removing project and todo 

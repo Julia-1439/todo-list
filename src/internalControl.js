@@ -113,7 +113,14 @@ function createProject(metadata) {
  */
 function viewProject(uuid) {
   const project = getProject(uuid);
-  return Project.view(project);
+
+  return {
+    title: project.title,
+    description: project.description,
+    status: project.status,
+    todoList: project.todoList.map((todo) => viewTodo(uuid, todo.uuid)),
+    uuid: project.uuid,
+  };
 }
 
 /**
@@ -182,6 +189,25 @@ function createTodo(projectUuid, data) {
 }
 
 /**
+ * Get an overview of a todo. For all its details, see function expandTodo
+ * @param {String} projectUuid 
+ * @param {String} todoUuid 
+ * @returns {Object}
+ */
+function viewTodo(projectUuid, todoUuid) {
+  const project = getProject(projectUuid);
+  const todo = project.getTodo(todoUuid); 
+  
+  return {
+    title: todo.title,
+    dueDateTime: todo.dueDateTime,
+    priority: todo.priority,
+    status: todo.status,
+    uuid: todo.uuid,
+  };
+}
+
+/**
  * Expand a todo to view more of its information
  * @param {String} projectUuid 
  * @param {String} todoUuid 
@@ -191,7 +217,10 @@ function expandTodo(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
   const todo = project.getTodo(todoUuid); 
 
-  return TodoItem.viewDetails(todo);
+  return {
+    ...viewTodo(projectUuid, todoUuid),
+    description: todo.description,
+  };
 }
 
 /**
@@ -252,7 +281,7 @@ export {
 
   // CRUD for todos
   createTodo,
-  expandTodo,
+  viewTodo, expandTodo,
   editTodo,
   removeTodo,
 };

@@ -53,23 +53,6 @@ export default class TodoItem {
     this._status = statusUtil.status(name);
   }
 
-  static viewSummary(todo) {
-    return {
-      title: todo.title,
-      dueDateTime: todo.dueDateTime,
-      priority: todo.priority,
-      status: todo.status,
-      uuid: todo.uuid,
-    };
-  }
-
-  static viewDetails(todo) {
-    return {
-      ...this.viewSummary(todo),
-      description: todo.description,
-    };
-  }
-
   get uuid() { return this.#uuid; }
 
   /**
