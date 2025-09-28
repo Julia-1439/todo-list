@@ -31,6 +31,8 @@ button, input, optgroup, select, textarea {
 
 html {
   /* Custom CSS properties */
+  --project-cell-width: 300px;
+  --project-cell-height: 2.25rem;
 
   --palette-light: #ffb9b9;
   --palette-dark: #ff8787;
@@ -44,20 +46,33 @@ body {
   min-height: 100vh;
 
   display: grid;
-  grid-template-columns: 1fr 5fr;
+  grid-template-columns: 345px 1fr; /* @todo quick fix */
+  grid-template-areas: "sidebar main";
 }
 
-header { 
+#sidebar { 
+  grid-area: sidebar;
+  height: 100vh;
   position: fixed;
-  overflow: auto; /* add a scroll bar if a lot of projects */
+  overflow: auto; /* add a scroll bar if a lot of projects. @todo need to test */
+
+  padding: 15px;
+}
+
+#sidebar h2 {
+  margin-bottom: revert;
+}
+
+#sidebar ul {
+  list-style-type: none;
 }
 
 #main {
-  
+  grid-area: main;  
 }
 
 #notif {
-  position: sticky;
+  position: absolute;
 }
 
 /* ========================================================================== */
@@ -65,9 +80,45 @@ header {
 /* ========================================================================== */
 
 .project-cell {
+  width: var(--project-cell-width);
+  display: grid;
+  grid-template-columns: 1fr min-content;
 
+  margin-left: 15px;
 }
 
-.project-btn {
+.project-cell button {
+  cursor: pointer;
+}
 
+.project-cell .view-project-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  max-width: calc(var(--project-cell-width) - var(--project-cell-height)); /* Quick duct tape fix for overflows... */
+  height: var(--project-cell-height);
+  padding: 5px;
+}
+
+.project-cell .view-project-btn .project-sym {
+  width: 1rem;
+  height: 1rem;
+}
+
+.project-cell .view-project-btn .project-title {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-cell .project-edit-btn {
+  width: var(--project-cell-height);
+}
+
+.project-cell .project-edit-sym {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0 auto;
 }
