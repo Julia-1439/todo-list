@@ -254,9 +254,9 @@ VARIABLES
 /* ========================================================================== */
 
 SET doc TO document
-SET nav TO doc.querySelector("nav")
-SET main TO doc.querySelector("div#main")
-SET notif TO doc.querySelector("div#notif") // probably a non-modal dialog
+SET projects TO doc.querySelector("#projects")
+SET main TO doc.querySelector("#main")
+SET notif TO doc.querySelector("#notif") // probably a non-modal dialog
 
 /* ========================================================================== */
 PAGE LOAD
