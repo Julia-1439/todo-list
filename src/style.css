@@ -32,7 +32,12 @@ button, input, optgroup, select, textarea {
 html {
   /* Custom CSS properties */
 
-  /* @todo pick out a color palette */
+  --palette-light: #ffb9b9;
+  --palette-dark: #ff8787;
+  --palette-accent: #db4f62;
+  --palette-accent-2: #ffb272;
+  --palette-dark-gray: #636363;
+  --palette-light-gray: #E2E8F0;
 }
 
 body {
