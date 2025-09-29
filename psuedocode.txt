@@ -280,19 +280,19 @@ func initialize()
   CALL renderProject WITH loadData.latestProjectData
 
 /* ========================================================================== */
-CRUD
+CRUD projects
 /* ========================================================================== */
 
 /**
  * open a form to enter and submit data for a new project. 
- * Preconditions: "formdata" event is fired on a "project creation" form with
- * html validation already done on the arguments
+ * Preconditions: a form is submitted with data to create a new project
  * Postconditions: a new project is created and main is populated with it
- * @param {Event {formData}} 
+ * @param {Event {SubmitEvent}} a submitEvent with 'form' attribute set 
  * @returns {}
  */
-func createProject(formDataEvt)
-  SET creationData TO formDataEvt.formData
+func createProject(submitEvt)
+  SET creationForm TO submitEvt.submitter.form
+  SET creationData TO new FormData(creationForm)
   CALL internalControl.createProject WITH creationData INTO projectData
 
   // view it
@@ -307,25 +307,26 @@ func createProject(formDataEvt)
  * @param {Object} 
  * @returns {}
  */
-func renderProject(projectData)
+func renderProject(clickEvt=null, projectData=null)
   CALL wipe WITH main
   // ...
 
 /**
  * Preconditions: none
  * Postconditions: main is populated with the updated projectData 
- * @param {String} uuid
- * @param {Event {formData | change}} evt 
+ * @param {SubmitEvent | Event with .type "change"}  
  * @returns {}
  */
-func updateProject(uuid, evt)
+func updateProject(evt)
+  GET uuid FROM somewhere // @todo
   SET updatedData TO {}
   IF evt.type === "change":
     SET formCtrl TO evt.target
     SET propToUpdate TO formCtrl.name
     SET updatedData[propToUpdate] TO evt.target.value
-  ELSE IF evt.type === "formdata":
-    SET updatedData TO evt.formData
+  ELSE IF evt.type === "submit":
+    SET updateForm TO evt.submitter.form
+    SET updatedData TO new FormData(updateForm)
   ELSE  
     THROW "An unknown error occured lmao"
 
@@ -340,10 +341,11 @@ func updateProject(uuid, evt)
  * Preconditions: none
  * Postconditions: The project is removed from the database and from view. 
  * There is no content in the main content view. 
- * @param {String} uuid
+ * @param {SubmitEvent}
  * @returns {}
  */
-func removeProject(uuid)
+func removeProject(submitEvt)
+  GET uuid FROM somewhere 
   CALL internalControl.removeProject(uuid)
   
   CALL wipe WITH main
