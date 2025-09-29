@@ -3,7 +3,7 @@ import { TodoItem } from "./barrel.js";
 
 import { storageControl } from "./barrel.js";
 import { internalControl } from "./barrel.js";
-import { displayControl } from "./barrel.js";
+import { displayControl as dc } from "./barrel.js";
 
 // bare-metal work on Project & TodoItem 
 function runTestSet1() {
@@ -436,6 +436,12 @@ function runTestSet7() {
   );
 }
 
+// display control
+function runTestSet8() {
+  dc.load();
+  dc.displayNotif("Test notification");
+}
+
 export { 
   runTestSet1, 
   runTestSet2, 
@@ -445,4 +451,5 @@ export {
   runTestSet5,
   runTestSet6,
   runTestSet7,
+  runTestSet8,
 };

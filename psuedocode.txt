@@ -244,6 +244,7 @@ func displayNotif(notifMsg)
 
 func updateSidebar()
   CALL internalControl.viewProjectTitles INTO projectTitles // @todo need to expose this
+  CALL projectTitles.reverse() // put most recent projects first
   FOR EACH title OF projectTitles
     DOMCREATE button INTO projectBtn
     SET projectBtn.textContent TO projectTitle
@@ -262,6 +263,8 @@ SET notif TO doc.querySelector("#notif") // probably a non-modal dialog
 PAGE LOAD
 /* ========================================================================== */
 
+// Add event listeners to the page
+
 /**
  * Preconditions: none
  * Postconditions: sidebar is populated with a button for each project.
@@ -269,7 +272,7 @@ PAGE LOAD
  * @param {} 
  * @returns {}
  */
-func initialize()
+func load()
   // load the data from storage OR create a default project if no projects
   CALL internalControl.initialize() INTO loadData
 

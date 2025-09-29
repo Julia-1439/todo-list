@@ -275,7 +275,7 @@ export {
 
   // CRUD for projects
   createProject, 
-  viewProject,
+  viewProject, viewProjectTitles,
   editProjectMetadata,
   removeProject,
 
