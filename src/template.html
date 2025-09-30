@@ -169,8 +169,36 @@
       </button>
     </div>
   </div>
-  <div id="notif">
-
-  </div>
+  <div id="notif"></div>
+  <dialog id="cu-project-dialog">
+    <form id="cu-project-form" method="dialog">
+      <fieldset>
+        <!-- @todo -->
+        <legend><span data-operation="create|edit">Create</span> project</legend>
+        <div>
+          <label for="cu-project-form-title">
+            Title
+          </label>
+          <input autofocus type="text" id="cu-project-form-title" name="title"
+            required
+            maxlength="40"
+          >
+        </div>
+        <div>
+          <label for="cu-project-form-description">
+            Description
+          </label>
+          <textarea id="cu-project-form-description" name="description" maxlength="240"></textarea>
+        </div>
+      </fieldset>
+      <div class="form-finish-btns-row">
+        <button class="form-cancel-btn" type="button">Cancel</button>
+        <button class="form-submit-btn" type="submit">Add Project</button>
+      </div>
+    </form>
+  </dialog>
+  <script defer>
+    document.querySelector("#cu-project-dialog").showModal();
+  </script>
 </body>
 </html>

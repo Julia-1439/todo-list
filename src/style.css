@@ -59,6 +59,7 @@ body {
   overflow: auto; /* add a scroll bar if a lot of projects. @todo need to test */
 
   padding: var(--standard-padding);
+  background-color: var(--palette-sidebar);
 }
 
 #sidebar-add-todo-btn {
@@ -283,18 +284,85 @@ project-edit-btn .project-edit-sym {
   height: 1.25rem;
 }
 
-
 /* ========================================================================== */
-/* TEST STYLES */
+/* FORMS */
 /* ========================================================================== */
 
-#sidebar {
-  background-color: var(--palette-sidebar);
+dialog {
+  margin: 8vh auto auto;
+  border: none;
+  box-shadow: 0px 2px 11px -3px var(--palette-dark-gray);
+  -webkit-box-shadow: 0px 2px 11px -3px var(--palette-dark-gray);
+  border-radius: 8px;
 }
 
-#main-content {
+dialog::backdrop {
+  /* A styleground for those who dare */
+  /* background-image: linear-gradient(45deg, magenta, rebeccapurple, dodgerblue, green); */
+
+  background-color: #000000;
+  opacity: 0.3;
 }
 
-.todo-card {
-  background-color: white;
+input,
+textarea {
+  padding: 8px;
+}
+
+textarea[name="description"] {
+  width: 100%;
+  resize: vertical;
+}
+
+fieldset {
+  border: none;
+}
+
+legend {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: var(--standard-padding);
+}
+
+#cu-project-dialog {
+  padding: calc(2 * var(--standard-padding));
+}
+
+#cu-project-dialog fieldset {
+  display: flex;
+  flex-flow: column wrap;
+  gap: var(--minor-padding);
+}
+
+#cu-project-form label {
+  display: block;
+}
+
+.form-finish-btns-row {
+  margin-top: calc(2 * var(--standard-padding));
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--standard-padding);
+}
+
+.form-finish-btns-row button {
+  min-width: 80px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-finish-btns-row button:hover {
+  filter: brightness(95%);
+}
+
+.form-cancel-btn {
+  background-color: #efefef;
+  color: var(--palette-dark-gray);
+}
+
+.form-submit-btn {
+  background-color: var(--palette-accent);
+  color: white;
 }
