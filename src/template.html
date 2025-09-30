@@ -7,9 +7,13 @@
 </head>
 <body>
   <header id="sidebar">
-    <button id="sidebar-add-task" type="button">Add task</button>
-    <button id="sidebar-add-project" type="button">Add a project</button>
-    <h2>My Projects</h2>
+    <button id="sidebar-add-task-btn" type="button">Add a todo</button>
+    <div id="sidebar-projects-title">
+      My Projects
+      <button id="sidebar-add-project-btn" type="button">
+        <img src="style-assets/plus.svg" alt="">
+      </button>
+    </div>
     <nav>
       <ul>
         <li>
@@ -48,7 +52,45 @@
       </ul>
     </nav>
   </header>
-  <div id="main">
+  <div id="main-container">
+    <div id="main-topbar">
+      <button class="project-edit-btn">
+        <img class="project-edit-sym" src="style-assets/dots-horizontal.svg" alt="">
+      </button>
+    </div>
+    <div id="main-content">
+      <h1>Home 🏡</h1>
+      <ul>
+        <li>
+          <div class="todo-card">
+            <div class="todo-checkbubble-container">
+              <button class="todo-checkbubble" name="statusName" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
+              </button>
+            </div>
+            <div class="todo-top-row">
+              <span class="todo-title">
+                <strong>Mow the lawn</strong>
+              </span> 
+              <div class="todo-btns-container">
+                <button class="todo-btn" type="button">
+                  <img src="style-assets/chevron-double-down.svg" alt="">
+                </button>
+                <button class="todo-btn" type="button">
+                  <img src="style-assets/dots-horizontal.svg" alt="">
+                </button>
+              </div>
+            </div>
+            <div class="todo-due-by">Sep 22-1984, 12:00pm</div>
+            <div class="todo-description">It needs to be mowed for cryin' out loud! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+          </div>
+        </li>
+      </ul>
+      <button id="this-project-add-todo" class="add-todo">
+        <img src="style-assets/plus.svg" alt="">
+        Add todo
+      </button>
+    </div>
   </div>
   <div id="notif">
 

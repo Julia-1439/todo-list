@@ -31,13 +31,13 @@ button, input, optgroup, select, textarea {
 
 html {
   /* Custom CSS properties */
+  --standard-padding: 15px;
+  --minor-padding: 5px;
   --project-cell-width: 300px;
-  --project-cell-height: 2.25rem;
+  --project-cell-height: 36px;
 
-  --palette-light: #ffb9b9;
-  --palette-dark: #ff8787;
-  --palette-accent: #db4f62;
-  --palette-accent-2: #ffb272;
+  --palette-sidebar: #7ecdff;
+  --palette-accent: #ffe524;
   --palette-dark-gray: #636363;
   --palette-light-gray: #E2E8F0;
 }
@@ -46,7 +46,7 @@ body {
   min-height: 100vh;
 
   display: grid;
-  grid-template-columns: 345px 1fr; /* @todo quick fix */
+  grid-template-columns: calc(var(--project-cell-width) + 3*var(--standard-padding)) 1fr; 
   grid-template-areas: "sidebar main";
 }
 
@@ -56,19 +56,48 @@ body {
   position: fixed;
   overflow: auto; /* add a scroll bar if a lot of projects. @todo need to test */
 
-  padding: 15px;
+  padding: var(--standard-padding);
 }
 
-#sidebar h2 {
-  margin-bottom: revert;
+#sidebar-add-task-btn {
+  width: 100%;
+  font-size: 1.2rem;
+}
+
+
+#sidebar-projects-title {
+  font-size: 1.25rem;
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#sidebar-add-project-btn {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 #sidebar ul {
   list-style-type: none;
 }
 
-#main {
+#main-container {
   grid-area: main;  
+  display: flex;
+  flex-direction: column;
+
+  padding: var(--standard-padding);
+  background-color: var(--palette-light-gray);
+}
+
+#main-topbar {
+  display: flex; 
+  justify-content: flex-end;
+}
+
+#main-content {
+  padding: var(--standard-padding) 10%;
 }
 
 #notif {
@@ -86,41 +115,138 @@ body {
   display: grid;
   grid-template-columns: 1fr min-content;
 
-  margin-left: 15px;
+  margin-left: var(--standard-padding);
+  background-color: white;
 }
 
 .project-cell button {
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .project-cell .view-project-btn {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: var(--minor-padding);
 
   max-width: calc(var(--project-cell-width) - var(--project-cell-height)); /* Quick duct tape fix for overflows... */
   height: var(--project-cell-height);
-  padding: 5px;
+  padding: var(--minor-padding);
 }
 
-.project-cell .view-project-btn .project-sym {
+.project-cell .project-sym {
   width: 1rem;
   height: 1rem;
 }
 
-.project-cell .view-project-btn .project-title {
+.project-cell .project-title {
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.project-cell .project-edit-btn {
+.project-edit-btn {
+  height: var(--project-cell-height);
   width: var(--project-cell-height);
 }
 
-.project-cell .project-edit-sym {
+project-edit-btn .project-edit-sym {
   width: 1.25rem;
   height: 1.25rem;
   margin: 0 auto;
+}
+
+#main-content h1 {
+  margin-bottom: revert;
+}
+
+#main-content ul {
+  list-style-type: none;
+}
+
+#main-content li {
+  margin-bottom: var(--standard-padding);
+}
+
+.todo-card {
+  padding: var(--standard-padding);
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: repeat(3, min-content);
+
+  border-radius: 8px;
+}
+
+.todo-card > div {
+  padding: var(--minor-padding);
+}
+
+.todo-checkbubble-container {
+  grid-row: 1 / -1;
+  width: 50px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.todo-checkbubble {
+  width: 1.5rem;
+  border-radius: 50%;
+  border: none;
+  /* background-color: #11cc11;  */
+  background-color: transparent; /* changes based on status */
+}
+
+.todo-checkbubble:hover {
+  cursor: pointer;
+}
+
+.todo-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.todo-title {
+  color: initial; /* changes based on status */
+}
+
+.todo-btn {
+  vertical-align: middle;
+  height: 24px;
+  width: 24px;
+}
+
+.todo-due-by, 
+.todo-description {
+  font-size: 0.9rem;
+}
+
+#this-project-add-todo {
+  width: 100%;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  gap: var(--minor-padding);
+  padding: var(--standard-padding);
+}
+
+#this-project-add-todo img {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* ========================================================================== */
+/* TEST STYLES */
+/* ========================================================================== */
+
+#sidebar {
+  background-color: var(--palette-sidebar);
+}
+
+#main-content {
+}
+
+.todo-card {
+  background-color: white;
 }

@@ -1,14 +1,14 @@
 function incompleteStatus() {
   return {
     name: "incomplete",
-    color: "#9b9b9b",
+    color: "#00000000",
   };
 }
 
 function completedStatus() {
   return {
     name: "completed",
-    color: "#80ff80",
+    color: "#11cc11",
   };
 }
 
