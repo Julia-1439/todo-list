@@ -36,17 +36,19 @@ html {
   --project-cell-width: 300px;
   --project-cell-height: 36px;
 
-  --palette-sidebar: #7ecdff;
-  --palette-accent: #ffe524;
+  --palette-sidebar: #FCFAF8;
+  --palette-highlight: #F2F0EE;
+  --palette-focus: #ffe5d6;
+  --palette-accent: #dc583e;
   --palette-dark-gray: #636363;
-  --palette-light-gray: #E2E8F0;
+  --palette-light-gray: #dfdfdf;
 }
 
 body {
   min-height: 100vh;
 
   display: grid;
-  grid-template-columns: calc(var(--project-cell-width) + 3*var(--standard-padding)) 1fr; 
+  grid-template-columns: calc(var(--project-cell-width) + 2*var(--standard-padding)) 1fr; 
   grid-template-areas: "sidebar main";
 }
 
@@ -59,11 +61,23 @@ body {
   padding: var(--standard-padding);
 }
 
-#sidebar-add-task-btn {
+#sidebar-add-todo-btn {
   width: 100%;
+  height: 2.5rem;
   font-size: 1.2rem;
+  color: var(--palette-accent);
+  font-weight: bold;
+  padding: var(--minor-padding);
+
+  display: flex;
+  align-items: center;
+  gap: var(--standard-padding);
 }
 
+.add-todo-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
 
 #sidebar-projects-title {
   font-size: 1.25rem;
@@ -86,14 +100,21 @@ body {
   grid-area: main;  
   display: flex;
   flex-direction: column;
-
-  padding: var(--standard-padding);
-  background-color: var(--palette-light-gray);
+  padding: 0 var(--standard-padding);
 }
 
 #main-topbar {
   display: flex; 
   justify-content: flex-end;
+  background-color: white;
+
+  padding: var(--standard-padding) 0;
+  border-bottom: 1px solid var(--palette-light-gray);
+}
+
+.sticky {
+  position: sticky;
+  top: 0px;
 }
 
 #main-content {
@@ -115,7 +136,6 @@ body {
   display: grid;
   grid-template-columns: 1fr min-content;
 
-  margin-left: var(--standard-padding);
   background-color: white;
 }
 
@@ -136,6 +156,10 @@ body {
 .project-cell .project-sym {
   width: 1rem;
   height: 1rem;
+}
+
+.project-cell.completed .project-sym path {
+  d: path("M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20M16.59 7.58L10 14.17L7.41 11.59L6 13L10 17L18 9L16.59 7.58Z");
 }
 
 .project-cell .project-title {
@@ -169,12 +193,12 @@ project-edit-btn .project-edit-sym {
 }
 
 .todo-card {
-  padding: var(--standard-padding);
+  padding: var(--standard-padding) 0;
   display: grid;
   grid-template-columns: min-content 1fr;
   grid-template-rows: repeat(3, min-content);
 
-  border-radius: 8px;
+  border-bottom: 1px solid var(--palette-light-gray);
 }
 
 .todo-card > div {
@@ -192,13 +216,23 @@ project-edit-btn .project-edit-sym {
 .todo-checkbubble {
   width: 1.5rem;
   border-radius: 50%;
-  border: none;
-  /* background-color: #11cc11;  */
-  background-color: transparent; /* changes based on status */
+  border: 2px solid #6E64FE;
+  background-color: #6E64FEa6;
+  /* changes based on status */
+}
+
+.todo-checkbubble svg {
+  visibility: hidden;
 }
 
 .todo-checkbubble:hover {
   cursor: pointer;
+  filter: brightness(95%);
+
+  background-image: url(style-assets/check-white.svg);
+  background-size: 75%;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .todo-top-row {
@@ -222,19 +256,33 @@ project-edit-btn .project-edit-sym {
   font-size: 0.9rem;
 }
 
-#this-project-add-todo {
+#this-project-add-todo-btn {
   width: 100%;
   height: 2rem;
   display: flex;
   align-items: center;
-  gap: var(--minor-padding);
+  gap: var(--standard-padding);
   padding: var(--standard-padding);
+
+  border-radius: 8px;
+  border: none;
+  background-color: white;
+  cursor: pointer;
 }
 
-#this-project-add-todo img {
+#this-project-add-todo-btn:hover {
+  color: var(--palette-accent); 
+}
+
+#this-project-add-todo-btn:hover svg.add-todo-icon path {
+  d: path("M17,13H13V17H11V13H7V11H11V7H13V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z");
+}
+
+#this-project-add-todo-btn .add-todo-icon {
   width: 1.25rem;
   height: 1.25rem;
 }
+
 
 /* ========================================================================== */
 /* TEST STYLES */
