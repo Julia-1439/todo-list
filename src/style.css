@@ -290,6 +290,7 @@ project-edit-btn .project-edit-sym {
 
 dialog {
   margin: 8vh auto auto;
+  padding: calc(2 * var(--standard-padding));
   border: none;
   box-shadow: 0px 2px 11px -3px var(--palette-dark-gray);
   -webkit-box-shadow: 0px 2px 11px -3px var(--palette-dark-gray);
@@ -325,7 +326,7 @@ legend {
 }
 
 #cu-project-dialog {
-  padding: calc(2 * var(--standard-padding));
+
 }
 
 #cu-project-dialog fieldset {

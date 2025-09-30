@@ -171,7 +171,7 @@
   </div>
   <div id="notif"></div>
   <dialog id="cu-project-dialog">
-    <form id="cu-project-form" method="dialog">
+    <form id="cu-project-form" method="dialog" data-dialog="cu-project-dialog">
       <fieldset>
         <!-- @todo -->
         <legend><span data-operation="create|edit">Create</span> project</legend>
@@ -192,13 +192,36 @@
         </div>
       </fieldset>
       <div class="form-finish-btns-row">
-        <button class="form-cancel-btn" type="button">Cancel</button>
+        <button class="form-cancel-btn" type="button" form="cu-project-form">Cancel</button>
         <button class="form-submit-btn" type="submit">Add Project</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="delete-dialog">
+    <form id="delete-form" method="dialog" data-dialog="delete-dialog"
+      data-object-type="project|todo"
+      data-uuid=""      
+    >
+      This <span data-object-type="">project</span> “<strong>Home</strong>” will be deleted. Confirm? 
+      <div class="form-finish-btns-row">
+        <button class="form-cancel-btn" type="button" form="delete-form">Cancel</button>
+        <button class="form-submit-btn" type="submit" autofocus>Delete</button>
       </div>
     </form>
   </dialog>
   <script defer>
     document.querySelector("#cu-project-dialog").showModal();
+    document.querySelector("#delete-dialog").showModal();
+
+    document.querySelectorAll(".form-cancel-btn").forEach((btn) => {
+      btn.addEventListener("click", (evt) => {
+        const form = btn.form;
+        form.reset();
+
+        const dialog = document.querySelector(`#${form.dataset.dialog}`);
+        dialog.close();
+      });
+    })
   </script>
 </body>
 </html>
