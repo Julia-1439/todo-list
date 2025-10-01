@@ -120,6 +120,8 @@ body {
 
 #main-content {
   padding: var(--standard-padding) 10%;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 #notif {
@@ -182,10 +184,16 @@ project-edit-btn .project-edit-sym {
 }
 
 #main-content h1 {
-  margin-bottom: revert;
+  margin-bottom: var(--standard-padding);
+}
+
+.project-description {
+  margin-bottom: var(--standard-padding);
 }
 
 #main-content ul {
+  align-self: center;
+  width: min(700px, 100%);
   list-style-type: none;
 }
 
@@ -240,10 +248,21 @@ project-edit-btn .project-edit-sym {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--standard-padding);
 }
 
 .todo-title {
   color: initial; /* changes based on status */
+  display: inline-block;
+  min-width: 45ch;
+  max-width: 72ch;
+  word-break: break-all;
+}
+
+.todo-btns-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--minor-padding);  
 }
 
 .todo-btn {
@@ -255,6 +274,8 @@ project-edit-btn .project-edit-sym {
 .todo-due-by, 
 .todo-description {
   font-size: 0.9rem;
+  min-width: 45ch;
+  max-width: 72ch;
 }
 
 #this-project-add-todo-btn {
