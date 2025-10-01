@@ -177,30 +177,34 @@
   </div>
   <dialog id="cu-project-dialog">
     <form id="cu-project-form" method="dialog" data-dialog="cu-project-dialog"
-      data-uuid="if editing the project uuid would go here"
+      data-operation
+      data-uuid
     >
       <fieldset>
-        <!-- @todo -->
-        <legend><span data-operation="create|edit">Create</span> project</legend>
+        <legend><span data-operation>create</span> project</legend>
         <div>
-          <label for="cu-project-form-title">
-            Title <span aria-label="required">*</span>
-          </label>
+          <div>
+            <label for="cu-project-form-title">
+              Title <span aria-label="required">*</span>
+            </label>
+          </div>
           <input autofocus type="text" name="title" id="cu-project-form-title" 
             required
             maxlength="40"
           >
         </div>
         <div>
-          <label for="cu-project-form-description">
-            Description
-          </label>
+          <div>
+            <label for="cu-project-form-description">
+              Description
+            </label>
+          </div>
           <textarea id="cu-project-form-description" name="description" maxlength="240"></textarea>
         </div>
       </fieldset>
       <div class="form-finish-row">
         <button class="form-cancel-btn" type="button" form="cu-project-form">Cancel</button>
-        <button class="form-submit-btn" type="submit">Add Project</button>
+        <button class="form-submit-btn" type="submit" data-operation><span data-operation>create</span> Project</button>
       </div>
     </form>
   </dialog>
@@ -272,7 +276,7 @@
     </form>
   </dialog>
   <script defer>
-    // document.querySelector("#cu-project-dialog").showModal();
+    document.querySelector("#cu-project-dialog").showModal();
     // document.querySelector("#delete-dialog").showModal();
     // document.querySelector("#cu-todo-dialog").showModal();
 

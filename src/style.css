@@ -395,10 +395,6 @@ legend {
   gap: var(--minor-padding);
 }
 
-#cu-project-form label {
-  display: block;
-}
-
 #cu-todo-form fieldset {
   display: grid;
   grid-template-columns: min-content 1fr;
@@ -456,4 +452,8 @@ legend {
   padding: 8px;
   display: flex;
   align-items: center;
+}
+
+[data-operation] {
+  text-transform: capitalize;
 }
