@@ -36,7 +36,7 @@ function createDefaultProject() {
       d.setHours(17, 0, 0, 0);
       return d;
     })(), 
-    priorityLvl: "p3",
+    priority: "p3",
   });
   createTodo(projectUuid, {
     title: "Practice meditation for 10 minutes", 
@@ -47,7 +47,7 @@ function createDefaultProject() {
       d.setHours(8, 0, 0, 0);
       return d;
     })(), 
-    priorityLvl: "p4",
+    priority: "p4",
   });
 
   return viewProject(_projects.at(-1).uuid);
@@ -179,8 +179,8 @@ function removeProject(uuid) {
 function createTodo(projectUuid, data) {
   const project = getProject(projectUuid);
 
-  const {title, description, dueDateTime, priorityLvl,} = data;
-  const todo = new TodoItem(title, description, dueDateTime, priorityLvl,);
+  const {title, description, dueDateTime, priority,} = data;
+  const todo = new TodoItem(title, description, dueDateTime, priority,);
   project.addTodo(todo);
 
   storageControl.post(project);
