@@ -130,9 +130,24 @@ body {
 }
 
 #notif {
-  position: absolute;
-  bottom: 5px;
-  left: 50%;
+  z-index: 1;
+  position: fixed;
+  bottom: 2vw;
+  right: 2vw;
+
+  min-width: 45ch;
+  min-height: 4rem;
+  border: 1px solid var(--palette-accent);
+  box-shadow: 0px 2px 11px -3px var(--palette-dark-gray);
+  background-color: white;
+  padding: var(--minor-padding);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 /* ========================================================================== */
