@@ -25,6 +25,10 @@ button, input, optgroup, select, textarea {
   font-size: 100%;
 }
 
+input, select {
+  height: var(--form-ctrl-height);
+}
+
 /* ========================================================================== */
 /* MAIN STYLING */
 /* ========================================================================== */
@@ -35,6 +39,7 @@ html {
   --minor-padding: 5px;
   --project-cell-width: 300px;
   --project-cell-height: 36px;
+  --form-ctrl-height: 38px; /* this is close to the default height. use this to normalize height for the one-liner form controls, particularly for <select> which is oddly shorter than <input type="text"> */
 
   --palette-sidebar: #FCFAF8;
   --palette-highlight: #F2F0EE;
@@ -327,12 +332,12 @@ dialog::backdrop {
 }
 
 input,
-textarea {
+textarea,
+select {
   padding: 8px;
 }
 
 textarea[name="description"] {
-  width: 100%;
   resize: vertical;
 }
 
@@ -346,11 +351,12 @@ legend {
   margin-bottom: var(--standard-padding);
 }
 
-#cu-project-dialog {
-
+#cu-project-form textarea[name="description"]{
+  display: block;
+  width: 100%;
 }
 
-#cu-project-dialog fieldset {
+#cu-project-form fieldset {
   display: flex;
   flex-flow: column wrap;
   gap: var(--minor-padding);
@@ -360,14 +366,30 @@ legend {
   display: block;
 }
 
-.form-finish-btns-row {
+#cu-todo-form fieldset {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: repeat(4, min-content);
+  gap: var(--standard-padding);
+}
+
+#cu-todo-form select[name="priority"],
+#cu-todo-form select[name="projectUuid"] {
+  width: 100%;
+}
+
+.full-span-row {
+  grid-column: 1 / -1;
+}
+
+.form-finish-row {
   margin-top: calc(2 * var(--standard-padding));
   display: flex;
   justify-content: flex-end;
   gap: var(--standard-padding);
 }
 
-.form-finish-btns-row button {
+.form-finish-row button {
   min-width: 80px;
   padding: 6px 12px;
   border: none;
@@ -375,7 +397,7 @@ legend {
   cursor: pointer;
 }
 
-.form-finish-btns-row button:hover {
+.form-finish-row button:hover {
   filter: brightness(95%);
 }
 
@@ -388,3 +410,4 @@ legend {
   background-color: var(--palette-accent);
   color: white;
 }
+

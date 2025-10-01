@@ -171,15 +171,17 @@
   </div>
   <div id="notif"></div>
   <dialog id="cu-project-dialog">
-    <form id="cu-project-form" method="dialog" data-dialog="cu-project-dialog">
+    <form id="cu-project-form" method="dialog" data-dialog="cu-project-dialog"
+      data-uuid="if editing the project uuid would go here"
+    >
       <fieldset>
         <!-- @todo -->
         <legend><span data-operation="create|edit">Create</span> project</legend>
         <div>
           <label for="cu-project-form-title">
-            Title
+            Title <span aria-label="required">*</span>
           </label>
-          <input autofocus type="text" id="cu-project-form-title" name="title"
+          <input autofocus type="text" name="title" id="cu-project-form-title" 
             required
             maxlength="40"
           >
@@ -191,9 +193,64 @@
           <textarea id="cu-project-form-description" name="description" maxlength="240"></textarea>
         </div>
       </fieldset>
-      <div class="form-finish-btns-row">
+      <div class="form-finish-row">
         <button class="form-cancel-btn" type="button" form="cu-project-form">Cancel</button>
         <button class="form-submit-btn" type="submit">Add Project</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="cu-todo-dialog">
+    <form id="cu-todo-form" method="dialog" data-dialog="cu-todo-dialog">
+      <fieldset>
+        <!-- @todo -->
+        <legend><span data-operation="create|edit">Create</span> task</legend>
+        <div>
+          <label for="cu-todo-form-title">
+            Title <span aria-label="required">*</span>
+          </label>
+        </div>
+        <input autofocus type="text" id="cu-todo-form-title" name="title" 
+          required
+          maxlength="120"
+        >
+        <div>
+          <label for="cu-todo-form-description">
+            Description
+          </label>
+        </div>
+        <textarea id="cu-todo-form-description" name="description" maxlength="240"></textarea>
+        <div>
+          <label for="cu-todo-form-dueby">
+            Due by
+            <input type="datetime-local" name="dueDateTime" id="cu-todo-form-dueby">
+          </label>
+        </div>
+        <div>
+          <label for="cu-todo-form-priority">
+            Priority
+            <select name="priority" id="cu-todo-form-priority">
+              <option value=""></option>
+              <option value="p1">P1</option>
+              <option value="p2">P2</option>
+              <option value="p3">P3</option>
+              <option value="p4">P4</option>
+            </select>
+          </label>
+        </div>
+        <div class="full-span-row">
+          <label for="cu-todo-form-project-selector">
+            Select a project <span aria-label="required">*</span>
+            <select name="projectUuid" id="cu-todo-form-project-selector"
+              required>
+              <option value="">Select a project</option>
+              <option value="PROJECT UUID GOES HERE">Awesome project!</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+      <div class="form-finish-row">
+        <button class="form-cancel-btn" type="button" form="cu-todo-form">Cancel</button>
+        <button class="form-submit-btn" type="submit">Add Task</button>
       </div>
     </form>
   </dialog>
@@ -203,7 +260,7 @@
       data-uuid=""      
     >
       This <span data-object-type="">project</span> “<strong>Home</strong>” will be deleted. Confirm? 
-      <div class="form-finish-btns-row">
+      <div class="form-finish-row">
         <button class="form-cancel-btn" type="button" form="delete-form">Cancel</button>
         <button class="form-submit-btn" type="submit" autofocus>Delete</button>
       </div>
@@ -212,6 +269,7 @@
   <script defer>
     document.querySelector("#cu-project-dialog").showModal();
     document.querySelector("#delete-dialog").showModal();
+    document.querySelector("#cu-todo-dialog").showModal();
 
     document.querySelectorAll(".form-cancel-btn").forEach((btn) => {
       btn.addEventListener("click", (evt) => {
@@ -221,7 +279,7 @@
         const dialog = document.querySelector(`#${form.dataset.dialog}`);
         dialog.close();
       });
-    })
+    });
   </script>
 </body>
 </html>
