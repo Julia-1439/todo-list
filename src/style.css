@@ -429,3 +429,16 @@ legend {
   color: white;
 }
 
+#context-menu {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  /* border: 2px solid var(--palette-accent); */
+}
+
+#context-menu button {
+  color: var(--palette-accent);
+  height: 2rem;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+}

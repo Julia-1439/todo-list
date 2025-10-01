@@ -6,6 +6,11 @@
   <title>Todo List</title>
 </head>
 <body>
+  <div id="context-menu" popover>
+    <button type="button">Edit</button>
+    <button type="button">Mark complete</button>
+    <button type="button">Delete</button>    
+  </div>
   <header id="sidebar">
     <button id="sidebar-add-todo-btn" type="button">
       <svg class="add-todo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17,13H13V17H11V13H7V11H11V7H13V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" fill="#dc583e"/></svg>
@@ -25,7 +30,7 @@
               <img class="project-sym" src="style-assets/pound.svg" alt="">
               <span class="project-title">Learn Web Development</span>
             </button>
-            <button class="project-edit-btn">
+            <button class="project-edit-btn" popovertarget="context-menu" popovertargetaction="toggle">
               <img class="project-edit-sym" src="style-assets/dots-horizontal.svg" alt="">
             </button>
           </div>
@@ -267,9 +272,9 @@
     </form>
   </dialog>
   <script defer>
-    document.querySelector("#cu-project-dialog").showModal();
-    document.querySelector("#delete-dialog").showModal();
-    document.querySelector("#cu-todo-dialog").showModal();
+    // document.querySelector("#cu-project-dialog").showModal();
+    // document.querySelector("#delete-dialog").showModal();
+    // document.querySelector("#cu-todo-dialog").showModal();
 
     document.querySelectorAll(".form-cancel-btn").forEach((btn) => {
       btn.addEventListener("click", (evt) => {
