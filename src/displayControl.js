@@ -42,6 +42,7 @@ const doc = document;
 })();
 
 /* Forms */
+// the form for creating OR updating a project
 (function initListenersCuProjectForm() {
   const form = doc.querySelector("#cu-project-form");
   form.addEventListener("submit", (evt) => {
@@ -55,6 +56,27 @@ const doc = document;
         // @todo
         break;
     }
+
+    form.reset();
+  });
+})();
+
+// the form for creating OR updating a todo
+(function initListenersCuTodoForm() {
+  const form = doc.querySelector("#cu-todo-form");
+  form.addEventListener("submit", (evt) => {
+    const operation = form.dataset.operation;
+
+    switch (operation) {
+      case "create":
+        createTodo(evt);
+        break;
+      case "update":
+        // @todo
+        break;
+    }
+
+    form.reset();
   });
 })();
 
@@ -73,22 +95,52 @@ const doc = document;
 
 /* Load data from storage */
 function load() {
-  const loadData = internalControl.load();  
-  updateSidebar();  
-
-  // @todo call render project
+  internalControl.load();  
+  updateDisplay();  
 }
 
 /* ========================================================================== */
 /* HELPERS */
 /* ========================================================================== */
 
-function updateSidebar() {
-  const projectTitles = internalControl.viewProjectTitles();
-  projectTitles.reverse(); // sort descending by project creation date
-  projectTitles.forEach((title) => {
-    console.log(title);
-  });
+/**
+ * update the sidebar with project titles; update the project selection menu 
+ * when creating a new task; update the main display
+*/
+function updateDisplay() {
+  const projectsData = internalControl.viewAllProjects();
+  projectsData.reverse(); // sorts in descending order by project creation time
+
+  updateSidebar();
+  updateProjectSelectElement();
+  // @todo update the main display
+
+  function updateSidebar() {
+    // @todo call wipe
+    const projectTitles = projectsData.map(projectData => projectData.title);
+    projectTitles.forEach((title) => {
+      console.log(title); // @todo 
+    });
+  }
+
+  function updateProjectSelectElement() {
+    const selector = doc.querySelector("#cu-todo-form-project-selector");
+    wipe(selector);
+    
+    const blankOption = createOption("", "");
+    const projectOptions = projectsData.map((projectData) => 
+      createOption(projectData.uuid, projectData.title)
+    );
+    selector.append(blankOption, ...projectOptions);
+
+    function createOption(uuid, title) {
+      const option = doc.createElement("option");
+      option.setAttribute("value", uuid);
+      option.textContent = title;
+      return option;
+    }
+  }
+
 }
 
 /**
@@ -116,6 +168,17 @@ function displayNotif(message) {
   }, THREE_SECONDS);
 }
 
+/**
+ * Replaces empty string values "" in an object with undefined, for usage in
+ * preparing data to be passed into the internal control module. 
+ */
+function emptyStrReplacer(data) {
+  Object.entries(data).forEach(([key, val]) => {
+    if (val === "") 
+      data[key] = undefined;
+  });
+}
+
 /* ========================================================================== */
 /* CRUD for projects */
 /* ========================================================================== */
@@ -123,18 +186,28 @@ function displayNotif(message) {
 function createProject(submitEvt) {
   const creationForm = submitEvt.submitter.form;
   const enteredData = Object.fromEntries(new FormData(creationForm));
+  emptyStrReplacer(enteredData);
 
   const projectData = internalControl.createProject(enteredData);
 
   displayNotif(`Project "${projectData.title}" has been created.`);
-  updateSidebar();
-  // @todo render project
+  updateDisplay();
 }
 
 /* ========================================================================== */
 /* CRUD for todos */
 /* ========================================================================== */
 
+function createTodo(submitEvt) {
+  const creationForm = submitEvt.submitter.form;
+  const enteredData = Object.fromEntries(new FormData(creationForm));
+  emptyStrReplacer(enteredData);
+
+  const projectData = internalControl.createTodo(enteredData.projectUuid, enteredData);
+
+  displayNotif(`Task has been created.`);
+  updateDisplay();
+}
 
 
 /* ========================================================================== */

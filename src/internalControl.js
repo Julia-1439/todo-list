@@ -53,8 +53,8 @@ function createDefaultProject() {
   return viewProject(_projects.at(-1).uuid);
 }
 
-function viewProjectTitles() {
-  return _projects.map(project => project.title);
+function viewAllProjects() {
+  return _projects.map((project) => viewProject(project.uuid));
 }
 
 /**
@@ -69,12 +69,6 @@ function load() {
 
   if (_projects.length === 0) 
     createDefaultProject();
-
-  const latestProjectData = viewProject(_projects.at(-1).uuid); 
-  return Object.assign(
-    { projectTitles: viewProjectTitles() }, // @todo might not be needed
-    { latestProjectData }
-  );
 }
 
 /* ========================================================================== */
@@ -275,7 +269,7 @@ export {
 
   // CRUD for projects
   createProject, 
-  viewProject, viewProjectTitles,
+  viewProject, viewAllProjects,
   editProjectMetadata,
   removeProject,
 
