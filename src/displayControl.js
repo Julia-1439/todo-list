@@ -4,37 +4,80 @@ import { internalControl } from "./barrel.js";
 /* SET VARIABLES */
 /* ========================================================================== */
 
-// @note cannot export this from barrel due to what I believe is circular dependency between displayControl and barrel
+const THREE_SECONDS = 3 * 1000;
 const doc = document; 
 
+
+/* ========================================================================== */
+/* INITIALIZATION: add evt listeners to *permanent* fixtures, and load data from storage */
+/* ========================================================================== */
+
 /* Sidebar */
-const sbar = doc.querySelector("#sidebar");
-const sbarAddTask = doc.querySelector("#sidebar-add-task")
-const sbarAddProject = doc.querySelector("#sidebar-add-project")
+(function initListenersSidebar() {
+  const createProjectBtn = doc.querySelector("#sidebar-create-project-btn");
+  createProjectBtn.addEventListener("click", () => {
+    const dialog = doc.querySelector("#cu-project-dialog");
+    const form = doc.querySelector("#cu-project-form");
 
-/* Main content section */
-const main = doc.querySelector("#main");
+    form.dataset.operation = "create";
+    form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
+      blankToFill.textContent = "create";
+    });
+    
+    dialog.showModal();
+  });
 
-/* Notification box */
-const notif = doc.querySelector("#notif");
+  const createTodoBtn = doc.querySelector("#sidebar-create-todo-btn");
+  createTodoBtn.addEventListener("click", () => {
+    const dialog = doc.querySelector("#cu-todo-dialog");
+    const form = doc.querySelector("#cu-todo-form");
 
-/* ========================================================================== */
-/* INITIALIZATION: add event listeners and load the page from storage */
-/* ========================================================================== */
-
-(function addEventListeners() {
-  // @todo
+    form.dataset.operation = "create";
+    form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
+      blankToFill.textContent = "add";
+    });
+    
+    dialog.showModal();
+  });
 })();
 
+/* Forms */
+(function initListenersCuProjectForm() {
+  const form = doc.querySelector("#cu-project-form");
+  form.addEventListener("submit", (evt) => {
+    const operation = form.dataset.operation;
+
+    switch (operation) {
+      case "create":
+        createProject(evt);
+        break;
+      case "update":
+        // @todo
+        break;
+    }
+  });
+})();
+
+(function initListenersCancelBtns() {
+  const cancelBtns = doc.querySelectorAll(".form-cancel-btn");
+  cancelBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const form = btn.form;
+      const dialog = doc.querySelector(`#${form.dataset.dialog}`);
+
+      form.reset();
+      dialog.close();
+    });
+  });
+})();
+
+/* Load data from storage */
 function load() {
-  const loadData = internalControl.initialize();
+  const loadData = internalControl.load();  
   updateSidebar();  
 
   // @todo call render project
 }
-
-
-
 
 /* ========================================================================== */
 /* HELPERS */
@@ -59,18 +102,34 @@ function wipe(container) {
 }
 
 /**
- * 
- * @param {String} content 
+ * Create toast notifications that disappear after a few seconds
+ * @param {String} message
  */
-function displayNotif(content) {
-  console.log(content);
-  // notif.textContent = content;
+function displayNotif(message) {
+  const notif = doc.querySelector("#notif");
+  notif.textContent = message;
+  notif.classList.remove("hidden");
+
+  setTimeout(() => {
+    notif.textContent = null;
+    notif.classList.add("hidden");
+  }, THREE_SECONDS);
 }
 
 /* ========================================================================== */
 /* CRUD for projects */
 /* ========================================================================== */
 
+function createProject(submitEvt) {
+  const creationForm = submitEvt.submitter.form;
+  const enteredData = Object.fromEntries(new FormData(creationForm));
+
+  const projectData = internalControl.createProject(enteredData);
+
+  displayNotif(`Project "${projectData.title}" has been created.`);
+  updateSidebar();
+  // @todo render project
+}
 
 /* ========================================================================== */
 /* CRUD for todos */

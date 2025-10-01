@@ -64,7 +64,7 @@ function viewProjectTitles() {
  * @returns {Object} containing a list of project titles and a view of the
  * most recently created project
  */
-function initialize() {
+function load() {
   restoreFromStorage();
 
   if (_projects.length === 0) 
@@ -271,7 +271,7 @@ function removeTodo(projectUuid, todoUuid) {
 
 export { 
   // For page load
-  initialize,
+  load,
 
   // CRUD for projects
   createProject, 
