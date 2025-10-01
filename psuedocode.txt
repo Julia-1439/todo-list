@@ -354,3 +354,18 @@ func removeProject(submitEvt)
   CALL wipe WITH main
   CALL updateSidebar
   CALL displayNotif WITH a message
+
+/* ========================================================================== */
+CRUD todos
+/* ========================================================================== */
+
+func createTodo(uuid)
+  SET creationData TO formDataEvt.formData
+  CALL internalControl.createProject WITH creationData INTO projectData
+
+  // view it
+  CALL renderProject WITH projectData
+  CALL updateSidebar
+  CALL displayNotif WITH a message
+
+
