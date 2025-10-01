@@ -232,6 +232,7 @@ project-edit-btn .project-edit-sym {
   border-radius: 50%;
   border: 2px solid #6E64FE;
   background-color: #6E64FEa6;
+  cursor: pointer;
   /* changes based on status */
 }
 
@@ -240,13 +241,20 @@ project-edit-btn .project-edit-sym {
 }
 
 .todo-checkbubble:hover {
-  cursor: pointer;
   filter: brightness(95%);
+}
 
+.todo-checkbubble:hover,
+.todo-completed {
   background-image: url(style-assets/check-white.svg);
   background-size: 75%;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.todo-completed {
+  border-color: #11cc11;
+  background-color: #11cc11a6;
 }
 
 .todo-top-row {
@@ -262,6 +270,12 @@ project-edit-btn .project-edit-sym {
   min-width: 45ch;
   max-width: 72ch;
   word-break: break-all;
+}
+
+.todo-card:has(.todo-completed) .todo-title,
+.todo-card:has(.todo-completed) .todo-due-by,
+.todo-card:has(.todo-completed) .todo-description {
+  text-decoration: line-through;
 }
 
 .todo-btns-container {
