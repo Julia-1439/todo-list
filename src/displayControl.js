@@ -12,6 +12,10 @@ const doc = document;
 /* INITIALIZATION: add evt listeners to *permanent* fixtures, and load data from storage */
 /* ========================================================================== */
 
+function render() {
+  updateDisplay();  
+}
+
 /* Sidebar */
 (function initListenersSidebar() {
   const createProjectBtn = doc.querySelector("#sidebar-create-project-btn");
@@ -80,6 +84,7 @@ const doc = document;
   });
 })();
 
+// make each cancel button close their parent form
 (function initListenersCancelBtns() {
   const cancelBtns = doc.querySelectorAll(".form-cancel-btn");
   cancelBtns.forEach((btn) => {
@@ -92,12 +97,6 @@ const doc = document;
     });
   });
 })();
-
-/* Load data from storage */
-function load() {
-  internalControl.load();  
-  updateDisplay();  
-}
 
 /* ========================================================================== */
 /* HELPERS */
@@ -126,7 +125,7 @@ function updateDisplay() {
   function updateProjectSelectElement() {
     const selector = doc.querySelector("#cu-todo-form-project-selector");
     wipe(selector);
-    
+
     const blankOption = createOption("", "");
     const projectOptions = projectsData.map((projectData) => 
       createOption(projectData.uuid, projectData.title)
@@ -148,9 +147,7 @@ function updateDisplay() {
  * @param {HTMLElement} container 
  */
 function wipe(container) {
-  while (container.firstChild) {
-    container.removeChild(container.lastChild);
-  }
+  container.replaceChildren();
 }
 
 /**
@@ -215,7 +212,7 @@ function createTodo(submitEvt) {
 /* ========================================================================== */
 
 
-export { load };
+export { render };
 
 // @todo these exports will be removed once testing is done
 export { wipe, displayNotif };
