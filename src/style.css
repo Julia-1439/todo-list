@@ -179,6 +179,7 @@ body {
 }
 
 .project-cell .project-sym {
+  flex: none; /* in particular to prevent shrinking */
   width: 1rem;
   height: 1rem;
 }
@@ -201,8 +202,6 @@ body {
 .project-edit-btn {
   height: var(--project-cell-height);
   width: var(--project-cell-height);
-  display: flex;
-  justify-content: center;
 }
 
 #main-content h1 {
@@ -245,15 +244,20 @@ body {
 }
 
 .todo-checkbubble {
+  height: 1.5rem;
   width: 1.5rem;
   border-radius: 50%;
   border: 2px solid #6E64FE;
   background-color: #6E64FEa6;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   /* changes based on status */
 }
 
 .todo-checkbubble svg {
+  width: 80%;
   visibility: hidden;
 }
 
@@ -261,12 +265,9 @@ body {
   filter: brightness(95%);
 }
 
-.todo-checkbubble:hover,
-.todo-completed {
-  background-image: url(style-assets/check-white.svg);
-  background-size: 75%;
-  background-position: center;
-  background-repeat: no-repeat;
+.todo-checkbubble:hover svg,
+.todo-completed svg {
+  visibility: visible;
 }
 
 .todo-completed {
@@ -302,9 +303,12 @@ body {
 }
 
 .todo-btn {
-  vertical-align: middle;
   height: 24px;
   width: 24px;
+}
+
+.chevron-expanded path {
+  d: path("M7.41,18.41L6,17L12,11L18,17L16.59,18.41L12,13.83L7.41,18.41M7.41,12.41L6,11L12,5L18,11L16.59,12.41L12,7.83L7.41,12.41Z");
 }
 
 .todo-due-by, 
@@ -342,7 +346,8 @@ body {
 }
 
 .project-edit-sym {
-  width: 65%;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .borderless-btn {
@@ -350,6 +355,12 @@ body {
   border: none;
   background-color: transparent;
   cursor: pointer;
+}
+
+.square-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .borderless-btn:hover {
