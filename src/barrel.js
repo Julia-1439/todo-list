@@ -16,3 +16,6 @@ export * as app from "./app.js";
 
 // Styling
 export * as style from "./style.css";
+
+// Content rendering
+export * as notif from "./content-rendering/notif.js";

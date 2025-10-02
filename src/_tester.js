@@ -439,7 +439,7 @@ function runTestSet7() {
 // display control
 function runTestSet8() {
   dc.render();
-  dc.displayNotif("Test notification");
+  // dc.displayNotif("Test notification");
 }
 
 export { 

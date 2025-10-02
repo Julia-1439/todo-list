@@ -4,7 +4,6 @@ import { internalControl } from "./barrel.js";
 /* SET VARIABLES */
 /* ========================================================================== */
 
-const THREE_SECONDS = 3 * 1000;
 const doc = document; 
 
 
@@ -150,20 +149,6 @@ function wipe(container) {
   container.replaceChildren();
 }
 
-/**
- * Create toast notifications that disappear after a few seconds
- * @param {String} message
- */
-function displayNotif(message) {
-  const notif = doc.querySelector("#notif");
-  notif.textContent = message;
-  notif.classList.remove("hidden");
-
-  setTimeout(() => {
-    notif.textContent = null;
-    notif.classList.add("hidden");
-  }, THREE_SECONDS);
-}
 
 /**
  * Replaces empty string values "" in an object with undefined, for usage in
@@ -187,7 +172,11 @@ function createProject(submitEvt) {
 
   const projectData = internalControl.createProject(enteredData);
 
-  displayNotif(`Project "${projectData.title}" has been created.`);
+  doc.dispatchEvent(new CustomEvent("custom:notification", {
+    detail: {
+      message: `Project "${projectData.title}" has been created.`,
+    },
+  }));
   updateDisplay();
 }
 
@@ -202,7 +191,11 @@ function createTodo(submitEvt) {
 
   const projectData = internalControl.createTodo(enteredData.projectUuid, enteredData);
 
-  displayNotif(`Task has been created.`);
+  doc.dispatchEvent(new CustomEvent("custom:notification", {
+    detail: {
+      message: `Task has been created.`,
+    },
+  }));
   updateDisplay();
 }
 
@@ -215,4 +208,4 @@ function createTodo(submitEvt) {
 export { render };
 
 // @todo these exports will be removed once testing is done
-export { wipe, displayNotif };
+export { wipe };
