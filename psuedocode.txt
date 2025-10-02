@@ -369,3 +369,30 @@ func createTodo(uuid)
   CALL displayNotif WITH a message
 
 
+/* ========================================================================== */
+PAGE CONTROLS
+/* ========================================================================== */
+
+// HOOKING UP: Create project and Update project buttons
+SET addProjectBtn.dataset.operation TO "create"
+SET editProjectBtn.dataset.operation TO "update"
+
+// uhh what about adding the dynamic buttons. 
+// lets start from the ground up? ...
+SELECT addProjectBtn, editProjectBtn 
+[addProjectBtn, editProjectBtn].forEach((triggerBtn) => {
+  addEventListener("click", (evt) => {
+    CALL showModal ON #cu-project-dialog
+    SET op TO triggerBtn.dataset.operation
+    #cu-project-dialog.querySelectorAll([data-operation]).forEach(
+      SET ele.dataset.operation TO op
+    )
+    FOR EACH span[data-operation] CALLED s:
+      SET s.textContent TO op
+  })
+}
+
+SELECT (#cu-project-form .form-submit-btn)
+
+
+// HOOKING UP: Setting a project to completed or incomplete
