@@ -37,7 +37,7 @@ html {
   /* Custom CSS properties */
   --standard-padding: 15px;
   --minor-padding: 5px;
-  --project-cell-width: 300px;
+  --sidebar-cell-width: 300px;
   --project-cell-height: 36px;
   --form-ctrl-height: 38px; /* this is close to the default height. use this to normalize height for the one-liner form controls, particularly for <select> which is oddly shorter than <input type="text"> */
 
@@ -54,12 +54,13 @@ body {
   min-height: 100vh;
 
   display: grid;
-  grid-template-columns: calc(var(--project-cell-width) + 2*var(--standard-padding)) 1fr; 
+  grid-template-columns: calc(var(--sidebar-cell-width) + 2*var(--standard-padding)) 1fr; 
   grid-template-areas: "sidebar main";
 }
 
 #sidebar { 
   grid-area: sidebar;
+  width: calc(var(--sidebar-cell-width) + 2 * var(--standard-padding));
   height: 100vh;
   position: fixed;
   overflow: auto; /* add a scroll bar if a lot of projects. @todo need to test */
@@ -87,6 +88,7 @@ body {
 }
 
 #sidebar-projects-title {
+  width: 100%;
   font-size: 1.25rem;
   margin: 15px 0;
   display: flex;
@@ -156,7 +158,7 @@ body {
 /* ========================================================================== */
 
 .project-cell {
-  width: var(--project-cell-width);
+  width: var(--sidebar-cell-width);
   display: grid;
   grid-template-columns: 1fr min-content;
 
@@ -173,7 +175,7 @@ body {
   align-items: center;
   gap: var(--minor-padding);
 
-  max-width: calc(var(--project-cell-width) - var(--project-cell-height)); /* Quick duct tape fix for overflows... */
+  max-width: calc(var(--sidebar-cell-width) - 36px); /* Quick duct tape fix for overflows... */
   height: var(--project-cell-height);
   padding: var(--minor-padding);
 }
