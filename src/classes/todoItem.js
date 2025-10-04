@@ -4,7 +4,7 @@ import { priorityUtil } from "../barrel.js";
 import { dateFns } from "../barrel.js";
 
 export default class TodoItem {
-  static DATE_TIME_FORMAT = "MMM-d-yyyy p";
+  static DATE_TIME_FORMAT = "MMM-d-yyyy',' p";
   #uuid = uuidGenerator.generate();
 
   /**
