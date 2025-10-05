@@ -147,8 +147,9 @@ function renderNewTodoStatus(todoData) {
   const mainContent = doc.querySelector("#main-content"); 
   const todoCard = mainContent.querySelector(`[data-todo-uuid="${todoData.uuid}"]`);
   const checkBubbleBtn = todoCard.querySelector(".todo-checkbubble-btn");
-
+  
   if (todoData.status.name === "incomplete") {
+    checkBubbleBtn.removeAttribute("style"); // handles the case of reverting completed status for a todo with null priority
     checkBubbleBtn.style.borderColor = todoData.priority.color;
     checkBubbleBtn.style.backgroundColor = `${todoData.priority.color}a6`;  
     checkBubbleBtn.classList.remove("todo-completed");
