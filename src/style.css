@@ -444,6 +444,11 @@ legend {
   width: 100%;
 }
 
+#deletion-dialog {
+  width: 25%;
+  word-break: break-all;
+}
+
 .full-span-row {
   grid-column: 1 / -1;
 }
