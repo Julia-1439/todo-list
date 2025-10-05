@@ -4,6 +4,8 @@ const THREE_SECONDS = 3 * 1000;
 
 /**
  * Create toast notifications that disappear after a few seconds.
+ * @todo caveat: I believe setting two notifications in quick succession might
+ * not reset the timeout timer. 
  * @param {CustomEvent} evt has a message specified in .detail.message
  */
 doc.addEventListener("customEvt:notification", (evt) => {
