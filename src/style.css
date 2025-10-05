@@ -110,6 +110,7 @@ body {
   display: flex;
   flex-direction: column;
   padding: 0 var(--standard-padding);
+  word-break: break-all;
 }
 
 #main-topbar {
