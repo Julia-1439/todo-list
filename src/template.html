@@ -8,9 +8,9 @@
 <body>
   <div class="context-menu" id="project-context-menu" popover 
     data-uuid>
-    <button type="button">Edit</button>
-    <button type="button">Mark complete</button>
-    <button type="button">Delete</button>    
+    <button id="context-menu-update-btn" type="button">Edit</button>
+    <button id="context-menu-update-status-btn" type="button">Mark complete</button>
+    <button id="context-menu-delete-btn" type="button">Delete</button>    
   </div>
   <div class="context-menu" id="todo-context-menu" popover 
     data-project-uuid
@@ -210,7 +210,7 @@
               Description
             </label>
           </div>
-          <textarea id="cu-project-form-description" name="description" maxlength="240"></textarea>
+          <textarea id="cu-project-form-description" name="description" maxlength="240" rows="6"></textarea>
         </div>
       </fieldset>
       <div class="form-finish-row">

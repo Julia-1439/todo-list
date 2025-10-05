@@ -43,11 +43,36 @@ const mainContainer = doc.querySelector("#main-container");
 
 /* Main content */
 (function initListenersMainContent() {
-  
+  // none I think
 })();
 
 /* Context menus */
-// ... similarly use event delegation
+(function initListenersContextMenus() {
+  const projectContextMenu = doc.querySelector("#project-context-menu");
+  const updateProjectBtn = projectContextMenu.querySelector("#context-menu-update-btn");
+
+  updateProjectBtn.addEventListener("click", () => {
+    const dialog = doc.querySelector("#cu-project-dialog");
+    const form = doc.querySelector("#cu-project-form");
+  
+    const uuid = updateProjectBtn.dataset.uuid;
+    form.dataset.uuid = uuid;
+    form.dataset.operation = "update";
+    form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
+      blankToFill.textContent = "edit";
+    });
+
+    // populate with current project data
+    const currProjectData = internalControl.viewProject(uuid);
+    form.querySelectorAll("[name]").forEach((formCtrl) => {
+      formCtrl.value = currProjectData[formCtrl.name] ?? "";
+    });
+    
+    dialog.showModal();
+  });
+
+})();
+
 
 /* Forms */
 // the form for creating OR updating a project
@@ -55,13 +80,14 @@ const mainContainer = doc.querySelector("#main-container");
   const form = doc.querySelector("#cu-project-form");
   form.addEventListener("submit", (evt) => {
     const operation = form.dataset.operation;
+    const uuid = form.dataset.uuid; // only applicable for updating
 
     switch (operation) {
       case "create":
         createProject(evt);
         break;
       case "update":
-        // @todo
+        updateProject(evt);
         break;
     }
 
@@ -109,7 +135,7 @@ const mainContainer = doc.querySelector("#main-container");
 sidebarElt.addEventListener("custom:contentUpdate", () => {
   const projectsSection = sidebarElt.querySelector("#sidebar-projects-section");
   const viewProjectBtns = projectsSection.querySelectorAll(".view-project-btn");
-  const contextMenuBtns = projectsSection.querySelectorAll(".project-context-btn");
+  const openContextMenuBtns = projectsSection.querySelectorAll(".project-context-btn");
 
   viewProjectBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -119,16 +145,27 @@ sidebarElt.addEventListener("custom:contentUpdate", () => {
   });
 
   const contextMenu = doc.querySelector("#project-context-menu");
-  contextMenuBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      contextMenu.dataset.uuid = btn.dataset.uuid;
+  openContextMenuBtns.forEach((openMenuBtn) => {
+    openMenuBtn.addEventListener("click", () => {
+      contextMenu.querySelectorAll("button").forEach((actionBtn) => {
+        actionBtn.dataset.uuid = openMenuBtn.dataset.uuid;
+      });
     });
   });
+
 });
 
 mainContainer.addEventListener("custom:contentUpdate", () => {
-  const mainContent = mainContainer.querySelector("#main-content");
+  const mainTopbar = mainContainer.querySelector("#main-topbar");
+  const openProjectMenuBtn = mainTopbar.querySelector(".project-context-btn")
+  openProjectMenuBtn.addEventListener("click", () => {
+    const projectContextMenu = doc.querySelector("#project-context-menu");
+    projectContextMenu.querySelectorAll("button").forEach((actionBtn) => {
+      actionBtn.dataset.uuid = openProjectMenuBtn.dataset.uuid;
+    });
+  });
 
+  const mainContent = mainContainer.querySelector("#main-content");
   const expandBtns = mainContent.querySelectorAll(".expand-btn");
   expandBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -208,20 +245,41 @@ function emptyStrReplacer(data) {
 /* ========================================================================== */
 
 function createProject(submitEvt) {
-  const creationForm = submitEvt.submitter.form;
-  const enteredData = Object.fromEntries(new FormData(creationForm));
+  const form = submitEvt.submitter.form;
+  const enteredData = Object.fromEntries(new FormData(form));
   emptyStrReplacer(enteredData);
 
   const projectData = internalControl.createProject(enteredData);
+
+  renderDisplay({
+    detail: {focusedProjectUuid: projectData.uuid},
+  });
 
   doc.dispatchEvent(new CustomEvent("customEvt:notification", {
     detail: {
       message: `Project "${projectData.title}" has been created.`,
     },
   }));
+}
+
+function updateProject(submitEvt) {
+  const form = submitEvt.submitter.form;
+  const enteredData = Object.fromEntries(new FormData(form));
+  emptyStrReplacer(enteredData);
+
+  const uuid = form.dataset.uuid;
+  const updatedProjectData = internalControl.editProjectMetadata(uuid, enteredData);
+
+  const focusedProjectUuid = mainContainer.dataset.uuid;
   renderDisplay({
-    detail: {focusedProjectUuid: projectData.uuid},
+    detail: { focusedProjectUuid, },
   });
+
+  doc.dispatchEvent(new CustomEvent("customEvt:notification", {
+    detail: {
+      message: `Project "${updatedProjectData.title}" has been updated.`,
+    },
+  }));
 }
 
 /* ========================================================================== */

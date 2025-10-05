@@ -250,7 +250,7 @@ body {
   height: 1.5rem;
   width: 1.5rem;
   border-radius: 50%;
-  border: 2px solid black;
+  border: 2px solid var(--palette-dark-gray);
   background-color: #00000000;
   cursor: pointer;
   display: flex;

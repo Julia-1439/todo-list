@@ -7,13 +7,16 @@ const mainContainer = doc.querySelector("#main-container");
 function renderProject(projectData) {
   mainContainer.replaceChildren();
 
+  mainContainer.dataset.uuid = projectData.uuid;
+
   const topBar = doc.createElement("div");
   topBar.id = "main-topbar";
   topBar.classList.add("sticky");
   const projectMenuBtn = doc.createElement("button");
-  projectMenuBtn.classList.add("project-edit-btn", "borderless-btn", "square-btn");
+  projectMenuBtn.classList.add("project-context-btn", "borderless-btn", "square-btn");
   projectMenuBtn.setAttribute("popovertarget", "project-context-menu");
   projectMenuBtn.setAttribute("popovertargetaction", "toggle");
+  projectMenuBtn.dataset.uuid = projectData.uuid;
   const menuSym = domHelper.createSvg("dots-horizontal");
   menuSym.classList.add("context-menu-sym");
 
