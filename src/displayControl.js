@@ -190,7 +190,10 @@ mainContainer.addEventListener("custom:contentUpdate", () => {
           : "incomplete",
       });
 
-      mainContentRenderer.renderNewTodoStatus(newTodoData);
+      mainContentRenderer.renderNewTodoStatus(newTodoData); // (note)
+      // note: the alternative approach is to call mainContentRenderer.renderProject
+      // again, but that erases any expanded todos. thus, we create a special function
+      // .renderNewTodoStatus to modify the checkbubble and only the checkbubble
     });
   });
 
