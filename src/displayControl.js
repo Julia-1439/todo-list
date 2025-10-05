@@ -273,9 +273,8 @@ function updateProject(submitEvt) {
   const uuid = form.dataset.uuid;
   const updatedProjectData = internalControl.editProjectMetadata(uuid, enteredData);
 
-  const focusedProjectUuid = mainContainer.dataset.uuid;
   renderDisplay({
-    detail: { focusedProjectUuid, },
+    detail: { focusedProjectUuid: uuid, },
   });
 
   doc.dispatchEvent(new CustomEvent("customEvt:notification", {
