@@ -1,4 +1,4 @@
-// Util
+// Util for classes
 export * as uuidGenerator from "./classes/util/uuidGenerator.js";
 export * as statusUtil from "./classes/util/statusUtil.js";
 export * as priorityUtil from "./classes/util/priorityUtil.js";
@@ -18,4 +18,11 @@ export * as app from "./app.js";
 export * as style from "./style.css";
 
 // Content rendering
-export * as notif from "./content-rendering/notif.js";
+export * as sidebarRenderer from "./content-rendering/sidebar.js";
+export * as mainContentRenderer from "./content-rendering/mainContent.js";
+export * as projectSelectElementRenderer from "./content-rendering/projectSelectElement.js";
+export * as contextMenusRenderer from "./content-rendering/contextMenus.js";
+export * as notifRenderer from "./content-rendering/notif.js";
+
+// Util for content rendering
+export * as domHelper from "./content-rendering/util/domHelper.js";

@@ -1,19 +1,16 @@
 import { internalControl } from "./barrel.js";
 
-/* ========================================================================== */
-/* SET VARIABLES */
-/* ========================================================================== */
+import { sidebarRenderer } from "./barrel.js";
+import { mainContentRenderer } from "./barrel.js";
+import { projectSelectElementRenderer } from "./barrel.js";
 
 const doc = document; 
-
+const sidebarElt = doc.querySelector("#sidebar");
+const mainContainer = doc.querySelector("#main-container"); 
 
 /* ========================================================================== */
-/* INITIALIZATION: add evt listeners to *permanent* fixtures, and load data from storage */
+/* INITIALIZATION: add evt listeners to *permanent* fixtures */
 /* ========================================================================== */
-
-function render() {
-  updateDisplay();  
-}
 
 /* Sidebar */
 (function initListenersSidebar() {
@@ -43,6 +40,14 @@ function render() {
     dialog.showModal();
   });
 })();
+
+/* Main content */
+(function initListenersMainContent() {
+  
+})();
+
+/* Context menus */
+// ... similarly use event delegation
 
 /* Forms */
 // the form for creating OR updating a project
@@ -98,56 +103,93 @@ function render() {
 })();
 
 /* ========================================================================== */
+/* Add event listeners to *dynamic* content as they are created */
+/* ========================================================================== */
+
+sidebarElt.addEventListener("custom:contentUpdate", () => {
+  const projectsSection = sidebarElt.querySelector("#sidebar-projects-section");
+  const viewProjectBtns = projectsSection.querySelectorAll(".view-project-btn");
+  const contextMenuBtns = projectsSection.querySelectorAll(".project-context-btn");
+
+  viewProjectBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const projectData = internalControl.viewProject(btn.dataset.uuid);
+      mainContentRenderer.renderProject(projectData);
+    });
+  });
+
+  const contextMenu = doc.querySelector("#project-context-menu");
+  contextMenuBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      contextMenu.dataset.uuid = btn.dataset.uuid;
+    });
+  });
+});
+
+mainContainer.addEventListener("custom:contentUpdate", () => {
+  const mainContent = mainContainer.querySelector("#main-content");
+
+  const expandBtns = mainContent.querySelectorAll(".expand-btn");
+  expandBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const todoDataFull = internalControl.viewTodoFull(
+        btn.dataset.projectUuid, btn.dataset.todoUuid
+      );
+      mainContentRenderer.toggleDetailedTodo(todoDataFull);
+    });
+  });
+
+  // toggle status
+  const checkBubbleBtns = mainContent.querySelectorAll(".todo-checkbubble-btn");
+  checkBubbleBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const projectUuid = btn.dataset.projectUuid;
+      const todoUuid = btn.dataset.todoUuid;
+
+      const todoData = internalControl.viewTodoSummary(projectUuid, todoUuid);
+      const newTodoData = internalControl.editTodo(projectUuid, todoUuid, {
+        "status": (todoData.status.name === "incomplete") 
+          ? "completed" 
+          : "incomplete",
+      });
+
+      mainContentRenderer.renderNewTodoStatus(newTodoData);
+    });
+  });
+
+  // context menu
+
+});
+
+
+/* ========================================================================== */
 /* HELPERS */
 /* ========================================================================== */
 
 /**
  * update the sidebar with project titles; update the project selection menu 
  * when creating a new task; update the main display
+ * @param {Object} detail optional object to ... @todo
 */
-function updateDisplay() {
+function renderDisplay({ detail  } = { detail: {} }) {
   const projectsData = internalControl.viewAllProjects();
   projectsData.reverse(); // sorts in descending order by project creation time
 
-  updateSidebar();
-  updateProjectSelectElement();
-  // @todo update the main display
+  // sets the focused project to the specified one or defaults to the most recent
+  const focusedProjectData = (() => {
+    const uuid = detail.focusedProjectUuid;
+    if (uuid !== undefined)
+      return projectsData.find((projectData) => projectData.uuid === uuid);
+    else
+      return projectsData[0];
+  })();
 
-  function updateSidebar() {
-    // @todo call wipe
-    const projectTitles = projectsData.map(projectData => projectData.title);
-    projectTitles.forEach((title) => {
-      console.log(title); // @todo 
-    });
-  }
-
-  function updateProjectSelectElement() {
-    const selector = doc.querySelector("#cu-todo-form-project-selector");
-    wipe(selector);
-
-    const blankOption = createOption("", "");
-    const projectOptions = projectsData.map((projectData) => 
-      createOption(projectData.uuid, projectData.title)
-    );
-    selector.append(blankOption, ...projectOptions);
-
-    function createOption(uuid, title) {
-      const option = doc.createElement("option");
-      option.setAttribute("value", uuid);
-      option.textContent = title;
-      return option;
-    }
-  }
-
+  // render all parts of the page using projects' data
+  sidebarRenderer.renderProjects(projectsData);
+  mainContentRenderer.renderProject(focusedProjectData);
+  projectSelectElementRenderer.renderProjects(projectsData);
 }
 
-/**
- * 
- * @param {HTMLElement} container 
- */
-function wipe(container) {
-  container.replaceChildren();
-}
 
 
 /**
@@ -172,12 +214,14 @@ function createProject(submitEvt) {
 
   const projectData = internalControl.createProject(enteredData);
 
-  doc.dispatchEvent(new CustomEvent("custom:notification", {
+  doc.dispatchEvent(new CustomEvent("customEvt:notification", {
     detail: {
       message: `Project "${projectData.title}" has been created.`,
     },
   }));
-  updateDisplay();
+  renderDisplay({
+    detail: {focusedProjectUuid: projectData.uuid},
+  });
 }
 
 /* ========================================================================== */
@@ -189,23 +233,20 @@ function createTodo(submitEvt) {
   const enteredData = Object.fromEntries(new FormData(creationForm));
   emptyStrReplacer(enteredData);
 
-  const projectData = internalControl.createTodo(enteredData.projectUuid, enteredData);
+  const todoData = internalControl.createTodo(enteredData.projectUuid, enteredData);
 
-  doc.dispatchEvent(new CustomEvent("custom:notification", {
+  doc.dispatchEvent(new CustomEvent("customEvt:notification", {
     detail: {
       message: `Task has been created.`,
     },
   }));
-  updateDisplay();
+  renderDisplay({
+    detail: {focusedProjectUuid: enteredData.projectUuid},
+  });
 }
 
 
-/* ========================================================================== */
-/* EXPORTS */
-/* ========================================================================== */
 
 
-export { render };
 
-// @todo these exports will be removed once testing is done
-export { wipe };
+export { renderDisplay };

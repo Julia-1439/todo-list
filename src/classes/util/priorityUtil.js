@@ -1,28 +1,28 @@
 function prioNull() {
   return {
     level: null,
-    color: "#00000000",
+    color: null,
   }
 }
 
 function prio4() {
   return {
     level: "p4",
-    color: "#6E64FE",
+    color: "#b0aaff",
   };
 }
 
 function prio3() {
   return {
     level: "p3",
-    color: "#FFF57D",
+    color: "#ffbe6a",
   };
 }
 
 function prio2() {
   return {
     level: "p2",
-    color: "#FFA257",
+    color: "#ff8827",
   };
 }
 

@@ -64,7 +64,7 @@ function viewAllProjects() {
  * @returns {Object} containing a list of project titles and a view of the
  * most recently created project
  */
-function load() {
+function loadData() {
   restoreFromStorage();
 
   if (_projects.length === 0) 
@@ -112,7 +112,7 @@ function viewProject(uuid) {
     title: project.title,
     description: project.description,
     status: project.status,
-    todoList: project.todoList.map((todo) => viewTodo(uuid, todo.uuid)),
+    todoList: project.todoList.map((todo) => viewTodoSummary(uuid, todo.uuid)),
     uuid: project.uuid,
   };
 }
@@ -179,16 +179,16 @@ function createTodo(projectUuid, data) {
 
   storageControl.post(project);
 
-  return expandTodo(projectUuid, todo.uuid);
+  return viewTodoFull(projectUuid, todo.uuid);
 }
 
 /**
- * Get an overview of a todo. For all its details, see function expandTodo
+ * Get an overview of a todo. For all its details, see function viewTodoFull
  * @param {String} projectUuid 
  * @param {String} todoUuid 
  * @returns {Object}
  */
-function viewTodo(projectUuid, todoUuid) {
+function viewTodoSummary(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
   const todo = project.getTodo(todoUuid); 
   
@@ -198,6 +198,7 @@ function viewTodo(projectUuid, todoUuid) {
     priority: todo.priority,
     status: todo.status,
     uuid: todo.uuid,
+    projectUuid: projectUuid,
   };
 }
 
@@ -207,12 +208,12 @@ function viewTodo(projectUuid, todoUuid) {
  * @param {String} todoUuid 
  * @returns {Object} 
  */
-function expandTodo(projectUuid, todoUuid) {
+function viewTodoFull(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
   const todo = project.getTodo(todoUuid); 
 
   return {
-    ...viewTodo(projectUuid, todoUuid),
+    ...viewTodoSummary(projectUuid, todoUuid),
     description: todo.description,
   };
 }
@@ -244,7 +245,7 @@ function editTodo(projectUuid, todoUuid, data) {
 
   storageControl.post(project);
 
-  return expandTodo(projectUuid, todoUuid);
+  return viewTodoFull(projectUuid, todoUuid);
 }
 
 /**
@@ -255,7 +256,7 @@ function editTodo(projectUuid, todoUuid, data) {
  */
 function removeTodo(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
-  const todoData = expandTodo(projectUuid, todoUuid); // for the return
+  const todoData = viewTodoFull(projectUuid, todoUuid); // for the return
   project.removeTodo(todoUuid);
 
   storageControl.post(project);
@@ -265,7 +266,7 @@ function removeTodo(projectUuid, todoUuid) {
 
 export { 
   // For page load
-  load,
+  loadData,
 
   // CRUD for projects
   createProject, 
@@ -275,7 +276,7 @@ export {
 
   // CRUD for todos
   createTodo,
-  viewTodo, expandTodo,
+  viewTodoSummary, viewTodoFull,
   editTodo,
   removeTodo,
 };
