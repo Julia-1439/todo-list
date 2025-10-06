@@ -100,7 +100,7 @@ function createTodoEntry(todoData) {
   const expandSym = domHelper.createSvg("chevron");
   expandSym.classList.add("chevron");
   const menuBtn = doc.createElement("button");
-  menuBtn.classList.add("todo-btn", "borderless-btn", "square-btn");
+  menuBtn.classList.add("todo-context-btn", "todo-btn", "borderless-btn", "square-btn");
   menuBtn.setAttribute("popovertarget", "todo-context-menu");
   menuBtn.setAttribute("popovertargetaction", "toggle");
   menuBtn.dataset.todoUuid = todoData.uuid;

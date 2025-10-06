@@ -8,16 +8,15 @@
 <body>
   <div class="context-menu" id="project-context-menu" popover 
     data-uuid>
-    <button id="context-menu-update-btn" type="button">Edit</button>
-    <button id="context-menu-update-status-btn" type="button">Mark complete</button>
-    <button id="context-menu-delete-btn" type="button">Delete</button>    
+    <button id="project-update-btn" type="button">Edit</button>
+    <button id="project-update-status-btn" type="button">Mark complete</button>
+    <button id="project-delete-btn" type="button">Delete</button>    
   </div>
   <div class="context-menu" id="todo-context-menu" popover 
     data-project-uuid
     data-todo-uuid>
-    <button type="button">Edit</button>
-    <button type="button">Mark complete</button>
-    <button type="button">Delete</button>    
+    <button id="todo-update-btn" type="button">Edit</button>
+    <button id="todo-delete-btn" type="button">Delete</button>    
   </div>
 
   <div id="notif" class="hidden">Project has been created.</div>
@@ -238,7 +237,7 @@
             Description
           </label>
         </div>
-        <textarea id="cu-todo-form-description" name="description" maxlength="240"></textarea>
+        <textarea id="cu-todo-form-description" name="description" rows="6" maxlength="240"></textarea>
         <div>
           <label for="cu-todo-form-dueby">
             Due by

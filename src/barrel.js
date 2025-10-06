@@ -2,7 +2,6 @@
 export * as uuidGenerator from "./classes/util/uuidGenerator.js";
 export * as statusUtil from "./classes/util/statusUtil.js";
 export * as priorityUtil from "./classes/util/priorityUtil.js";
-export * as dateFns from "./classes/util/dateFns.js";
 
 // Classes
 export { default as Project } from "./classes/project.js";
@@ -26,3 +25,6 @@ export * as notifRenderer from "./content-rendering/notif.js";
 
 // Util for content rendering
 export * as domHelper from "./content-rendering/util/domHelper.js";
+
+// Util general
+export * as dateFns from "./util/dateFns.js";

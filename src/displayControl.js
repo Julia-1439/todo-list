@@ -3,7 +3,8 @@ import { internalControl } from "./barrel.js";
 import { sidebarRenderer } from "./barrel.js";
 import { mainContentRenderer } from "./barrel.js";
 import { projectSelectElementRenderer } from "./barrel.js";
-import { viewProject } from "./internalControl.js";
+
+import { dateFns } from "./barrel.js";
 
 const doc = document; 
 const sidebarElt = doc.querySelector("#sidebar");
@@ -48,10 +49,10 @@ const mainContainer = doc.querySelector("#main-container");
 })();
 
 /* Context menus */
-(function initListenersContextMenus() {
+(function initListenersProjectContextMenu() {
   const projectContextMenu = doc.querySelector("#project-context-menu");
 
-  const updateProjectBtn = projectContextMenu.querySelector("#context-menu-update-btn");
+  const updateProjectBtn = projectContextMenu.querySelector("#project-update-btn");
   updateProjectBtn.addEventListener("click", () => {
     const dialog = doc.querySelector("#cu-project-dialog");
     const form = doc.querySelector("#cu-project-form");
@@ -72,13 +73,13 @@ const mainContainer = doc.querySelector("#main-container");
     dialog.showModal();
   });
 
-  const deleteProjectBtn = projectContextMenu.querySelector("#context-menu-delete-btn");
+  const deleteProjectBtn = projectContextMenu.querySelector("#project-delete-btn");
   deleteProjectBtn.addEventListener("click", () => {
     const dialog = doc.querySelector("#deletion-dialog");
     const form = doc.querySelector("#deletion-form");
   
     const uuid = deleteProjectBtn.dataset.uuid;
-    form.dataset.uuid = uuid;
+    form.dataset.projectUuid = uuid; // form distinguishes between projectUuid & todoUuid since it supports deleting both (don't do this next time.) 
     form.dataset.objectType = "project";
     form.querySelectorAll("span[data-object-type]").forEach((blankToFill) => {
       blankToFill.textContent = "project";
@@ -86,6 +87,53 @@ const mainContainer = doc.querySelector("#main-container");
     
     dialog.showModal();
   });
+})();
+
+(function initListenersTodoContextMenu() {
+  const todoContextMenu = doc.querySelector("#todo-context-menu");
+
+  const updateTodoBtn = todoContextMenu.querySelector("#todo-update-btn");
+  updateTodoBtn.addEventListener("click", () => {
+    const dialog = doc.querySelector("#cu-todo-dialog");
+    const form = doc.querySelector("#cu-todo-form");
+  
+    const projectUuid = updateTodoBtn.dataset.projectUuid;
+    const todoUuid = updateTodoBtn.dataset.todoUuid;
+    form.dataset.projectUuid = projectUuid;
+    form.dataset.todoUuid = todoUuid;
+    form.dataset.operation = "update";
+    form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
+      blankToFill.textContent = "edit";
+    });
+
+    // populate with current todo data
+    const currTodoData = internalControl.viewTodoFull(projectUuid, todoUuid);
+    form.querySelectorAll("[name]").forEach((formCtrl) => {
+      const name = formCtrl.name;
+      formCtrl.value = (() => {
+        let currVal = currTodoData[name] ?? "";
+        switch (name) {
+          case "priority":
+            return currVal.level;
+          case "dueDateTime":
+            if (currVal)
+              return dateFns.format(new Date(currVal), "yyyy-MM-dd'T'HH:mm");
+          default:
+            return currVal;
+        }
+      })();
+    });
+
+    // Disable the project selector to prevent switching it to different project
+    // NOTE: the value will need to be injected into the form data afterward 
+    // since disabled inputs don't transmit their values. "readonly" also 
+    // doesn't work with <select> elements.
+    const projectSelector = form.querySelector("#cu-todo-form-project-selector");
+    projectSelector.disabled = "true"; 
+    
+    dialog.showModal();
+  });
+
 
 })();
 
@@ -124,7 +172,9 @@ const mainContainer = doc.querySelector("#main-container");
         createTodo(formData);
         break;
       case "update":
-        // @todo
+        formData.append("projectUuid", form.dataset.projectUuid); // disabled project selector does not transmit it automatically 
+        const todoUuid = form.dataset.todoUuid;
+        updateTodo(todoUuid, formData);
         break;
     }
 
@@ -137,14 +187,16 @@ const mainContainer = doc.querySelector("#main-container");
   const form = doc.querySelector("#deletion-form");
   
   form.addEventListener("submit", () => {
-    const uuid = form.dataset.uuid;
     const objectType = form.dataset.objectType;
+    const projectUuid = form.dataset.projectUuuid;
+
     switch (objectType) {
       case "project":
-        deleteProject(uuid);
+        deleteProject(projectUuid);
         break;
       case "todo":
-        // @todo
+        const todoUuid = form.dataset.todoUuid;
+        deleteTodo(projectUuid, todoUuid);
         break;
     }
   })
@@ -172,9 +224,8 @@ const mainContainer = doc.querySelector("#main-container");
 
 sidebarElt.addEventListener("custom:contentUpdate", () => {
   const projectsSection = sidebarElt.querySelector("#sidebar-projects-section");
-  const viewProjectBtns = projectsSection.querySelectorAll(".view-project-btn");
-  const openContextMenuBtns = projectsSection.querySelectorAll(".project-context-btn");
 
+  const viewProjectBtns = projectsSection.querySelectorAll(".view-project-btn");
   viewProjectBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       const projectData = internalControl.viewProject(btn.dataset.uuid);
@@ -182,6 +233,7 @@ sidebarElt.addEventListener("custom:contentUpdate", () => {
     });
   });
 
+  const openContextMenuBtns = projectsSection.querySelectorAll(".project-context-btn");
   const contextMenu = doc.querySelector("#project-context-menu");
   openContextMenuBtns.forEach((openMenuBtn) => {
     openMenuBtn.addEventListener("click", () => {
@@ -204,6 +256,8 @@ mainContainer.addEventListener("custom:contentUpdate", () => {
   });
 
   const mainContent = mainContainer.querySelector("#main-content");
+
+  // expand todos
   const expandBtns = mainContent.querySelectorAll(".expand-btn");
   expandBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -238,6 +292,16 @@ mainContainer.addEventListener("custom:contentUpdate", () => {
   });
 
   // context menu
+  const openContextMenuBtns = mainContent.querySelectorAll(".todo-context-btn");
+  const contextMenu = doc.querySelector("#todo-context-menu");
+  openContextMenuBtns.forEach((openMenuBtn) => {
+    openMenuBtn.addEventListener("click", () => {
+      contextMenu.querySelectorAll("button").forEach((actionBtn) => {
+        actionBtn.dataset.projectUuid = openMenuBtn.dataset.projectUuid;
+        actionBtn.dataset.todoUuid = openMenuBtn.dataset.todoUuid;        
+      });
+    });
+  });
 
 });
 
@@ -372,6 +436,20 @@ function updateTodo(todoUuid, formData, suppressNotif=false) {
         message: `Task has been updated.`,
       },
     }));
+}
+
+function deleteTodo(projectUuid, todoUuid) {
+  const removedTodo = internalControl.removeTodo(projectUuid, uuid);
+
+  renderDisplay({
+    detail: {focusedProjectUuid: projectUuid},
+  }); 
+
+  doc.dispatchEvent(new CustomEvent("customEvt:notification", {
+    detail: {
+      message: `This task has been deleted.`,
+    },
+  }));
 }
 
 
