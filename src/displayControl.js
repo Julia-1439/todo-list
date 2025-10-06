@@ -3,6 +3,7 @@ import { internalControl } from "./barrel.js";
 import { sidebarRenderer } from "./barrel.js";
 import { mainContentRenderer } from "./barrel.js";
 import { projectSelectElementRenderer } from "./barrel.js";
+import { viewProject } from "./internalControl.js";
 
 const doc = document; 
 const sidebarElt = doc.querySelector("#sidebar");
@@ -49,8 +50,8 @@ const mainContainer = doc.querySelector("#main-container");
 /* Context menus */
 (function initListenersContextMenus() {
   const projectContextMenu = doc.querySelector("#project-context-menu");
-  const updateProjectBtn = projectContextMenu.querySelector("#context-menu-update-btn");
 
+  const updateProjectBtn = projectContextMenu.querySelector("#context-menu-update-btn");
   updateProjectBtn.addEventListener("click", () => {
     const dialog = doc.querySelector("#cu-project-dialog");
     const form = doc.querySelector("#cu-project-form");
@@ -66,6 +67,21 @@ const mainContainer = doc.querySelector("#main-container");
     const currProjectData = internalControl.viewProject(uuid);
     form.querySelectorAll("[name]").forEach((formCtrl) => {
       formCtrl.value = currProjectData[formCtrl.name] ?? "";
+    });
+    
+    dialog.showModal();
+  });
+
+  const deleteProjectBtn = projectContextMenu.querySelector("#context-menu-delete-btn");
+  deleteProjectBtn.addEventListener("click", () => {
+    const dialog = doc.querySelector("#deletion-dialog");
+    const form = doc.querySelector("#deletion-form");
+  
+    const uuid = deleteProjectBtn.dataset.uuid;
+    form.dataset.uuid = uuid;
+    form.dataset.objectType = "project";
+    form.querySelectorAll("span[data-object-type]").forEach((blankToFill) => {
+      blankToFill.textContent = "project";
     });
     
     dialog.showModal();
@@ -112,6 +128,11 @@ const mainContainer = doc.querySelector("#main-container");
 
     form.reset();
   });
+})();
+
+// the form for deleting a project OR todo
+(function initListenersDeletionForm() {
+  // @TODO
 })();
 
 // make each cancel button close their parent form
@@ -229,8 +250,6 @@ function renderDisplay({ detail  } = { detail: {} }) {
   mainContentRenderer.renderProject(focusedProjectData);
   projectSelectElementRenderer.renderProjects(projectsData);
 }
-
-
 
 /**
  * Replaces empty string values "" in an object with undefined, for usage in
