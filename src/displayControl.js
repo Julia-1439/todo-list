@@ -94,7 +94,7 @@ const mainContainer = doc.querySelector("#main-container");
 // the form for creating OR updating a project
 (function initListenersCuProjectForm() {
   const form = doc.querySelector("#cu-project-form");
-  form.addEventListener("submit", (evt) => {
+  form.addEventListener("submit", () => {
     const operation = form.dataset.operation;
     const formData = new FormData(form);
 
@@ -115,7 +115,7 @@ const mainContainer = doc.querySelector("#main-container");
 // the form for creating OR updating a todo
 (function initListenersCuTodoForm() {
   const form = doc.querySelector("#cu-todo-form");
-  form.addEventListener("submit", (evt) => {
+  form.addEventListener("submit", () => {
     const operation = form.dataset.operation;
     const formData = new FormData(form);
 
@@ -134,7 +134,22 @@ const mainContainer = doc.querySelector("#main-container");
 
 // the form for deleting a project OR todo
 (function initListenersDeletionForm() {
-  // @TODO
+  const form = doc.querySelector("#deletion-form");
+  
+  form.addEventListener("submit", () => {
+    const uuid = form.dataset.uuid;
+    const objectType = form.dataset.objectType;
+    switch (objectType) {
+      case "project":
+        deleteProject(uuid);
+        break;
+      case "todo":
+        // @todo
+        break;
+    }
+  })
+
+  form.reset();
 })();
 
 // make each cancel button close their parent form
@@ -298,6 +313,18 @@ function updateProject(uuid, formData, suppressNotif=false) {
     }));
 }
 
+function deleteProject(uuid) {
+  const removedProject = internalControl.removeProject(uuid);
+
+  renderDisplay();
+
+  doc.dispatchEvent(new CustomEvent("customEvt:notification", {
+    detail: {
+      message: `Project "${removedProject.title}" has been deleted.`,
+    },
+  }));
+}
+
 /* ========================================================================== */
 /* CRUD for todos */
 /* ========================================================================== */
@@ -321,6 +348,12 @@ function createTodo(formData) {
   }));
 }
 
+/**
+ * 
+ * @param {String} todoUuid 
+ * @param {FormData} formData has projectUuid in there so dw
+ * @param {Boolean} suppressNotif 
+ */
 function updateTodo(todoUuid, formData, suppressNotif=false) {
   const enteredData = Object.fromEntries(formData);
   const todoData = internalControl.editTodo(
