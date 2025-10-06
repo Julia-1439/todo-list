@@ -253,17 +253,6 @@ function renderDisplay({ detail  } = { detail: {} }) {
   projectSelectElementRenderer.renderProjects(projectsData);
 }
 
-/**
- * Replaces empty string values "" in an object with undefined, for usage in
- * preparing data to be passed into the internal control module. 
- */
-function emptyStrReplacer(data) {
-  Object.entries(data).forEach(([key, val]) => {
-    if (val === "") 
-      data[key] = undefined;
-  });
-}
-
 /* ========================================================================== */
 /* CRUD for projects */
 /* ========================================================================== */
