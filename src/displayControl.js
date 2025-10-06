@@ -96,15 +96,16 @@ const mainContainer = doc.querySelector("#main-container");
   const form = doc.querySelector("#cu-project-form");
   form.addEventListener("submit", (evt) => {
     const operation = form.dataset.operation;
-    const uuid = form.dataset.uuid; // only applicable for updating
+    const formData = new FormData(form);
 
     switch (operation) {
       case "create":
-        createProject(evt);
-        break;
-      case "update":
-        updateProject(evt);
-        break;
+          createProject(formData);
+          break;
+        case "update":
+          const uuid = form.dataset.uuid; 
+          updateProject(uuid, formData);
+          break;
     }
 
     form.reset();
@@ -116,10 +117,11 @@ const mainContainer = doc.querySelector("#main-container");
   const form = doc.querySelector("#cu-todo-form");
   form.addEventListener("submit", (evt) => {
     const operation = form.dataset.operation;
+    const formData = new FormData(form);
 
     switch (operation) {
       case "create":
-        createTodo(evt);
+        createTodo(formData);
         break;
       case "update":
         // @todo
@@ -266,11 +268,12 @@ function emptyStrReplacer(data) {
 /* CRUD for projects */
 /* ========================================================================== */
 
-function createProject(submitEvt) {
-  const form = submitEvt.submitter.form;
-  const enteredData = Object.fromEntries(new FormData(form));
-  emptyStrReplacer(enteredData);
-
+/**
+ * 
+ * @param {FormData} formData 
+ */
+function createProject(formData) {
+  const enteredData = Object.fromEntries(formData);
   const projectData = internalControl.createProject(enteredData);
 
   renderDisplay({
@@ -284,13 +287,13 @@ function createProject(submitEvt) {
   }));
 }
 
-function updateProject(submitEvt) {
-  const form = submitEvt.submitter.form;
-  const enteredData = Object.fromEntries(new FormData(form));
-  emptyStrReplacer(enteredData);
-
-  const uuid = form.dataset.uuid;
-  const updatedProjectData = internalControl.editProjectMetadata(uuid, enteredData);
+/**
+ * 
+ * @param {FormData} formData 
+ */
+function updateProject(uuid, formData) {
+  const enteredData = Object.fromEntries(formData);
+  const updatedProjectData = internalControl.editProject(uuid, enteredData);
 
   renderDisplay({
     detail: { focusedProjectUuid: uuid, },
@@ -307,21 +310,23 @@ function updateProject(submitEvt) {
 /* CRUD for todos */
 /* ========================================================================== */
 
-function createTodo(submitEvt) {
-  const creationForm = submitEvt.submitter.form;
-  const enteredData = Object.fromEntries(new FormData(creationForm));
-  // emptyStrReplacer(enteredData);
-
+/**
+ * 
+ * @param {FormData} formData 
+ */
+function createTodo(formData) {
+  const enteredData = Object.fromEntries(formData);
   const todoData = internalControl.createTodo(enteredData.projectUuid, enteredData);
+
+  renderDisplay({
+    detail: {focusedProjectUuid: enteredData.projectUuid},
+  });
 
   doc.dispatchEvent(new CustomEvent("customEvt:notification", {
     detail: {
       message: `Task has been created.`,
     },
   }));
-  renderDisplay({
-    detail: {focusedProjectUuid: enteredData.projectUuid},
-  });
 }
 
 
