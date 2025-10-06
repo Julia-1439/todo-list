@@ -11,13 +11,13 @@ function renderProjects(projectsData) {
   const blankOption = createOption("", "");
   const projectOptions = projectsData.map(createOption);
   selector.append(blankOption, ...projectOptions);
-}
 
-function createOption(projectData) {
-  const option = doc.createElement("option");
-  option.setAttribute("value", projectData.uuid);
-  option.textContent = projectData.title;
-  return option;
+  function createOption(projectData) {
+    const option = doc.createElement("option");
+    option.setAttribute("value", projectData.uuid);
+    option.textContent = projectData.title;
+    return option;
+  }
 }
 
 export { renderProjects };
