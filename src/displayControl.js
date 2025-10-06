@@ -134,6 +134,22 @@ const mainContainer = doc.querySelector("#main-container");
     dialog.showModal();
   });
 
+  const deleteTodoBtn = todoContextMenu.querySelector("#todo-delete-btn");
+  deleteTodoBtn.addEventListener("click", () => {
+    const dialog = doc.querySelector("#deletion-dialog");
+    const form = doc.querySelector("#deletion-form");
+  
+    const projectUuid = deleteTodoBtn.dataset.projectUuid;
+    const todoUuid = deleteTodoBtn.dataset.todoUuid;
+    form.dataset.projectUuid = projectUuid; 
+    form.dataset.todoUuid = todoUuid;
+    form.dataset.objectType = "todo";
+    form.querySelectorAll("span[data-object-type]").forEach((blankToFill) => {
+      blankToFill.textContent = "task";
+    });
+    
+    dialog.showModal();
+  });
 
 })();
 
@@ -188,7 +204,7 @@ const mainContainer = doc.querySelector("#main-container");
   
   form.addEventListener("submit", () => {
     const objectType = form.dataset.objectType;
-    const projectUuid = form.dataset.projectUuuid;
+    const projectUuid = form.dataset.projectUuid;
 
     switch (objectType) {
       case "project":
@@ -439,7 +455,7 @@ function updateTodo(todoUuid, formData, suppressNotif=false) {
 }
 
 function deleteTodo(projectUuid, todoUuid) {
-  const removedTodo = internalControl.removeTodo(projectUuid, uuid);
+  const removedTodo = internalControl.removeTodo(projectUuid, todoUuid);
 
   renderDisplay({
     detail: {focusedProjectUuid: projectUuid},
