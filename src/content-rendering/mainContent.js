@@ -23,17 +23,7 @@ function renderProject(projectData) {
   const mainContent = doc.createElement("div");
   mainContent.id = "main-content";
 
-  const projectTitle = doc.createElement("h1");
-  projectTitle.classList.add("project-title");
-  if (projectData.status.name === "completed")
-    projectTitle.classList.add("project-completed");
-  projectTitle.textContent = projectData.title;
-
-  const projectDescr = doc.createElement("div");
-  projectDescr.classList.add("project-description")
-  if (projectData.status.name === "completed")
-    projectDescr.classList.add("project-completed");
-  projectDescr.textContent = projectData.description;
+  const projectHeader = createProjectHeader(projectData); 
 
   const todoList = doc.createElement("ul");
   const todoEntries = projectData.todoList.map(createTodoEntry);
@@ -47,11 +37,31 @@ function renderProject(projectData) {
   mainContainer.append(topBar, mainContent);
   topBar.append(projectMenuBtn);
   projectMenuBtn.append(menuSym);
-  mainContent.append(projectTitle, projectDescr, todoList, todoCreateBtn);
+  mainContent.append(projectHeader, todoList, todoCreateBtn);
   todoList.append(...todoEntries);
   todoCreateBtn.append(todoCreateSym, todoCreateText);
 
   mainContainer.dispatchEvent(new CustomEvent("custom:contentUpdate"));
+}
+
+function createProjectHeader(projectData) {
+  const projectHeader = doc.createElement("div");
+  projectHeader.classList.add("project-header-container");
+
+  const projectTitle = doc.createElement("h1");
+  projectTitle.classList.add("project-title");
+  if (projectData.status.name === "completed")
+    projectTitle.classList.add("project-completed");
+  projectTitle.textContent = projectData.title;
+
+  const projectDescr = doc.createElement("div");
+  projectDescr.classList.add("project-description")
+  if (projectData.status.name === "completed")
+    projectDescr.classList.add("project-completed");
+  projectDescr.textContent = projectData.description;
+
+  projectHeader.append(projectTitle, projectDescr);
+  return projectHeader;
 }
 
 /**
@@ -121,6 +131,32 @@ function createTodoEntry(todoData) {
   menuBtn.append(menuSym);
 
   return li;
+}
+
+function renderUpdatedProjectHeader(projectData) {
+  const mainContent = doc.querySelector("#main-content"); 
+  const oldProjectHeader = mainContent.querySelector(".project-header-container");
+  const newProjectHeader = createProjectHeader(projectData);
+  mainContent.replaceChild(newProjectHeader, oldProjectHeader)
+}
+
+/**
+ * Call each time a todo is updated in any way. This is a function provided
+ * specifically to render a todo rather than the whole page, which can cause
+ * expanded todos to unexpectedly collapse. 
+ * @param {Object} todoData optionally containing a 'description' property, in
+ * which case that is rendered as well.  
+ */
+function renderUpdatedTodo(todoData) {
+  const todoUuid = todoData.uuid;
+
+  const mainContent = doc.querySelector("#main-content"); 
+  const oldTodoCard = mainContent.querySelector(`[data-todo-uuid="${todoData.uuid}"]`);
+  const updatedTodoCard = createTodoEntry(todoData);
+  if (todoData.hasOwnProperty("description"))
+    toggleDetailedTodo(todoData);
+
+  mainContent.replaceChild(updatedTodoCard, oldTodoCard);
 }
 
 /**
