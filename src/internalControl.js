@@ -125,7 +125,7 @@ function viewProject(uuid) {
  * property names as those set in the Project constructor. 
  * @returns {Object}
  */
-function editProjectMetadata(uuid, metadata) {
+function editProject(uuid, metadata) {
   const project = getProject(uuid);
 
   const propertiesToUpdate = [
@@ -271,7 +271,7 @@ export {
   // CRUD for projects
   createProject, 
   viewProject, viewAllProjects,
-  editProjectMetadata,
+  editProject,
   removeProject,
 
   // CRUD for todos
