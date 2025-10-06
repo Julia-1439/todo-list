@@ -5,7 +5,7 @@ const doc = document;
  * @param {String} title 
  * @param {String} fill optional
  */
-function createSvg(title, fill=undefined) {
+function createSvg(title, fill="black") {
   const svg = doc.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", "0 0 24 24");
   const path = doc.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -16,8 +16,7 @@ function createSvg(title, fill=undefined) {
     "chevron": "M16.59,5.59L18,7L12,13L6,7L7.41,5.59L12,10.17L16.59,5.59M16.59,11.59L18,13L12,19L6,13L7.41,11.59L12,16.17L16.59,11.59Z",
     "plus": "M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z",
   }[title]);
-  if (fill !== undefined)
-    path.setAttribute("fill", fill);
+  path.setAttribute("fill", fill);
 
   svg.appendChild(path);
   return svg;
