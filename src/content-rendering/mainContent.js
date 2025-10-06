@@ -136,7 +136,7 @@ function toggleDetailedTodo(todoDetailedData) {
   if (descriptionDiv === null) {
     const descriptionDiv = doc.createElement("div");
     descriptionDiv.classList.add("todo-description");
-    descriptionDiv.textContent = todoDetailedData.description ?? "No description provided.";
+    descriptionDiv.textContent = todoDetailedData.description || "No description provided.";
     todoCard.append(descriptionDiv);
     expandSym.classList.add("chevron-expanded");
   }

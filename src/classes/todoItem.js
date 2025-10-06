@@ -24,10 +24,10 @@ export default class TodoItem {
   }
 
   set dueDateTime(dueDateTime) {
-    if (dueDateTime !== undefined)
+    if (dueDateTime)
       this._dueDateTime = new Date(dueDateTime); 
     else
-      this._dueDateTime = dueDateTime;
+      this._dueDateTime = undefined;
   }
 
   get dueDateTime() {

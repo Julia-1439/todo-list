@@ -310,7 +310,7 @@ function updateProject(submitEvt) {
 function createTodo(submitEvt) {
   const creationForm = submitEvt.submitter.form;
   const enteredData = Object.fromEntries(new FormData(creationForm));
-  emptyStrReplacer(enteredData);
+  // emptyStrReplacer(enteredData);
 
   const todoData = internalControl.createTodo(enteredData.projectUuid, enteredData);
 
