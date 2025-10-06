@@ -207,16 +207,18 @@ mainContainer.addEventListener("custom:contentUpdate", () => {
       const todoUuid = btn.dataset.todoUuid;
 
       const todoData = internalControl.viewTodoSummary(projectUuid, todoUuid);
-      const newTodoData = internalControl.editTodo(projectUuid, todoUuid, {
-        "status": (todoData.status.name === "incomplete") 
-          ? "completed" 
-          : "incomplete",
-      });
+      const newStatus = (todoData.status.name === "incomplete") ? "completed" : "incomplete";
+      const formData = (() => {
+        const f = new FormData();
+        f.append("status", newStatus);
+        f.append("projectUuid", projectUuid);
+        return f;
+      })();
+      updateTodo(todoUuid, formData, true);
 
-      mainContentRenderer.renderNewTodoStatus(newTodoData); // (note)
-      // note: the alternative approach is to call mainContentRenderer.renderProject
-      // again, but that erases any expanded todos. thus, we create a special function
-      // .renderNewTodoStatus to modify the checkbubble and only the checkbubble
+      renderDisplay({
+        detail: {focusedProjectUuid: todoData.projectUuid},
+      });
     });
   });
 
@@ -280,7 +282,7 @@ function createProject(formData) {
  * 
  * @param {FormData} formData 
  */
-function updateProject(uuid, formData) {
+function updateProject(uuid, formData, suppressNotif=false) {
   const enteredData = Object.fromEntries(formData);
   const updatedProjectData = internalControl.editProject(uuid, enteredData);
 
@@ -288,11 +290,12 @@ function updateProject(uuid, formData) {
     detail: { focusedProjectUuid: uuid, },
   });
 
-  doc.dispatchEvent(new CustomEvent("customEvt:notification", {
-    detail: {
-      message: `Project "${updatedProjectData.title}" has been updated.`,
-    },
-  }));
+  if (!suppressNotif)
+    doc.dispatchEvent(new CustomEvent("customEvt:notification", {
+      detail: {
+        message: `Project "${updatedProjectData.title}" has been updated.`,
+      },
+    }));
 }
 
 /* ========================================================================== */
@@ -309,7 +312,7 @@ function createTodo(formData) {
 
   renderDisplay({
     detail: {focusedProjectUuid: enteredData.projectUuid},
-  });
+  }); 
 
   doc.dispatchEvent(new CustomEvent("customEvt:notification", {
     detail: {
@@ -318,6 +321,25 @@ function createTodo(formData) {
   }));
 }
 
+function updateTodo(todoUuid, formData, suppressNotif=false) {
+  const enteredData = Object.fromEntries(formData);
+  const todoData = internalControl.editTodo(
+    enteredData.projectUuid, 
+    todoUuid, 
+    enteredData
+  );
+
+  renderDisplay({
+    detail: {focusedProjectUuid: enteredData.projectUuid},
+  });
+
+  if (!suppressNotif)
+    doc.dispatchEvent(new CustomEvent("customEvt:notification", {
+      detail: {
+        message: `Task has been updated.`,
+      },
+    }));
+}
 
 
 
