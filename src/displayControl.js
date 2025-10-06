@@ -319,6 +319,26 @@ mainContainer.addEventListener("custom:contentUpdate", () => {
     });
   });
 
+  // the create task button for this project
+  const createTodoBtn = doc.querySelector("#this-project-create-todo-btn");
+  createTodoBtn.addEventListener("click", () => {
+    const dialog = doc.querySelector("#cu-todo-dialog");
+    const form = doc.querySelector("#cu-todo-form");
+
+    form.dataset.operation = "create";
+    form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
+      blankToFill.textContent = "add";
+    });
+
+    // populate with this project
+    const projectUuid = createTodoBtn.dataset.projectUuid;
+    const projectSelector = form.querySelector("#cu-todo-form-project-selector");
+    const desiredOption = projectSelector.querySelector(`option[value="${projectUuid}"]`)
+    desiredOption.setAttribute("selected", "");
+    
+    dialog.showModal();
+  });
+
 });
 
 
