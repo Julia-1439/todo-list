@@ -29,7 +29,7 @@ function createDefaultProject() {
   const projectUuid = _projects.at(-1).uuid;
   createTodo(projectUuid, {
     title: "Buy groceries after work", 
-    description: "Remember to buy tomatoes.", 
+    description: "Bring the coupons for a discount.", 
     dueDateTime: (() => {
       const d = new Date();
       d.setDate(d.getDate() + 1);
