@@ -5,387 +5,14 @@ import { mainContentRenderer } from "./barrel.js";
 import { projectSelectElementRenderer } from "./barrel.js";
 import { contextMenusRenderer } from "./barrel.js";
 
-import { dateFns } from "./barrel.js";
+import { dateFns } from "./barrel.js"; 
 
 const doc = document; 
-const sidebarElt = doc.querySelector("#sidebar"); // might move to the custom events
-const mainContainer = doc.querySelector("#main-container"); // might move to the custom events
-
-/* ========================================================================== */
-/* INITIALIZATION: add evt listeners to *permanent* fixtures */
-/* ========================================================================== */
-
-/* Sidebar */
-(function initListenersSidebar() {
-  const createProjectBtn = doc.querySelector("#sidebar-create-project-btn");
-  createProjectBtn.addEventListener("click", () => {
-    const dialog = doc.querySelector("#cu-project-dialog");
-    const form = doc.querySelector("#cu-project-form");
-
-    form.dataset.operation = "create";
-    form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
-      blankToFill.textContent = "create";
-    });
-    
-    dialog.showModal();
-  });
-
-  const createTodoBtn = doc.querySelector("#sidebar-create-todo-btn");
-  createTodoBtn.addEventListener("click", () => {
-    const dialog = doc.querySelector("#cu-todo-dialog");
-    const form = doc.querySelector("#cu-todo-form");
-
-    form.dataset.operation = "create";
-    form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
-      blankToFill.textContent = "add";
-    });
-    
-    dialog.showModal();
-  });
-})();
-
-/* Main content */
-(function initListenersMainContent() {
-  // none I think
-})();
-
-/* Context menus */
-(function initListenersProjectContextMenu() {
-  const projectContextMenu = doc.querySelector("#project-context-menu");
-
-  const updateProjectBtn = projectContextMenu.querySelector("#project-update-btn");
-  updateProjectBtn.addEventListener("click", () => {
-    const dialog = doc.querySelector("#cu-project-dialog");
-    const form = doc.querySelector("#cu-project-form");
-  
-    const uuid = updateProjectBtn.dataset.uuid;
-    form.dataset.uuid = uuid;
-    form.dataset.operation = "update";
-    form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
-      blankToFill.textContent = "edit";
-    });
-
-    // populate with current project data
-    const currProjectData = internalControl.viewProject(uuid);
-    form.querySelectorAll("[name]").forEach((formCtrl) => {
-      formCtrl.value = currProjectData[formCtrl.name] ?? "";
-    });
-    
-    dialog.showModal();
-  });
-
-  //
-  const markCompleteBtn = projectContextMenu.querySelector("#project-update-status-btn");
-  markCompleteBtn.addEventListener("click", () => {
-    const uuid = markCompleteBtn.dataset.uuid;
-
-    const projectData = internalControl.viewProject(uuid);
-    const newStatus = (projectData.status.name === "incomplete") ? "completed" : "incomplete";
-    const formData = (() => {
-      const f = new FormData();
-      f.append("status", newStatus);
-      return f;
-    })();
-    updateProject(uuid, formData);
-
-    renderDisplay({
-      detail: {focusedProjectUuid: projectData.uuid},
-    });
-    projectContextMenu.hidePopover();
-  });
-
-  const deleteProjectBtn = projectContextMenu.querySelector("#project-delete-btn");
-  deleteProjectBtn.addEventListener("click", () => {
-    const dialog = doc.querySelector("#deletion-dialog");
-    const form = doc.querySelector("#deletion-form");
-  
-    const uuid = deleteProjectBtn.dataset.uuid;
-    form.dataset.projectUuid = uuid; // form distinguishes between projectUuid & todoUuid since it supports deleting both (don't do this next time.) 
-    form.dataset.objectType = "project";
-    form.querySelectorAll("span[data-object-type]").forEach((blankToFill) => {
-      blankToFill.textContent = "project";
-    });
-    
-    dialog.showModal();
-  });
-})();
-
-(function initListenersTodoContextMenu() {
-  const todoContextMenu = doc.querySelector("#todo-context-menu");
-
-  const updateTodoBtn = todoContextMenu.querySelector("#todo-update-btn");
-  updateTodoBtn.addEventListener("click", () => {
-    const dialog = doc.querySelector("#cu-todo-dialog");
-    const form = doc.querySelector("#cu-todo-form");
-  
-    const projectUuid = updateTodoBtn.dataset.projectUuid;
-    const todoUuid = updateTodoBtn.dataset.todoUuid;
-    form.dataset.projectUuid = projectUuid;
-    form.dataset.todoUuid = todoUuid;
-    form.dataset.operation = "update";
-    form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
-      blankToFill.textContent = "edit";
-    });
-
-    // populate with current todo data
-    const currTodoData = internalControl.viewTodo(projectUuid, todoUuid);
-    form.querySelectorAll("[name]").forEach((formCtrl) => {
-      const name = formCtrl.name;
-      formCtrl.value = (() => {
-        let currVal = currTodoData[name] ?? "";
-        switch (name) {
-          case "priority":
-            return currVal.level;
-          case "dueDateTime":
-            if (currVal)
-              return dateFns.format(new Date(currVal), "yyyy-MM-dd'T'HH:mm");
-          default:
-            return currVal;
-        }
-      })();
-    });
-
-    // Disable the project selector to prevent switching it to different project
-    // NOTE: the value will need to be injected into the form data afterward 
-    // since disabled inputs don't transmit their values. "readonly" also 
-    // doesn't work with <select> elements.
-    const projectSelector = form.querySelector("#cu-todo-form-project-selector");
-    projectSelector.disabled = "true"; 
-    
-    dialog.showModal();
-  });
-
-  const deleteTodoBtn = todoContextMenu.querySelector("#todo-delete-btn");
-  deleteTodoBtn.addEventListener("click", () => {
-    const dialog = doc.querySelector("#deletion-dialog");
-    const form = doc.querySelector("#deletion-form");
-  
-    const projectUuid = deleteTodoBtn.dataset.projectUuid;
-    const todoUuid = deleteTodoBtn.dataset.todoUuid;
-    form.dataset.projectUuid = projectUuid; 
-    form.dataset.todoUuid = todoUuid;
-    form.dataset.objectType = "todo";
-    form.querySelectorAll("span[data-object-type]").forEach((blankToFill) => {
-      blankToFill.textContent = "task";
-    });
-    
-    dialog.showModal();
-  });
-
-})();
-
-
-/* Forms */
-// the form for creating OR updating a project
-(function initListenersCuProjectForm() {
-  const form = doc.querySelector("#cu-project-form");
-  form.addEventListener("submit", () => {
-    const operation = form.dataset.operation;
-    const formData = new FormData(form);
-
-    switch (operation) {
-      case "create":
-          createProject(formData);
-          break;
-        case "update":
-          const uuid = form.dataset.uuid; 
-          updateProject(uuid, formData);
-          break;
-    }
-
-    form.reset();
-  });
-})();
-
-// the form for creating OR updating a todo
-(function initListenersCuTodoForm() {
-  const form = doc.querySelector("#cu-todo-form");
-  form.addEventListener("submit", () => {
-    const operation = form.dataset.operation;
-    const formData = new FormData(form);
-
-    switch (operation) {
-      case "create":
-        createTodo(formData);
-        break;
-      case "update":
-        formData.append("projectUuid", form.dataset.projectUuid); // disabled project selector does not transmit it automatically 
-        const todoUuid = form.dataset.todoUuid;
-        updateTodo(todoUuid, formData);
-        break;
-    }
-
-    form.reset();
-  });
-})();
-
-// the form for deleting a project OR todo
-(function initListenersDeletionForm() {
-  const form = doc.querySelector("#deletion-form");
-  
-  form.addEventListener("submit", () => {
-    const objectType = form.dataset.objectType;
-    const projectUuid = form.dataset.projectUuid;
-
-    switch (objectType) {
-      case "project":
-        deleteProject(projectUuid);
-        break;
-      case "todo":
-        const todoUuid = form.dataset.todoUuid;
-        deleteTodo(projectUuid, todoUuid);
-        break;
-    }
-  })
-
-  form.reset();
-})();
-
-// make each cancel button close their parent form
-(function initListenersCancelBtns() {
-  const cancelBtns = doc.querySelectorAll(".form-cancel-btn");
-  cancelBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const form = btn.form;
-      form.reset();
-
-      const dialog = doc.querySelector(`#${form.dataset.dialog}`);
-      dialog.close();
-    });
-  });
-})();
-
-(function initListenersDialogs() {
-  const cuTodoDialog = doc.querySelector("#cu-todo-dialog");
-  cuTodoDialog.addEventListener("close", () => {
-    const projectSelector = cuTodoDialog.querySelector("#cu-todo-form-project-selector");
-    projectSelector.removeAttribute("disabled"); 
-  });
-})();
-
-/* ========================================================================== */
-/* Add event listeners to *dynamic* content as they are created */
-/* ========================================================================== */
-
-sidebarElt.addEventListener("custom:contentRender", () => {
-  const projectsSection = sidebarElt.querySelector("#sidebar-projects-section");
-
-  const viewProjectBtns = projectsSection.querySelectorAll(".view-project-btn");
-  viewProjectBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const projectData = internalControl.viewProject(btn.dataset.uuid);
-      mainContentRenderer.renderProject(projectData);
-    });
-  });
-
-  const openContextMenuBtns = projectsSection.querySelectorAll(".project-context-btn");
-  const contextMenu = doc.querySelector("#project-context-menu");
-  openContextMenuBtns.forEach((openMenuBtn) => {
-    openMenuBtn.addEventListener("click", (evt) => {
-      contextMenu.querySelectorAll("button").forEach((actionBtn) => {
-        actionBtn.dataset.uuid = openMenuBtn.dataset.uuid;
-      });
-      const {x, y, width} = openMenuBtn.getBoundingClientRect();
-      contextMenusRenderer.setPosition(contextMenu, `${y}px auto auto ${x+width}px`);
-    });
-  });
-
-});
-
-mainContainer.addEventListener("custom:contentRender", () => {
-  const mainTopbar = mainContainer.querySelector("#main-topbar");
-  const openProjectMenuBtn = mainTopbar.querySelector(".project-context-btn")
-  openProjectMenuBtn.addEventListener("click", () => {
-    const projectContextMenu = doc.querySelector("#project-context-menu");
-    projectContextMenu.querySelectorAll("button").forEach((actionBtn) => {
-      actionBtn.dataset.uuid = openProjectMenuBtn.dataset.uuid;
-    });
-    const { x, y } = openProjectMenuBtn.getBoundingClientRect();
-    const { width } = projectContextMenu.getBoundingClientRect();
-    contextMenusRenderer.setPosition(projectContextMenu, `${y}px auto auto ${x - width}px`); 
-  });
-
-  const mainContent = mainContainer.querySelector("#main-content");
-
-  // expand todos
-  const expandBtns = mainContent.querySelectorAll(".expand-btn");
-  expandBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const todoData = internalControl.viewTodo(
-        btn.dataset.projectUuid, btn.dataset.todoUuid
-      );
-      mainContentRenderer.toggleExpandedTodo(todoData);
-    });
-  });
-
-  // toggle status
-  const checkBubbleBtns = mainContent.querySelectorAll(".todo-checkbubble-btn");
-  checkBubbleBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const projectUuid = btn.dataset.projectUuid;
-      const todoUuid = btn.dataset.todoUuid;
-
-      const todoData = internalControl.viewTodo(projectUuid, todoUuid);
-      const newStatus = (todoData.status.name === "incomplete") ? "completed" : "incomplete";
-      const formData = (() => {
-        const f = new FormData();
-        f.append("status", newStatus);
-        f.append("projectUuid", projectUuid);
-        return f;
-      })();
-      updateTodo(todoUuid, formData, true);
-
-      renderDisplay({
-        detail: {focusedProjectUuid: todoData.projectUuid},
-      });
-    });
-  });
-
-  // context menu
-  const openContextMenuBtns = mainContent.querySelectorAll(".todo-context-btn");
-  const contextMenu = doc.querySelector("#todo-context-menu");
-  openContextMenuBtns.forEach((openMenuBtn) => {
-    openMenuBtn.addEventListener("click", () => {
-      contextMenu.querySelectorAll("button").forEach((actionBtn) => {
-        actionBtn.dataset.projectUuid = openMenuBtn.dataset.projectUuid;
-        actionBtn.dataset.todoUuid = openMenuBtn.dataset.todoUuid;        
-      });
-      const {x, y, width} = openMenuBtn.getBoundingClientRect();
-      contextMenusRenderer.setPosition(contextMenu, `${y}px auto auto ${x+width}px`);
-    });
-  });
-
-  // the create task button for this project
-  const createTodoBtn = doc.querySelector("#this-project-create-todo-btn");
-  createTodoBtn.addEventListener("click", () => {
-    const dialog = doc.querySelector("#cu-todo-dialog");
-    const form = doc.querySelector("#cu-todo-form");
-
-    form.dataset.operation = "create";
-    form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
-      blankToFill.textContent = "add";
-    });
-
-    // populate with this project
-    const projectUuid = createTodoBtn.dataset.projectUuid;
-    const projectSelector = form.querySelector("#cu-todo-form-project-selector");
-    const desiredOption = projectSelector.querySelector(`option[value="${projectUuid}"]`)
-    desiredOption.setAttribute("selected", "");
-    
-    dialog.showModal();
-  });
-
-});
-
-
-/* ========================================================================== */
-/* HELPERS */
-/* ========================================================================== */
 
 /**
- * update the sidebar with project titles; update the project selection menu 
- * when creating a new task; update the main display
- * @param {Object} detail optional object to ... @todo
+ * Renders the screen with updated information. To be called each time a 
+ * modification is made to the app's internals. 
+ * @param {Object} detail optional object to configure parts of the display 
 */
 function renderDisplay({ detail  } = { detail: {} }) {
   const projectsData = internalControl.viewAllProjects();
@@ -407,7 +34,370 @@ function renderDisplay({ detail  } = { detail: {} }) {
 }
 
 /* ========================================================================== */
-/* CRUD for projects */
+/* Initialize all the event listeners */
+/* ========================================================================== */
+
+(function initListeners() {
+  /* Sidebar */
+  (function sidebar() {
+    const createProjectBtn = doc.querySelector("#sidebar-create-project-btn");
+    createProjectBtn.addEventListener("click", () => {
+      const dialog = doc.querySelector("#cu-project-dialog");
+      const form = doc.querySelector("#cu-project-form");
+  
+      form.dataset.operation = "create";
+      form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
+        blankToFill.textContent = "create";
+      });
+      
+      dialog.showModal();
+    });
+  
+    const createTodoBtn = doc.querySelector("#sidebar-create-todo-btn");
+    createTodoBtn.addEventListener("click", () => {
+      const dialog = doc.querySelector("#cu-todo-dialog");
+      const form = doc.querySelector("#cu-todo-form");
+  
+      form.dataset.operation = "create";
+      form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
+        blankToFill.textContent = "add";
+      });
+      
+      dialog.showModal();
+    });
+
+    const sidebarElt = doc.querySelector("#sidebar");
+    sidebarElt.addEventListener("custom:contentRender", () => {
+      const projectsSection = sidebarElt.querySelector("#sidebar-projects-section");
+
+      const viewProjectBtns = projectsSection.querySelectorAll(".view-project-btn");
+      viewProjectBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const projectData = internalControl.viewProject(btn.dataset.uuid);
+          mainContentRenderer.renderProject(projectData);
+        });
+      });
+
+      const openContextMenuBtns = projectsSection.querySelectorAll(".project-context-btn");
+      const contextMenu = doc.querySelector("#project-context-menu");
+      openContextMenuBtns.forEach((openMenuBtn) => {
+        openMenuBtn.addEventListener("click", (evt) => {
+          contextMenu.querySelectorAll("button").forEach((actionBtn) => {
+            actionBtn.dataset.uuid = openMenuBtn.dataset.uuid;
+          });
+          const {x, y, width} = openMenuBtn.getBoundingClientRect();
+          contextMenusRenderer.setPosition(contextMenu, `${y}px auto auto ${x+width}px`);
+        });
+      });
+
+    });
+
+  })();
+
+  /* Main container */
+  (function mainContainer() {
+    const mainContainer = doc.querySelector("#main-container"); 
+    mainContainer.addEventListener("custom:contentRender", () => {
+      const mainTopbar = mainContainer.querySelector("#main-topbar");
+      const openProjectMenuBtn = mainTopbar.querySelector(".project-context-btn")
+      openProjectMenuBtn.addEventListener("click", () => {
+        const projectContextMenu = doc.querySelector("#project-context-menu");
+        projectContextMenu.querySelectorAll("button").forEach((actionBtn) => {
+          actionBtn.dataset.uuid = openProjectMenuBtn.dataset.uuid;
+        });
+        const { x, y } = openProjectMenuBtn.getBoundingClientRect();
+        const { width } = projectContextMenu.getBoundingClientRect();
+        contextMenusRenderer.setPosition(projectContextMenu, `${y}px auto auto ${x - width}px`); 
+      });
+
+      const mainContent = mainContainer.querySelector("#main-content");
+
+      // expand todos
+      const expandBtns = mainContent.querySelectorAll(".expand-btn");
+      expandBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const todoData = internalControl.viewTodo(
+            btn.dataset.projectUuid, btn.dataset.todoUuid
+          );
+          mainContentRenderer.toggleExpandedTodo(todoData);
+        });
+      });
+
+      // toggle status
+      const checkBubbleBtns = mainContent.querySelectorAll(".todo-checkbubble-btn");
+      checkBubbleBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const projectUuid = btn.dataset.projectUuid;
+          const todoUuid = btn.dataset.todoUuid;
+
+          const todoData = internalControl.viewTodo(projectUuid, todoUuid);
+          const newStatus = (todoData.status.name === "incomplete") ? "completed" : "incomplete";
+          const formData = (() => {
+            const f = new FormData();
+            f.append("status", newStatus);
+            f.append("projectUuid", projectUuid);
+            return f;
+          })();
+          updateTodo(todoUuid, formData, true);
+
+          renderDisplay({
+            detail: {focusedProjectUuid: todoData.projectUuid},
+          });
+        });
+      });
+
+      // context menu
+      const openContextMenuBtns = mainContent.querySelectorAll(".todo-context-btn");
+      const contextMenu = doc.querySelector("#todo-context-menu");
+      openContextMenuBtns.forEach((openMenuBtn) => {
+        openMenuBtn.addEventListener("click", () => {
+          contextMenu.querySelectorAll("button").forEach((actionBtn) => {
+            actionBtn.dataset.projectUuid = openMenuBtn.dataset.projectUuid;
+            actionBtn.dataset.todoUuid = openMenuBtn.dataset.todoUuid;        
+          });
+          const {x, y, width} = openMenuBtn.getBoundingClientRect();
+          contextMenusRenderer.setPosition(contextMenu, `${y}px auto auto ${x+width}px`);
+        });
+      });
+
+      // the create task button for this project
+      const createTodoBtn = doc.querySelector("#this-project-create-todo-btn");
+      createTodoBtn.addEventListener("click", () => {
+        const dialog = doc.querySelector("#cu-todo-dialog");
+        const form = doc.querySelector("#cu-todo-form");
+
+        form.dataset.operation = "create";
+        form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
+          blankToFill.textContent = "add";
+        });
+
+        // populate with this project
+        const projectUuid = createTodoBtn.dataset.projectUuid;
+        const projectSelector = form.querySelector("#cu-todo-form-project-selector");
+        const desiredOption = projectSelector.querySelector(`option[value="${projectUuid}"]`)
+        desiredOption.setAttribute("selected", "");
+        
+        dialog.showModal();
+      });
+
+    });
+  })();
+
+  /* Context menus */
+  (function contextMenus() {
+    (function projectMenu() {
+      const projectContextMenu = doc.querySelector("#project-context-menu");
+    
+      const updateProjectBtn = projectContextMenu.querySelector("#project-update-btn");
+      updateProjectBtn.addEventListener("click", () => {
+        const dialog = doc.querySelector("#cu-project-dialog");
+        const form = doc.querySelector("#cu-project-form");
+      
+        const uuid = updateProjectBtn.dataset.uuid;
+        form.dataset.uuid = uuid;
+        form.dataset.operation = "update";
+        form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
+          blankToFill.textContent = "edit";
+        });
+    
+        // populate with current project data
+        const currProjectData = internalControl.viewProject(uuid);
+        form.querySelectorAll("[name]").forEach((formCtrl) => {
+          formCtrl.value = currProjectData[formCtrl.name] ?? "";
+        });
+        
+        dialog.showModal();
+      });
+    
+      //
+      const markCompleteBtn = projectContextMenu.querySelector("#project-update-status-btn");
+      markCompleteBtn.addEventListener("click", () => {
+        const uuid = markCompleteBtn.dataset.uuid;
+    
+        const projectData = internalControl.viewProject(uuid);
+        const newStatus = (projectData.status.name === "incomplete") ? "completed" : "incomplete";
+        const formData = (() => {
+          const f = new FormData();
+          f.append("status", newStatus);
+          return f;
+        })();
+        updateProject(uuid, formData);
+    
+        renderDisplay({
+          detail: {focusedProjectUuid: projectData.uuid},
+        });
+        projectContextMenu.hidePopover();
+      });
+    
+      const deleteProjectBtn = projectContextMenu.querySelector("#project-delete-btn");
+      deleteProjectBtn.addEventListener("click", () => {
+        const dialog = doc.querySelector("#deletion-dialog");
+        const form = doc.querySelector("#deletion-form");
+      
+        const uuid = deleteProjectBtn.dataset.uuid;
+        form.dataset.projectUuid = uuid; // form distinguishes between projectUuid & todoUuid since it supports deleting both (don't do this next time.) 
+        form.dataset.objectType = "project";
+        form.querySelectorAll("span[data-object-type]").forEach((blankToFill) => {
+          blankToFill.textContent = "project";
+        });
+        
+        dialog.showModal();
+      });
+    })();
+    
+    (function todoMenu() {
+      const todoContextMenu = doc.querySelector("#todo-context-menu");
+    
+      const updateTodoBtn = todoContextMenu.querySelector("#todo-update-btn");
+      updateTodoBtn.addEventListener("click", () => {
+        const dialog = doc.querySelector("#cu-todo-dialog");
+        const form = doc.querySelector("#cu-todo-form");
+      
+        const projectUuid = updateTodoBtn.dataset.projectUuid;
+        const todoUuid = updateTodoBtn.dataset.todoUuid;
+        form.dataset.projectUuid = projectUuid;
+        form.dataset.todoUuid = todoUuid;
+        form.dataset.operation = "update";
+        form.querySelectorAll("span[data-operation]").forEach((blankToFill) => {
+          blankToFill.textContent = "edit";
+        });
+    
+        // populate with current todo data
+        const currTodoData = internalControl.viewTodo(projectUuid, todoUuid);
+        form.querySelectorAll("[name]").forEach((formCtrl) => {
+          const name = formCtrl.name;
+          formCtrl.value = (() => {
+            let currVal = currTodoData[name] ?? "";
+            switch (name) {
+              case "priority":
+                return currVal.level;
+              case "dueDateTime":
+                if (currVal)
+                  return dateFns.format(new Date(currVal), "yyyy-MM-dd'T'HH:mm");
+              default:
+                return currVal;
+            }
+          })();
+        });
+    
+        // Disable the project selector to prevent switching it to different project
+        // NOTE: the value will need to be injected into the form data afterward 
+        // since disabled inputs don't transmit their values. "readonly" also 
+        // doesn't work with <select> elements.
+        const projectSelector = form.querySelector("#cu-todo-form-project-selector");
+        projectSelector.disabled = "true"; 
+        
+        dialog.showModal();
+      });
+    
+      const deleteTodoBtn = todoContextMenu.querySelector("#todo-delete-btn");
+      deleteTodoBtn.addEventListener("click", () => {
+        const dialog = doc.querySelector("#deletion-dialog");
+        const form = doc.querySelector("#deletion-form");
+      
+        const projectUuid = deleteTodoBtn.dataset.projectUuid;
+        const todoUuid = deleteTodoBtn.dataset.todoUuid;
+        form.dataset.projectUuid = projectUuid; 
+        form.dataset.todoUuid = todoUuid;
+        form.dataset.objectType = "todo";
+        form.querySelectorAll("span[data-object-type]").forEach((blankToFill) => {
+          blankToFill.textContent = "task";
+        });
+        
+        dialog.showModal();
+      });
+    
+    })();
+  })();
+
+  /* Forms */
+  (function forms() {
+    (function createOrUpdateProject() {
+      const form = doc.querySelector("#cu-project-form");
+      form.addEventListener("submit", () => {
+        const operation = form.dataset.operation;
+        const formData = new FormData(form);
+    
+        switch (operation) {
+          case "create":
+              createProject(formData);
+              break;
+            case "update":
+              const uuid = form.dataset.uuid; 
+              updateProject(uuid, formData);
+              break;
+        }
+    
+        form.reset();
+      });
+    })();
+  
+    (function createOrUpdateTodo() {
+      const form = doc.querySelector("#cu-todo-form");
+      form.addEventListener("submit", () => {
+        const operation = form.dataset.operation;
+        const formData = new FormData(form);
+    
+        switch (operation) {
+          case "create":
+            createTodo(formData);
+            break;
+          case "update":
+            formData.append("projectUuid", form.dataset.projectUuid); // disabled project selector does not transmit it automatically 
+            const todoUuid = form.dataset.todoUuid;
+            updateTodo(todoUuid, formData);
+            break;
+        }
+    
+        form.reset();
+      });
+  
+      const dialog = doc.querySelector("#cu-todo-dialog");
+      dialog.addEventListener("close", () => {
+        const projectSelector = dialog.querySelector("#cu-todo-form-project-selector");
+        projectSelector.removeAttribute("disabled"); 
+      });
+    })();
+  
+    (function deletion() {
+      const form = doc.querySelector("#deletion-form");
+      
+      form.addEventListener("submit", () => {
+        const objectType = form.dataset.objectType;
+        const projectUuid = form.dataset.projectUuid;
+    
+        switch (objectType) {
+          case "project":
+            deleteProject(projectUuid);
+            break;
+          case "todo":
+            const todoUuid = form.dataset.todoUuid;
+            deleteTodo(projectUuid, todoUuid);
+            break;
+        }
+      })
+    
+      form.reset();
+    })();
+  
+    (function cancelBtns() {
+      const cancelBtns = doc.querySelectorAll(".form-cancel-btn");
+      cancelBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const form = btn.form;
+          form.reset();
+    
+          const dialog = doc.querySelector(`#${form.dataset.dialog}`);
+          dialog.close();
+        });
+      });
+    })();
+  })();
+  
+})();
+
+/* ========================================================================== */
+/* Create-Update-Delete functions for projects */
 /* ========================================================================== */
 
 /**
@@ -462,7 +452,7 @@ function deleteProject(uuid) {
 }
 
 /* ========================================================================== */
-/* CRUD for todos */
+/* Create-Update-Delete functions for todos */
 /* ========================================================================== */
 
 /**
@@ -487,7 +477,7 @@ function createTodo(formData) {
 /**
  * 
  * @param {String} todoUuid 
- * @param {FormData} formData has projectUuid in there so dw
+ * @param {FormData} formData 
  * @param {Boolean} suppressNotif 
  */
 function updateTodo(todoUuid, formData, suppressNotif=false) {
@@ -523,8 +513,5 @@ function deleteTodo(projectUuid, todoUuid) {
     },
   }));
 }
-
-
-
 
 export { renderDisplay };
