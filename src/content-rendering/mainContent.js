@@ -54,81 +54,82 @@ function renderProject(projectData) {
   todoCreateBtn.append(todoCreateSym, todoCreateText);
 
   mainContainer.dispatchEvent(new CustomEvent("custom:contentRender"));
+  
+  /**
+   * 
+   * @param {Object} todoData 
+   * @returns {HTMLLIElement}
+   */
+  function createTodoEntry(todoData) {
+    const li = doc.createElement("li");
+  
+    const card = doc.createElement("div");
+    card.classList.add("todo-card");
+    card.dataset.todoUuid = todoData.uuid;
+    card.dataset.projectUuid = todoData.projectUuid;
+    const checkBubbleDiv = doc.createElement("div");
+    checkBubbleDiv.classList.add("todo-checkbubble-container");
+    const checkBubbleBtn = doc.createElement("button");
+    checkBubbleBtn.classList.add("todo-checkbubble-btn");
+    if (todoData.status.name === "incomplete") {
+      checkBubbleBtn.style.borderColor = todoData.priority.color;
+      checkBubbleBtn.style.backgroundColor = `${todoData.priority.color}a6`;  
+    }
+    else {
+      checkBubbleBtn.style.borderColor = todoData.status.color;
+      checkBubbleBtn.style.backgroundColor = `${todoData.status.color}a6`;  
+      checkBubbleBtn.classList.add("todo-completed");
+    }
+    checkBubbleBtn.dataset.todoUuid = todoData.uuid;
+    checkBubbleBtn.dataset.projectUuid = todoData.projectUuid;
+    const checkSym = svgCreator.create("check", "white");
+    
+    const topRowDiv = doc.createElement("div");
+    topRowDiv.classList.add("todo-top-row");
+    const titleSpan = doc.createElement("span");
+    titleSpan.classList.add("todo-title");
+    const titleStrong = doc.createElement("strong");
+    titleStrong.textContent = todoData.title;
+    const btnsContainer = doc.createElement("div");
+    btnsContainer.classList.add("todo-btns-container");
+    const expandBtn = doc.createElement("button");
+    expandBtn.classList.add("expand-btn", "todo-btn", "borderless-btn", "square-btn");
+    expandBtn.dataset.todoUuid = todoData.uuid;
+    expandBtn.dataset.projectUuid = todoData.projectUuid;
+    const expandSym = svgCreator.create("chevron");
+    expandSym.classList.add("chevron");
+    const menuBtn = doc.createElement("button");
+    menuBtn.classList.add("todo-context-btn", "todo-btn", "borderless-btn", "square-btn");
+    menuBtn.setAttribute("popovertarget", "todo-context-menu");
+    menuBtn.setAttribute("popovertargetaction", "toggle");
+    menuBtn.dataset.todoUuid = todoData.uuid;
+    menuBtn.dataset.projectUuid = todoData.projectUuid;
+    const menuSym = svgCreator.create("dots-horizontal");
+    menuSym.classList.add("context-menu-sym");
+  
+    const dueByDiv = doc.createElement("div");
+    dueByDiv.classList.add("todo-due-by");
+    dueByDiv.textContent = todoData.dueDateTime;
+    
+    li.append(card);
+    card.append(checkBubbleDiv, topRowDiv, dueByDiv);
+    checkBubbleDiv.append(checkBubbleBtn);
+    checkBubbleBtn.append(checkSym);
+    topRowDiv.append(titleSpan, btnsContainer);
+    titleSpan.append(titleStrong);
+    btnsContainer.append(expandBtn, menuBtn);
+    expandBtn.append(expandSym);
+    menuBtn.append(menuSym);
+  
+    const wasExpanded = _expandedTodos.includes(todoData.uuid);
+    if (wasExpanded) {
+      expandTodo(card, todoData);
+    }
+  
+    return li;
+  }
 }
 
-/**
- * 
- * @param {Object} todoData 
- * @returns {HTMLLIElement}
- */
-function createTodoEntry(todoData) {
-  const li = doc.createElement("li");
-
-  const card = doc.createElement("div");
-  card.classList.add("todo-card");
-  card.dataset.todoUuid = todoData.uuid;
-  card.dataset.projectUuid = todoData.projectUuid;
-  const checkBubbleDiv = doc.createElement("div");
-  checkBubbleDiv.classList.add("todo-checkbubble-container");
-  const checkBubbleBtn = doc.createElement("button");
-  checkBubbleBtn.classList.add("todo-checkbubble-btn");
-  if (todoData.status.name === "incomplete") {
-    checkBubbleBtn.style.borderColor = todoData.priority.color;
-    checkBubbleBtn.style.backgroundColor = `${todoData.priority.color}a6`;  
-  }
-  else {
-    checkBubbleBtn.style.borderColor = todoData.status.color;
-    checkBubbleBtn.style.backgroundColor = `${todoData.status.color}a6`;  
-    checkBubbleBtn.classList.add("todo-completed");
-  }
-  checkBubbleBtn.dataset.todoUuid = todoData.uuid;
-  checkBubbleBtn.dataset.projectUuid = todoData.projectUuid;
-  const checkSym = svgCreator.create("check", "white");
-  
-  const topRowDiv = doc.createElement("div");
-  topRowDiv.classList.add("todo-top-row");
-  const titleSpan = doc.createElement("span");
-  titleSpan.classList.add("todo-title");
-  const titleStrong = doc.createElement("strong");
-  titleStrong.textContent = todoData.title;
-  const btnsContainer = doc.createElement("div");
-  btnsContainer.classList.add("todo-btns-container");
-  const expandBtn = doc.createElement("button");
-  expandBtn.classList.add("expand-btn", "todo-btn", "borderless-btn", "square-btn");
-  expandBtn.dataset.todoUuid = todoData.uuid;
-  expandBtn.dataset.projectUuid = todoData.projectUuid;
-  const expandSym = svgCreator.create("chevron");
-  expandSym.classList.add("chevron");
-  const menuBtn = doc.createElement("button");
-  menuBtn.classList.add("todo-context-btn", "todo-btn", "borderless-btn", "square-btn");
-  menuBtn.setAttribute("popovertarget", "todo-context-menu");
-  menuBtn.setAttribute("popovertargetaction", "toggle");
-  menuBtn.dataset.todoUuid = todoData.uuid;
-  menuBtn.dataset.projectUuid = todoData.projectUuid;
-  const menuSym = svgCreator.create("dots-horizontal");
-  menuSym.classList.add("context-menu-sym");
-
-  const dueByDiv = doc.createElement("div");
-  dueByDiv.classList.add("todo-due-by");
-  dueByDiv.textContent = todoData.dueDateTime;
-  
-  li.append(card);
-  card.append(checkBubbleDiv, topRowDiv, dueByDiv);
-  checkBubbleDiv.append(checkBubbleBtn);
-  checkBubbleBtn.append(checkSym);
-  topRowDiv.append(titleSpan, btnsContainer);
-  titleSpan.append(titleStrong);
-  btnsContainer.append(expandBtn, menuBtn);
-  expandBtn.append(expandSym);
-  menuBtn.append(menuSym);
-
-  const wasExpanded = _expandedTodos.includes(todoData.uuid);
-  if (wasExpanded) {
-    expandTodo(card, todoData);
-  }
-
-  return li;
-}
 
 /**
  * Toggles a full view of a todo item by adding an additional div with the 
