@@ -12,7 +12,7 @@ export * as sidebarRenderer from "./content-rendering/sidebar.js";
 export * as mainContentRenderer from "./content-rendering/mainContent.js";
 export * as projectSelectElementRenderer from "./content-rendering/projectSelectElement.js";
 export * as contextMenusRenderer from "./content-rendering/contextMenus.js";
-export * as notifRenderer from "./content-rendering/notif.js";
+export * as notifRenderer from "./content-rendering/notification.js";
 
 // Util (for content rendering)
 export * as svgCreator from "./content-rendering/util/svgCreator.js";
