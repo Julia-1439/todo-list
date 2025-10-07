@@ -73,6 +73,25 @@ const mainContainer = doc.querySelector("#main-container");
     dialog.showModal();
   });
 
+  //
+  const markCompleteBtn = projectContextMenu.querySelector("#project-update-status-btn");
+  markCompleteBtn.addEventListener("click", () => {
+    const uuid = markCompleteBtn.dataset.uuid;
+
+    const projectData = internalControl.viewProject(uuid);
+    const newStatus = (projectData.status.name === "incomplete") ? "completed" : "incomplete";
+    const formData = (() => {
+      const f = new FormData();
+      f.append("status", newStatus);
+      return f;
+    })();
+    updateProject(uuid, formData, true);
+
+    renderDisplay({
+      detail: {focusedProjectUuid: projectData.uuid},
+    });
+  });
+
   const deleteProjectBtn = projectContextMenu.querySelector("#project-delete-btn");
   deleteProjectBtn.addEventListener("click", () => {
     const dialog = doc.querySelector("#deletion-dialog");
@@ -226,9 +245,9 @@ const mainContainer = doc.querySelector("#main-container");
   cancelBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       const form = btn.form;
-      const dialog = doc.querySelector(`#${form.dataset.dialog}`);
-
       form.reset();
+
+      const dialog = doc.querySelector(`#${form.dataset.dialog}`);
       dialog.close();
     });
   });

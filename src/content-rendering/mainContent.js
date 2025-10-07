@@ -27,13 +27,9 @@ function renderProject(projectData) {
   projectHeader.classList.add("project-header-container");
   const projectTitle = doc.createElement("h1");
   projectTitle.classList.add("project-title");
-  if (projectData.status.name === "completed")
-    projectTitle.classList.add("project-completed");
   projectTitle.textContent = projectData.title;
   const projectDescr = doc.createElement("div");
   projectDescr.classList.add("project-description")
-  if (projectData.status.name === "completed")
-    projectDescr.classList.add("project-completed");
   projectDescr.textContent = projectData.description;
 
   const todoList = doc.createElement("ul");

@@ -199,7 +199,7 @@ body {
 }
 
 .project-completed {
-  text-decoration: line-through;
+  /* text-decoration: line-through; */
 }
 
 .project-context-btn {
@@ -477,18 +477,20 @@ legend {
   color: white;
 }
 
+.context-menu {
+  display: grid;
+  grid-auto-rows: 1fr;
+  border: 2px solid var(--palette-accent);
+
+}
+
 .context-menu button {
+  border: 2px solid var(--palette-accent);
   color: var(--palette-accent);
   height: 2rem;
   padding: 8px;
   display: flex;
   align-items: center;
-}
-
-.context-menu {
-  display: grid;
-  grid-auto-rows: 1fr;
-  /* border: 2px solid var(--palette-accent); */
 }
 
 span[data-operation] {
