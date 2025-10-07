@@ -7,6 +7,9 @@ const mainContainer = doc.querySelector("#main-container");
 function renderProject(projectData) {
   mainContainer.replaceChildren();
 
+  if (projectData === undefined)
+    return;
+
   mainContainer.dataset.uuid = projectData.uuid;
 
   const topBar = doc.createElement("div");
