@@ -3,6 +3,7 @@ import { internalControl } from "./barrel.js";
 import { sidebarRenderer } from "./barrel.js";
 import { mainContentRenderer } from "./barrel.js";
 import { projectSelectElementRenderer } from "./barrel.js";
+import { contextMenusRenderer } from "./barrel.js";
 
 import { dateFns } from "./barrel.js";
 
@@ -279,10 +280,12 @@ sidebarElt.addEventListener("custom:contentUpdate", () => {
   const openContextMenuBtns = projectsSection.querySelectorAll(".project-context-btn");
   const contextMenu = doc.querySelector("#project-context-menu");
   openContextMenuBtns.forEach((openMenuBtn) => {
-    openMenuBtn.addEventListener("click", () => {
+    openMenuBtn.addEventListener("click", (evt) => {
       contextMenu.querySelectorAll("button").forEach((actionBtn) => {
         actionBtn.dataset.uuid = openMenuBtn.dataset.uuid;
       });
+      const {x, y, width} = openMenuBtn.getBoundingClientRect();
+      contextMenusRenderer.setPosition(contextMenu, `${y}px auto auto ${x+width}px`);
     });
   });
 
@@ -296,6 +299,9 @@ mainContainer.addEventListener("custom:contentUpdate", () => {
     projectContextMenu.querySelectorAll("button").forEach((actionBtn) => {
       actionBtn.dataset.uuid = openProjectMenuBtn.dataset.uuid;
     });
+    const { x, y } = openProjectMenuBtn.getBoundingClientRect();
+    const { width } = projectContextMenu.getBoundingClientRect();
+    contextMenusRenderer.setPosition(projectContextMenu, `${y}px auto auto ${x - width}px`); 
   });
 
   const mainContent = mainContainer.querySelector("#main-content");
@@ -343,6 +349,8 @@ mainContainer.addEventListener("custom:contentUpdate", () => {
         actionBtn.dataset.projectUuid = openMenuBtn.dataset.projectUuid;
         actionBtn.dataset.todoUuid = openMenuBtn.dataset.todoUuid;        
       });
+      const {x, y, width} = openMenuBtn.getBoundingClientRect();
+      contextMenusRenderer.setPosition(contextMenu, `${y}px auto auto ${x+width}px`);
     });
   });
 

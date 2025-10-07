@@ -1,7 +1,10 @@
-import { domHelper } from "../barrel.js";
+/**
+ * 
+ * @param {HTMLElement} contextMenu 
+ * @param {String} insetStr 
+ */
+function setPosition(contextMenu, insetStr) {
+  contextMenu.style.inset = insetStr;
+}
 
-const doc = document; 
-
-// mark incomplete 
-
-// set uuid or some association
+export { setPosition };

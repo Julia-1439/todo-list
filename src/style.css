@@ -478,10 +478,16 @@ legend {
 }
 
 .context-menu {
+  position: absolute;
+  z-index: -1;
   display: grid;
   grid-auto-rows: 1fr;
   border: 2px solid var(--palette-accent);
+}
 
+/* To "fix" unexpected layering behavior with popovers - just hide them! */
+.context-menu:not(:popover-open) {
+  visibility: hidden;
 }
 
 .context-menu button {
