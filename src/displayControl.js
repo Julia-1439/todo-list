@@ -86,11 +86,12 @@ const mainContainer = doc.querySelector("#main-container"); // might move to the
       f.append("status", newStatus);
       return f;
     })();
-    updateProject(uuid, formData, true);
+    updateProject(uuid, formData);
 
     renderDisplay({
       detail: {focusedProjectUuid: projectData.uuid},
     });
+    projectContextMenu.hidePopover();
   });
 
   const deleteProjectBtn = projectContextMenu.querySelector("#project-delete-btn");
