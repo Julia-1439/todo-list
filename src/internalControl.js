@@ -29,25 +29,25 @@ function createDefaultProject() {
   const projectUuid = _projects.at(-1).uuid;
   createTodo(projectUuid, {
     title: "Buy groceries after work", 
-    description: "Make sure to get vegetables!", 
+    description: "Remember to buy tomatoes.", 
     dueDateTime: (() => {
       const d = new Date();
       d.setDate(d.getDate() + 1);
       d.setHours(17, 0, 0, 0);
       return d;
     })(), 
-    priority: "p3",
+    priority: "p2",
   });
   createTodo(projectUuid, {
-    title: "Practice meditation for 10 minutes", 
-    description: "A calm soul is a restful soul, or something.", 
+    title: "Read for 10 minutes at night", 
+    description: "To help establish a better pre-sleep routine.", 
     dueDateTime: (() => {
       const d = new Date();
       d.setDate(d.getDate() + 2);
       d.setHours(8, 0, 0, 0);
       return d;
     })(), 
-    priority: "p4",
+    priority: "p3",
   });
 
   return viewProject(_projects.at(-1).uuid);
