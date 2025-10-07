@@ -66,7 +66,7 @@ function get(projectUuid) {
     return null;
   }
 
-  return Project.deserialize(value);
+  return Project.revive(value);
 }
 
 function remove(projectUuid) {

@@ -74,7 +74,7 @@ export default class Project {
    * serialization retained, notably the uuid of the project itself and its todo 
    * items, and the creation timestamp of the project.
    */
-  static deserialize(serializedProject) {
+  static revive(serializedProject) {
     const projectObj = JSON.parse(serializedProject);
     
     const project = new Project(
