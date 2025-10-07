@@ -2,10 +2,9 @@ import { uuidGenerator } from "../barrel.js";
 import { statusUtil } from "../barrel.js";
 import { TodoItem } from "../barrel.js";
 
-
 export default class Project {
   #uuid = uuidGenerator.generate();
-  #creationTime = (new Date()).valueOf();
+  #creationTime = (new Date()).valueOf(); // for use in sorting by creation time
   
   constructor(title, description) {
     this.title = title;
@@ -15,29 +14,20 @@ export default class Project {
     this.todoList = [];
   }
 
-  get status() {
-    return this._status;
-  }
-
   set status(name) {
     this._status = statusUtil.status(name);
   }
 
-  /**
-   * 
-   * @param {TodoItem} todo 
-   */
-  addTodo(todo) {
-    this.todoList.push(todo);
+  get status() {
+    return this._status;
   }
 
-  getTodo(uuid) {
-    return this.todoList.find((todo) => todo.uuid === uuid);
+  get uuid() { 
+    return this.#uuid; 
   }
 
-  removeTodo(uuid) {
-    const removalIdx = this.todoList.findIndex((todo) => todo.uuid === uuid);
-    this.todoList.splice(removalIdx, 1);
+  get creationTime() { 
+    return this.#creationTime; 
   }
 
   /**
@@ -86,14 +76,11 @@ export default class Project {
     project.status = projectObj._status.name;
     projectObj.todoList.forEach((todoObj) => {
       const todo = TodoItem.revive(todoObj);
-      project.addTodo(todo);
+      project.todoList.push(todo);
     });
     project.#uuid = projectObj.exposedUuid;
     project.#creationTime = +projectObj.exposedCreationTime;
 
     return project;
   }
-  
-  get uuid() { return this.#uuid; }
-  get creationTime() { return this.#creationTime; }
 }

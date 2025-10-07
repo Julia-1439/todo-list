@@ -175,7 +175,7 @@ function createTodo(projectUuid, data) {
 
   const {title, description, dueDateTime, priority,} = data;
   const todo = new TodoItem(title, description, dueDateTime, priority,);
-  project.addTodo(todo);
+  project.todoList.push(todo);
 
   storageControl.post(project);
 
@@ -190,7 +190,7 @@ function createTodo(projectUuid, data) {
  */
 function viewTodo(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
-  const todo = project.getTodo(todoUuid); 
+  const todo = project.todoList.find((todo) => todo.uuid === todoUuid);
   
   return {
     title: todo.title,
@@ -213,7 +213,7 @@ function viewTodo(projectUuid, todoUuid) {
  */
 function editTodo(projectUuid, todoUuid, data) {
   const project = getProject(projectUuid)
-  const todo = project.getTodo(todoUuid);
+  const todo = project.todoList.find((todo) => todo.uuid === todoUuid);
 
   const propertiesToUpdate = [
     "title", 
@@ -242,7 +242,9 @@ function editTodo(projectUuid, todoUuid, data) {
 function removeTodo(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
   const todoData = viewTodo(projectUuid, todoUuid); // for the return
-  project.removeTodo(todoUuid);
+  
+  const removalIdx = project.todoList.findIndex((todo) => todo.uuid === todoUuid);
+  project.todoList.splice(removalIdx, 1);
 
   storageControl.post(project);
 
