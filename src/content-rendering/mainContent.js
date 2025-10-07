@@ -54,7 +54,7 @@ function renderProject(projectData) {
   todoList.append(...todoEntries);
   todoCreateBtn.append(todoCreateSym, todoCreateText);
 
-  mainContainer.dispatchEvent(new CustomEvent("custom:contentUpdate"));
+  mainContainer.dispatchEvent(new CustomEvent("custom:contentRender"));
 }
 
 /**

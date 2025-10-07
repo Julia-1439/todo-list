@@ -15,7 +15,7 @@ function renderProjects(projectsData) {
   const projectEntries = projectsData.map(createProjectEntry);
   projectList.append(...projectEntries);
 
-  sidebar.dispatchEvent(new CustomEvent("custom:contentUpdate"));
+  sidebar.dispatchEvent(new CustomEvent("custom:contentRender"));
 }
 
 /**

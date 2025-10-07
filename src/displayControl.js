@@ -266,7 +266,7 @@ const mainContainer = doc.querySelector("#main-container"); // might move to the
 /* Add event listeners to *dynamic* content as they are created */
 /* ========================================================================== */
 
-sidebarElt.addEventListener("custom:contentUpdate", () => {
+sidebarElt.addEventListener("custom:contentRender", () => {
   const projectsSection = sidebarElt.querySelector("#sidebar-projects-section");
 
   const viewProjectBtns = projectsSection.querySelectorAll(".view-project-btn");
@@ -291,7 +291,7 @@ sidebarElt.addEventListener("custom:contentUpdate", () => {
 
 });
 
-mainContainer.addEventListener("custom:contentUpdate", () => {
+mainContainer.addEventListener("custom:contentRender", () => {
   const mainTopbar = mainContainer.querySelector("#main-topbar");
   const openProjectMenuBtn = mainTopbar.querySelector(".project-context-btn")
   openProjectMenuBtn.addEventListener("click", () => {
