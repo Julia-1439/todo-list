@@ -234,6 +234,14 @@ const mainContainer = doc.querySelector("#main-container");
   });
 })();
 
+(function initListenersDialogs() {
+  const cuTodoDialog = doc.querySelector("#cu-todo-dialog");
+  cuTodoDialog.addEventListener("close", () => {
+    const projectSelector = cuTodoDialog.querySelector("#cu-todo-form-project-selector");
+    projectSelector.removeAttribute("disabled"); 
+  });
+})();
+
 /* ========================================================================== */
 /* Add event listeners to *dynamic* content as they are created */
 /* ========================================================================== */
