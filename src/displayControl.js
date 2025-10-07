@@ -8,8 +8,8 @@ import { contextMenusRenderer } from "./barrel.js";
 import { dateFns } from "./barrel.js";
 
 const doc = document; 
-const sidebarElt = doc.querySelector("#sidebar");
-const mainContainer = doc.querySelector("#main-container"); 
+const sidebarElt = doc.querySelector("#sidebar"); // might move to the custom events
+const mainContainer = doc.querySelector("#main-container"); // might move to the custom events
 
 /* ========================================================================== */
 /* INITIALIZATION: add evt listeners to *permanent* fixtures */
@@ -127,7 +127,7 @@ const mainContainer = doc.querySelector("#main-container");
     });
 
     // populate with current todo data
-    const currTodoData = internalControl.viewTodoFull(projectUuid, todoUuid);
+    const currTodoData = internalControl.viewTodo(projectUuid, todoUuid);
     form.querySelectorAll("[name]").forEach((formCtrl) => {
       const name = formCtrl.name;
       formCtrl.value = (() => {
@@ -310,10 +310,10 @@ mainContainer.addEventListener("custom:contentUpdate", () => {
   const expandBtns = mainContent.querySelectorAll(".expand-btn");
   expandBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const todoDataFull = internalControl.viewTodoFull(
+      const todoData = internalControl.viewTodo(
         btn.dataset.projectUuid, btn.dataset.todoUuid
       );
-      mainContentRenderer.toggleDetailedTodo(todoDataFull);
+      mainContentRenderer.toggleExpandedTodo(todoData);
     });
   });
 
@@ -324,7 +324,7 @@ mainContainer.addEventListener("custom:contentUpdate", () => {
       const projectUuid = btn.dataset.projectUuid;
       const todoUuid = btn.dataset.todoUuid;
 
-      const todoData = internalControl.viewTodoSummary(projectUuid, todoUuid);
+      const todoData = internalControl.viewTodo(projectUuid, todoUuid);
       const newStatus = (todoData.status.name === "incomplete") ? "completed" : "incomplete";
       const formData = (() => {
         const f = new FormData();

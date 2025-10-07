@@ -112,7 +112,7 @@ function viewProject(uuid) {
     title: project.title,
     description: project.description,
     status: project.status,
-    todoList: project.todoList.map((todo) => viewTodoSummary(uuid, todo.uuid)),
+    todoList: project.todoList.map((todo) => viewTodo(uuid, todo.uuid)),
     uuid: project.uuid,
   };
 }
@@ -179,42 +179,27 @@ function createTodo(projectUuid, data) {
 
   storageControl.post(project);
 
-  return viewTodoFull(projectUuid, todo.uuid);
+  return viewTodo(projectUuid, todo.uuid);
 }
 
 /**
- * Get an overview of a todo. For all its details, see function viewTodoFull
+ * Get data of a todo
  * @param {String} projectUuid 
  * @param {String} todoUuid 
  * @returns {Object}
  */
-function viewTodoSummary(projectUuid, todoUuid) {
+function viewTodo(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
   const todo = project.getTodo(todoUuid); 
   
   return {
     title: todo.title,
+    description: todo.description,
     dueDateTime: todo.dueDateTime,
     priority: todo.priority,
     status: todo.status,
     uuid: todo.uuid,
     projectUuid: projectUuid,
-  };
-}
-
-/**
- * Expand a todo to view more of its information
- * @param {String} projectUuid 
- * @param {String} todoUuid 
- * @returns {Object} 
- */
-function viewTodoFull(projectUuid, todoUuid) {
-  const project = getProject(projectUuid);
-  const todo = project.getTodo(todoUuid); 
-
-  return {
-    ...viewTodoSummary(projectUuid, todoUuid),
-    description: todo.description,
   };
 }
 
@@ -245,7 +230,7 @@ function editTodo(projectUuid, todoUuid, data) {
 
   storageControl.post(project);
 
-  return viewTodoFull(projectUuid, todoUuid);
+  return viewTodo(projectUuid, todoUuid);
 }
 
 /**
@@ -256,7 +241,7 @@ function editTodo(projectUuid, todoUuid, data) {
  */
 function removeTodo(projectUuid, todoUuid) {
   const project = getProject(projectUuid);
-  const todoData = viewTodoFull(projectUuid, todoUuid); // for the return
+  const todoData = viewTodo(projectUuid, todoUuid); // for the return
   project.removeTodo(todoUuid);
 
   storageControl.post(project);
@@ -276,7 +261,7 @@ export {
 
   // CRUD for todos
   createTodo,
-  viewTodoSummary, viewTodoFull,
+  viewTodo,
   editTodo,
   removeTodo,
 };

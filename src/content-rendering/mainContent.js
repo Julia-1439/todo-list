@@ -3,6 +3,7 @@ import { contextMenus } from "../barrel.js";
 
 const doc = document; 
 const mainContainer = doc.querySelector("#main-container");
+const _expandedTodos = [];
 
 function renderProject(projectData) {
   mainContainer.replaceChildren();
@@ -122,30 +123,53 @@ function createTodoEntry(todoData) {
   expandBtn.append(expandSym);
   menuBtn.append(menuSym);
 
+  const wasExpanded = _expandedTodos.includes(todoData.uuid);
+  if (wasExpanded) {
+    expandTodo(card, todoData);
+  }
+
   return li;
 }
 
 /**
- * Toggles a full view of a todo item
- * @param {Object} todoDetailedData 
+ * Toggles a full view of a todo item by adding an additional div with the 
+ * additional information, or removing it if already present. 
+ * Keeps record of it in `_expandedTodos` so they can be re-rendered in expanded
+ * form on any updates to the display. 
+ * @param {Object} todoData 
  */
-function toggleDetailedTodo(todoDetailedData) {
+function toggleExpandedTodo(todoData) {
   const mainContent = doc.querySelector("#main-content"); 
-  const todoCard = mainContent.querySelector(`[data-todo-uuid="${todoDetailedData.uuid}"]`);
-  const expandSym = todoCard.querySelector(".chevron");
+  const todoCard = mainContent.querySelector(`[data-todo-uuid="${todoData.uuid}"]`);
 
-  const descriptionDiv = todoCard.querySelector(".todo-description");
-  if (descriptionDiv === null) {
-    const descriptionDiv = doc.createElement("div");
-    descriptionDiv.classList.add("todo-description");
-    descriptionDiv.textContent = todoDetailedData.description || "No description provided.";
-    todoCard.append(descriptionDiv);
-    expandSym.classList.add("chevron-expanded");
+  const isExpanded = _expandedTodos.includes(todoData.uuid);
+  if (!isExpanded) {
+    expandTodo(todoCard, todoData);
+    _expandedTodos.push(todoData.uuid);
   }
   else {
-    todoCard.removeChild(descriptionDiv);
-    expandSym.classList.remove("chevron-expanded");
+    retractTodo(todoCard);
+    const removalIdx = _expandedTodos.findIndex((uuid) => uuid === todoData.uuid);
+    _expandedTodos.splice(removalIdx, 1);
   }
 }
 
-export { renderProject, toggleDetailedTodo, };
+function expandTodo(todoCard, todoData) {
+  const expandSym = todoCard.querySelector(".chevron");
+
+  const descriptionDiv = doc.createElement("div");
+  descriptionDiv.classList.add("todo-description");
+  descriptionDiv.textContent = todoData.description || "No description provided.";
+  todoCard.append(descriptionDiv);
+  expandSym.classList.add("chevron-expanded");
+}
+
+function retractTodo(todoCard) {
+  const descriptionDiv = todoCard.querySelector(".todo-description");
+  todoCard.removeChild(descriptionDiv);
+
+  const expandSym = todoCard.querySelector(".chevron");
+  expandSym.classList.remove("chevron-expanded");
+}
+
+export { renderProject, toggleExpandedTodo, };
