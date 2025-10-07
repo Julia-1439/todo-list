@@ -160,13 +160,21 @@ function expandTodo(todoCard, todoData) {
   const descriptionDiv = doc.createElement("div");
   descriptionDiv.classList.add("todo-description");
   descriptionDiv.textContent = todoData.description || "No description provided.";
+  descriptionDiv.dataset.isExpansion = "";
   todoCard.append(descriptionDiv);
   expandSym.classList.add("chevron-expanded");
 }
 
+/**
+ * Removes all elements in `todoCard` with data-attribute "is-expansion", which
+ * is assigned by function `expandTodo`. 
+ * @param {HTMLDivElement} todoCard 
+ */
 function retractTodo(todoCard) {
-  const descriptionDiv = todoCard.querySelector(".todo-description");
-  todoCard.removeChild(descriptionDiv);
+  const expansionElts = todoCard.querySelectorAll("[data-is-expansion]");
+  expansionElts.forEach((elt) => {
+    todoCard.removeChild(elt);
+  });
 
   const expandSym = todoCard.querySelector(".chevron");
   expandSym.classList.remove("chevron-expanded");
