@@ -45,15 +45,17 @@ export default class TodoItem {
     return this._priority;
   }
 
-  get status() {
-    return this._status;
-  }
-
   set status(name) {
     this._status = statusUtil.status(name);
   }
 
-  get uuid() { return this.#uuid; }
+  get status() {
+    return this._status;
+  }
+
+  get uuid() { 
+    return this.#uuid; 
+  }
 
   /**
    * A utility function used to revive a TodoItem instance, for use in 
