@@ -42,7 +42,7 @@ function renderProject(projectData) {
   const todoCreateBtn = doc.createElement("button");
   todoCreateBtn.id = "this-project-create-todo-btn";
   todoCreateBtn.dataset.projectUuid = projectData.uuid;
-  const todoCreateSym = svgCreator.create("plus", "#dc583e"); // the var(--palette-accent-color)
+  const todoCreateSym = svgCreator.create("plus"); 
   todoCreateSym.classList.add("create-todo-icon");
   const todoCreateText = doc.createTextNode("Add task");
 

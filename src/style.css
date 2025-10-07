@@ -87,6 +87,10 @@ body {
   height: 1.5rem;
 }
 
+.create-todo-icon path {
+  fill: var(--palette-accent);
+}
+
 #sidebar-projects-title {
   width: 100%;
   font-size: 1.25rem;
@@ -345,7 +349,7 @@ body {
   color: var(--palette-accent); 
 }
 
-#this-project-create-todo-btn:hover svg.create-todo-icon path {
+#this-project-create-todo-btn:hover .create-todo-icon path {
   d: path("M17,13H13V17H11V13H7V11H11V7H13V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z");
 }
 
