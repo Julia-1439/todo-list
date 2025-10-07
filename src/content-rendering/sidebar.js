@@ -1,4 +1,4 @@
-import { domHelper } from "../barrel.js";
+import { svgCreator } from "../barrel.js";
 import { contextMenus } from "../barrel.js";
 
 const doc = document; 
@@ -35,7 +35,7 @@ function createProjectEntry(projectData) {
   titleBtn.classList.add("view-project-btn", "borderless-btn");
   titleBtn.type = "button";
   titleBtn.dataset.uuid = projectData.uuid;
-  const projectSym = domHelper.createSvg("pound");
+  const projectSym = svgCreator.create("pound");
   projectSym.classList.add("project-sym");
   const titleSpan = doc.createElement("span");
   titleSpan.classList.add("project-title");
@@ -46,7 +46,7 @@ function createProjectEntry(projectData) {
   menuBtn.setAttribute("popovertarget", "project-context-menu");
   menuBtn.setAttribute("popovertargetaction", "toggle");
   menuBtn.dataset.uuid = projectData.uuid;
-  const menuSym = domHelper.createSvg("dots-horizontal");
+  const menuSym = svgCreator.create("dots-horizontal");
   menuSym.classList.add("context-menu-sym");
 
   li.append(projectCell);

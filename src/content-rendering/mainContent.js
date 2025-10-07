@@ -1,4 +1,4 @@
-import { domHelper } from "../barrel.js";
+import { svgCreator } from "../barrel.js";
 import { contextMenus } from "../barrel.js";
 
 const doc = document; 
@@ -21,7 +21,7 @@ function renderProject(projectData) {
   projectMenuBtn.setAttribute("popovertarget", "project-context-menu");
   projectMenuBtn.setAttribute("popovertargetaction", "toggle");
   projectMenuBtn.dataset.uuid = projectData.uuid;
-  const menuSym = domHelper.createSvg("dots-horizontal");
+  const menuSym = svgCreator.create("dots-horizontal");
   menuSym.classList.add("context-menu-sym");
 
   const mainContent = doc.createElement("div");
@@ -42,7 +42,7 @@ function renderProject(projectData) {
   const todoCreateBtn = doc.createElement("button");
   todoCreateBtn.id = "this-project-create-todo-btn";
   todoCreateBtn.dataset.projectUuid = projectData.uuid;
-  const todoCreateSym = domHelper.createSvg("plus", "#dc583e"); // the var(--palette-accent-color)
+  const todoCreateSym = svgCreator.create("plus", "#dc583e"); // the var(--palette-accent-color)
   todoCreateSym.classList.add("create-todo-icon");
   const todoCreateText = doc.createTextNode("Add task");
 
@@ -84,7 +84,7 @@ function createTodoEntry(todoData) {
   }
   checkBubbleBtn.dataset.todoUuid = todoData.uuid;
   checkBubbleBtn.dataset.projectUuid = todoData.projectUuid;
-  const checkSym = domHelper.createSvg("check", "white");
+  const checkSym = svgCreator.create("check", "white");
   
   const topRowDiv = doc.createElement("div");
   topRowDiv.classList.add("todo-top-row");
@@ -98,7 +98,7 @@ function createTodoEntry(todoData) {
   expandBtn.classList.add("expand-btn", "todo-btn", "borderless-btn", "square-btn");
   expandBtn.dataset.todoUuid = todoData.uuid;
   expandBtn.dataset.projectUuid = todoData.projectUuid;
-  const expandSym = domHelper.createSvg("chevron");
+  const expandSym = svgCreator.create("chevron");
   expandSym.classList.add("chevron");
   const menuBtn = doc.createElement("button");
   menuBtn.classList.add("todo-context-btn", "todo-btn", "borderless-btn", "square-btn");
@@ -106,7 +106,7 @@ function createTodoEntry(todoData) {
   menuBtn.setAttribute("popovertargetaction", "toggle");
   menuBtn.dataset.todoUuid = todoData.uuid;
   menuBtn.dataset.projectUuid = todoData.projectUuid;
-  const menuSym = domHelper.createSvg("dots-horizontal");
+  const menuSym = svgCreator.create("dots-horizontal");
   menuSym.classList.add("context-menu-sym");
 
   const dueByDiv = doc.createElement("div");

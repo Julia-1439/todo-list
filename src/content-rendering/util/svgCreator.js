@@ -5,7 +5,7 @@ const doc = document;
  * @param {String} title 
  * @param {String} fill optional
  */
-function createSvg(title, fill="black") {
+function create(title, fill="black") {
   const svg = doc.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", "0 0 24 24");
   const path = doc.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -23,4 +23,4 @@ function createSvg(title, fill="black") {
 }
 
 
-export { createSvg };
+export { create };

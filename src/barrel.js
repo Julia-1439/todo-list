@@ -24,7 +24,7 @@ export * as contextMenusRenderer from "./content-rendering/contextMenus.js";
 export * as notifRenderer from "./content-rendering/notif.js";
 
 // Util for content rendering
-export * as domHelper from "./content-rendering/util/domHelper.js";
+export * as svgCreator from "./content-rendering/util/svgCreator.js";
 
 // Util general
 export * as dateFns from "./util/dateFns.js";
