@@ -1,5 +1,4 @@
 import { svgCreator } from "../barrel.js";
-import { contextMenus } from "../barrel.js";
 
 const doc = document; 
 const sidebar = doc.querySelector("#sidebar");

@@ -280,10 +280,6 @@ body {
   fill: white;
 }
 
-.todo-completed {
-
-}
-
 .todo-top-row {
   display: flex;
   align-items: center;
