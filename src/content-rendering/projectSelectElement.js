@@ -8,9 +8,8 @@ const selector = doc.querySelector("#cu-todo-form-project-selector");
 function renderProjects(projectsData) {
   selector.replaceChildren();
 
-  const blankOption = createOption("", "");
   const projectOptions = projectsData.map(createOption);
-  selector.append(blankOption, ...projectOptions);
+  selector.append( ...projectOptions);
 
   function createOption(projectData) {
     const option = doc.createElement("option");
