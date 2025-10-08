@@ -1,6 +1,9 @@
 # todo-list
 A Todo List created using Object-Oriented Programming principles, featuring CRUD interactions and browser storage.  
 
+dependency chart: 
+<img src="./diagram.png" alt="diagram of dependencies in the project">
+
 ## Reflection
 <strong>Major concepts utilized:</strong>
 - separation of logic
