@@ -1,7 +1,6 @@
 import { uuidGenerator } from "../barrel.js";
 import { statusUtil } from "../barrel.js";
 import { priorityUtil } from "../barrel.js";
-import { dateFns } from "../barrel.js";
 
 export default class TodoItem {
   static DATE_TIME_FORMAT = "MMM-d-yyyy',' p";
@@ -11,7 +10,9 @@ export default class TodoItem {
    * 
    * @param {String} title 
    * @param {String} description 
-   * @param {Date | String} dueDateTime 
+   * @param {Date | String} dueDateTime for strings, they should be a truthy
+   * value that can be converted to a Date via the Date constructor. otherwise,
+   * the internal _dueDateTime will be of value undefined.
    * @param {String} priorityLvl 
    */
   constructor(title, description, dueDateTime, priorityLvl) {
@@ -31,10 +32,7 @@ export default class TodoItem {
   }
 
   get dueDateTime() {
-    if (this._dueDateTime !== undefined)
-      return dateFns.format(this._dueDateTime, TodoItem.DATE_TIME_FORMAT);
-    else
-      return this._dueDateTime;
+    return this._dueDateTime;
   }
 
   set priority(priorityLvl) {

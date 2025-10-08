@@ -1,4 +1,5 @@
 import { svgCreator } from "../barrel.js";
+import { dateFns } from "../barrel.js";
 
 const doc = document; 
 const mainContainer = doc.querySelector("#main-container");
@@ -109,7 +110,10 @@ function renderProject(projectData) {
   
     const dueByDiv = doc.createElement("div");
     dueByDiv.classList.add("todo-due-by");
-    dueByDiv.textContent = todoData.dueDateTime;
+    if (todoData.dueDateTime !== undefined)
+      dueByDiv.textContent = dateFns.format(todoData.dueDateTime, 
+        "MMM-d-yyyy',' p"
+      );
     
     li.append(card);
     card.append(checkBubbleDiv, topRowDiv, dueByDiv);
