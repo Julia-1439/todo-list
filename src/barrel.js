@@ -4,9 +4,6 @@ export * as displayControl from "./displayControl.js";
 export * as internalControl from "./internalControl.js";
 export * as storageControl from "./storageControl.js";
 
-// Util (general usage)
-export * as dateFns from "./util/dateFns.js";
-
 // Content rendering
 export * as sidebarRenderer from "./content-rendering/sidebar.js";
 export * as mainContentRenderer from "./content-rendering/mainContent.js";
@@ -16,6 +13,7 @@ export * as notifRenderer from "./content-rendering/notification.js";
 
 // Util (for content rendering)
 export * as svgCreator from "./content-rendering/util/svgCreator.js";
+export * as dateFns from "./content-rendering/util/dateFns.js"; 
 
 // Classes
 export { default as Project } from "./classes/project.js";
