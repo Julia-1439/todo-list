@@ -20,18 +20,36 @@ dependency chart:
 - custom events: create a decoupled communication system
 - more practice with css: making widely applicable classes, positioning, grid, svg manipulation, popovers, text overflows
 
+room for improvement:
+<ol>
+  <li>biggest thing to improve is probably the `initListeners` function: its contents can be better delegated to modules in `/content-rendering`, such as rendering of the forms. 
+  </li>
+  <li>the displayControl module's `renderDisplay` function renders the entire sidebar and main content sections, which creates coupling. a less coupled solution is to create more modular render functions in /content-rendering so no content outside of the updated content are touched. 
+  </li>
+
+  <li>consistent naming. "is it 'create' or 'add'? is it 'edit' or 'update'? 'remove' or 'delete'? 'todo' or 'todoItem'? I believe my naming can be more consistent, which I learn from experience, and the next bullet might help. 
+  </li>
+
+  <li>should play around with the product i'm emulating first to get a better idea of the high-level and low-level — what features and design I want before coding. 
+    <ul>
+      <li>
+        e.g. might be good for consistency to associate todos with their projects next time internally, since at the DOM level that's how they are.
+      </li>
+      <li>
+        e.g. to understand that todo expansion should be handled at the DOM-level rather than internally
+      </li>
+    </ul>
+  </li>
+
+  <li>css: decouple divs too (consider not putting buttons in the same container as text, e.g. in todoCard)
+  </li>
+</ol>
+
 design choices:
 - classes were chosen over factory functions mostly for practice with classes, but also because there was not enough overlap between Projects & TodoItems to justify function composition. 
 - modules & classes were designed with the minimum needed to function. <em>(e.g. internalControl does not provide distinguish between a summarized todo and expanded todo, as that is more of a feature for displayControl)</em>
 - C-U-D functions in displayControl receive FormData object, which felt like a natural generalization of how the C-U-D functions in internalControl receive regular Objects. FormData can also be arbitrarily constructed without a form, which is helpful too. 
 - used JS to expand todos. a potential alternative I've discovered is using the "details" element.
-
-room for improvement:
-- the displayControl module's `renderDisplay` function renders the entire sidebar and main content sections, which creates coupling. a less coupled solution is to create more modular render functions in /content-rendering so no content outside of the updated content are touched. 
-- consistent naming. "is it 'create' or 'add'? is it 'edit' or 'update'? 'remove' or 'delete'? 'todo' or 'todoItem'? I believe my naming can be more consistent, which I learn from experience, and the next bullet might help. 
-- should play around with the product i'm emulating first to get a better idea of the high-level and low-level — what features and design I want before coding. 
-  - e.g. might be good for consistency to associate todos with their projects next time internally, since at the DOM level that's how they are. 
-- css: decouple divs too (consider not putting buttons in the same container as text, e.g. in todoCard)
 
 ## Developer setup
 ```
@@ -46,7 +64,10 @@ npm run build
 ## Credits
 <details>
 <summary>Assets used</summary>
-  SVG icons from <a src="https://pictogrammers.com/library/mdi/">Pictogrammers</a>
+  <ul>
+    <li>aesthetic inspiration from <a href="https://www.todoist.com/">Todoist</a></li>
+    <li>SVG icons from <a src="https://pictogrammers.com/library/mdi/">Pictogrammers</a></li>
+  <ul>
 </details>
 
 <details>
