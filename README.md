@@ -1,5 +1,5 @@
 # todo-list
-A Todo List created using Object-Oriented Programming principles, featuring CRUD interactions and browser storage.  
+A Todo List created using Object-Oriented Programming principles, featuring CRUD interactions and browser storage. 
 
 ## Reflection
 <strong>major concepts utilized:</strong>
@@ -18,14 +18,14 @@ A Todo List created using Object-Oriented Programming principles, featuring CRUD
 - custom events: create a decoupled communication system
 - more practice with css: making widely applicable classes, positioning, grid, svg manipulation, popovers, text overflows
 
+dependency chart: 
+<img src="./diagram.png" alt="diagram of dependencies in the project">
+
 room for improvement:
 <ol>
-  <li>biggest thing to improve is probably the <code>initListeners</code> function: its contents can be better delegated to modules in <code>/content-rendering</code>, such as rendering of the forms. 
-  </li>
-  <li>the displayControl module's <code>renderDisplay</code> function renders the entire sidebar and main content sections, which creates coupling. a less coupled solution is to create more modular render functions in /content-rendering so no content outside of the updated content are touched. 
-  </li>
-
-  <li>consistent naming. "is it 'create' or 'add'? is it 'edit' or 'update'? 'remove' or 'delete'? 'todo' or 'todoItem'? I believe my naming can be more consistent, which I learn from experience, and the next bullet might help. 
+  <li><strong>biggest thing to improve</strong> is probably the <code>initListeners</code> function: its contents can be way better modularized to not be a several-hundred-line function. a potential solution can be to move the code into the modules in <code>/content-rendering</code> as adding event listeners can still fall under that same responsibility of "content rendering". this would require the CRUD functions defined in displayControl to be moved into a utility module (<code>/content-rendering/util/</code>) which the content-renderers would depend on. additionally, a <code>forms</code> renderer would be helpful too to render the form graphics (mostly just changing some words in spans). altogether, a potential revision could be as follows, with red the new connections: 
+  <br>
+  <img style="width: 50%;" src="./potential-revision.png" alt="diagram of potential revision to displayControl">
   </li>
 
   <li>should play around with the product i'm emulating first to get a better idea of the high-level and low-level — what features and design I want before coding. 
@@ -39,6 +39,16 @@ room for improvement:
     </ul>
   </li>
 
+  <li>consistent naming. "is it 'create' or 'add'? is it 'edit' or 'update'? 'remove' or 'delete'? 'todo' or 'todoItem'? I believe my naming can be more consistent, which I learn from experience, and the next bullet might help. 
+  </li>
+
+  <li>
+  Consider pubsub next time! Jakub seems to have used it to good effect to create loose coupling and readability. 
+  </li>
+
+  <li>a potentially more efficient structure for 'render' functions could be to listen for changes to internal content (via custom events or pubsub) and then target only that element in the DOM to update.  
+  </li>
+
   <li>css: decouple divs too (consider not putting buttons in the same container as text, e.g. in todoCard)
   </li>
 </ol>
@@ -46,11 +56,10 @@ room for improvement:
 design choices:
 - classes were chosen over factory functions mostly for practice with classes, but also because there was not enough overlap between Projects & TodoItems to justify function composition. 
 - modules & classes were designed with the minimum needed to function. <em>(e.g. internalControl does not provide distinguish between a summarized todo and expanded todo, as that is more of a feature for displayControl)</em>
-- C-U-D functions in displayControl receive FormData object, which felt like a natural generalization of how the C-U-D functions in internalControl receive regular Objects. FormData can also be arbitrarily constructed without a form, which is helpful too. 
+- C-U-D functions in displayControl receive FormData object, which felt like a natural generalization of how the C-U-D functions in internalControl receive regular Objects. FormData can also be arbitrarily constructed without a form, which is helpful too, such as the case of marking a todo or project as complete.
+- utilized custom events to create a decoupled communication system. after modules in /content-rendering generate the HTML, they dispatch a custom event telling displayControl to add event listeners to the new content. the notification system is similar: listen to updates and display notifs in response.  
+- the three prior JS projects had important role to play in the structure of this todolist project, each providing its own contribution. Library: data-attributes, dialogs, forms. TicTacToe: separation of logic, some kind of controller that makes the app work only in console. Restaurant Page: content generation with JS, organizing into ES6 modules. the Todolist integrated all of these together, increased the magnitude, and threw in OOP principles, more heavy emphasis on Single Responsibility and Loose Coupling, npm packages, JSON, and storage. 
 - used JS to expand todos. a potential alternative I've discovered is using the "details" element.
-
-dependency chart: 
-<img src="./diagram.png" alt="diagram of dependencies in the project">
 
 ## Developer setup
 ```
